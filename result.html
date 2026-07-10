@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>결과</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="overlay">
+
+<h1>결과</h1>
+
+<p id="score"></p>
+
+<button onclick="location.href='index.html'">
+
+다시하기
+
+</button>
+
+</div>
+
+<script>
+
+const params=new URLSearchParams(location.search);
+
+const score=params.get("score");
+
+document.getElementById("score").innerHTML=
+
+"당신은 "+score+"점을 획득했습니다.<br><br>실제 해양경찰은 매일 이런 판단을 하고 있습니다.";
+
+</script>
+
+</body>
+
+</html>
