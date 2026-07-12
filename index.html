@@ -3,98 +3,195 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>상황판단 테스트</title>
-  <link rel="stylesheet" href="style.css">
+  <title>바다 테스트</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    .list-wrap {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      color: white;
-      padding: 40px 20px;
-      width: 100%;
-      max-width: 800px;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .list-wrap h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
-
-    .list-wrap .sub {
-      font-size: 16px;
-      margin-bottom: 40px;
-      opacity: 0.85;
-    }
-
-    .card-grid {
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0a1628 0%, #0d2a4a 40%, #0a3d6b 70%, #0a2a50 100%);
       display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* 별 배경 */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 80% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 40% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 90% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.2) 0%, transparent 100%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* 파도 */
+    body::after {
+      content: '';
+      position: fixed;
+      width: 250%; height: 300px;
+      bottom: -100px; left: -75%;
+      background: rgba(100,180,255,0.07);
+      border-radius: 45%;
+      animation: wave 12s linear infinite;
+      z-index: 0;
+    }
+    @keyframes wave { 0%{transform:translateX(0)} 100%{transform:translateX(20%)} }
+
+    /* 컨테이너 */
+    .wrap {
+      position: relative; z-index: 10;
+      width: 100%; max-width: 900px;
+      padding: 60px 24px 80px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* 헤더 */
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(100,180,255,0.4);
+      color: #7dd3fc;
+      font-size: 12px; font-weight: 700; letter-spacing: 2px;
+      padding: 6px 18px; border-radius: 50px;
+      background: rgba(100,180,255,0.08);
+      margin-bottom: 24px;
+    }
+    .badge::before { content: '⚓'; font-size: 14px; }
+
+    .main-title {
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 900;
+      color: white;
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+    .main-title span { color: #7dd3fc; }
+
+    .main-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      margin-bottom: 56px;
+      line-height: 1.7;
+    }
+
+    /* 카드 그리드 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
     }
 
     .card {
-      width: 200px;
-      background: rgba(255,255,255,0.15);
-      border: 2px solid rgba(255,255,255,0.4);
-      border-radius: 16px;
+      position: relative;
+      border-radius: 24px;
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      backdrop-filter: blur(4px);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
     }
-
     .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(255,255,255,0.4);
+      transform: translateY(-8px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(100,180,255,0.3);
+      border-color: rgba(100,180,255,0.3);
     }
 
     .card-thumb {
-      width: 100%;
-      height: 130px;
-      background: rgba(255,255,255,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 54px;
-      /* 이미지 추가 시 아래 주석 해제하고 src 경로 입력 */
-      /* background-image: url('images/coast-guard.jpg');
-         background-size: cover;
-         background-position: center; */
+      width: 100%; aspect-ratio: 16/9;
+      background: rgba(255,255,255,0.05);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .card-thumb::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0,10,30,0.7) 100%);
     }
 
-    .card-label {
-      padding: 14px 10px;
-      font-size: 15px;
-      font-weight: bold;
-      line-height: 1.4;
+    .card-body {
+      padding: 20px 22px 24px;
+    }
+    .card-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      color: #7dd3fc; margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .card-title {
+      font-size: 18px; font-weight: 900;
+      color: white; line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      font-size: 13px; color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+    .card-arrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 16px; font-size: 13px; font-weight: 700;
+      color: #7dd3fc;
+      transition: gap 0.2s;
+    }
+    .card:hover .card-arrow { gap: 10px; }
+
+    /* 하단 문구 */
+    .footer-hint {
+      margin-top: 48px;
+      font-size: 13px; color: rgba(255,255,255,0.3);
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <audio autoplay loop><source src="bgm.mp3" type="audio/mpeg"></audio>
-  <div class="list-wrap">
-    <h1>상황판단 테스트</h1>
-    <p class="sub">당신이라면 어떤 선택을 하겠습니까?</p>
 
-    <div class="card-grid">
+  <div class="wrap">
+    <div class="badge">KOREA COAST GUARD</div>
 
-      <!-- 테스트 카드 1 -->
-      <div class="card" onclick="location.href='cover.html?test=coast'">
-        <div class="card-thumb" style="background-image:url('thumbnail.png'); background-size:cover; background-position:center; font-size:0;"></div>
-        <div class="card-label">해양경찰<br>상황판단 테스트</div>
+    <h1 class="main-title">친구야,<br><span>나랑 바다 가자!</span></h1>
+    <p class="main-sub">바다에서 당신은 어떤 사람인가요?<br>테스트로 알아보세요.</p>
+
+    <div class="grid">
+
+      <!-- 카드 1: 해양경찰 상황판단 -->
+      <div class="card" onclick="location.href='cover.html'">
+        <div class="card-thumb" style="background-image:url('thumbnail.png')"></div>
+        <div class="card-body">
+          <div class="card-tag">🚨 상황판단 게임</div>
+          <div class="card-title">당신의 판단으로<br>몇 명을 살릴 수 있을까?</div>
+          <div class="card-desc">신입 해양경찰이 되어 긴박한 바다 상황을 판단해보세요.</div>
+          <div class="card-arrow">테스트 시작하기 →</div>
+        </div>
       </div>
 
-      <!-- 테스트 카드 2 -->
+      <!-- 카드 2: 바다 MBTI -->
       <div class="card" onclick="location.href='mbti.html'">
-        <div class="card-thumb" style="background-image:url('thumbnail2.png'); background-size:cover; background-position:center; font-size:0;">
-          <span style="font-size:54px; display:none">🌊</span>
+        <div class="card-thumb" style="background-image:url('thumbnail2.png')"></div>
+        <div class="card-body">
+          <div class="card-tag">🌊 심리테스트</div>
+          <div class="card-title">나의 바다 MBTI<br>심리테스트</div>
+          <div class="card-desc">8개의 질문으로 나의 바다 유형을 알아보고 친구와 궁합을 확인해보세요.</div>
+          <div class="card-arrow">테스트 시작하기 →</div>
         </div>
-        <div class="card-label">나의 바다 MBTI<br>심리테스트</div>
       </div>
 
     </div>
+
+    <div class="footer-hint">결과를 같이 바다 가고 싶은 사람에게 공유해보세요 🌊</div>
   </div>
 </body>
 </html>
