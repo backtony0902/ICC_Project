@@ -38,15 +38,7 @@
   </style>
 </head>
 <body>
-  <audio id="bgm" loop>
-    <source src="bgm.mp3" type="audio/mpeg">
-  </audio>
+  <audio autoplay loop><source src="bgm.mp3" type="audio/mpeg"></audio>
   <button class="btn-start" onclick="location.href='intro.html'">테스트 시작</button>
-  <script>
-    document.addEventListener('click', function startBgm() {
-      document.getElementById('bgm').play();
-      document.removeEventListener('click', startBgm);
-    });
-  </script>
 </body>
 </html>
