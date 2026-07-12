@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>해양경찰 상황판단 테스트</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      background: url('thumbnail.png') center center / cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 60px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .btn-start {
+      padding: 18px 72px;
+      font-size: 22px;
+      font-weight: 900;
+      border: none;
+      border-radius: 50px;
+      background: white;
+      color: #005BAC;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+    }
+
+    .btn-start:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 50px rgba(255,255,255,0.6);
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgm" loop>
+    <source src="bgm.mp3" type="audio/mpeg">
+  </audio>
+  <button class="btn-start" onclick="location.href='intro.html'">테스트 시작</button>
+  <script>
+    document.addEventListener('click', function startBgm() {
+      document.getElementById('bgm').play();
+      document.removeEventListener('click', startBgm);
+    });
+  </script>
+</body>
+</html>
