@@ -226,9 +226,41 @@
              box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 0 3px rgba(255,255,255,0.25); }
     }
     @keyframes sparkleFly {
-      0%   { opacity:0; transform: scale(0) rotate(0deg); }
-      40%  { opacity:1; transform: scale(1.4) rotate(180deg) translateY(-8px); }
-      100% { opacity:0; transform: scale(0.6) rotate(360deg) translateY(-28px); }
+      0%   { opacity:0; transform: scale(0) rotate(0deg) translateY(0); }
+      25%  { opacity:1; transform: scale(1.6) rotate(140deg) translateY(-14px); }
+      65%  { opacity:.9; transform: scale(1.2) rotate(300deg) translateY(-36px); }
+      100% { opacity:0; transform: scale(0.4) rotate(480deg) translateY(-60px); }
+    }
+
+    /* ── 타로 카드 프레임 ── */
+    .card-frame {
+      position: relative;
+      padding: 10px 10px 8px;
+      background: linear-gradient(160deg, #1e0d00, #2e1800, #1a0a00);
+      border-radius: 18px;
+      box-shadow:
+        0 0 0 2px #DAA520,
+        0 0 0 4px #6b4c00,
+        0 0 0 6px rgba(255,215,0,.22),
+        inset 0 0 30px rgba(180,80,0,.12);
+    }
+    .cf-corner {
+      position: absolute; color: #FFD700; font-size: 15px; z-index: 2;
+      text-shadow: 0 0 10px rgba(255,215,0,1); line-height: 1; pointer-events:none;
+    }
+    .cf-tl { top:5px; left:7px; }
+    .cf-tr { top:5px; right:7px; }
+    .cf-bl { bottom:5px; left:7px; }
+    .cf-br { bottom:5px; right:7px; }
+    .cf-label {
+      text-align:center; color:rgba(218,165,32,.9); font-size:9px;
+      letter-spacing:3px; padding:4px 0 2px; font-weight:700;
+      text-shadow: 0 0 8px rgba(255,215,0,.6);
+    }
+    .card-frame img {
+      display:block; width:100%; height:auto;
+      border-radius: 10px;
+      filter: brightness(1.18);
     }
     .card-reveal {
       animation: cardReveal 1.4s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
@@ -516,13 +548,23 @@ function showResult(type) {
   document.getElementById('my-type-display').textContent = r.title;
   history.replaceState(null, '', '?type=' + type);
   const wrap = document.getElementById('r-wrap');
-  wrap.innerHTML = '<div class="skel skel-block" id="r-skel"></div><img id="r-img" src="" alt="" style="display:none">';
-  const skel = document.getElementById('r-skel');
-  const img  = document.getElementById('r-img');
-  img.alt = r.title;
+  wrap.innerHTML =
+    `<div class="skel skel-block" id="r-skel"></div>
+     <div class="card-frame" id="r-frame" style="display:none">
+       <div class="cf-label">✦ &nbsp; K O R E A &nbsp; C O A S T &nbsp; G U A R D &nbsp; ✦</div>
+       <div class="cf-corner cf-tl">✦</div>
+       <div class="cf-corner cf-tr">✦</div>
+       <img id="r-img" src="" alt="${r.title}">
+       <div class="cf-corner cf-bl">✦</div>
+       <div class="cf-corner cf-br">✦</div>
+       <div class="cf-label">✦ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦</div>
+     </div>`;
+  const skel  = document.getElementById('r-skel');
+  const frame = document.getElementById('r-frame');
+  const img   = document.getElementById('r-img');
   img.onload  = () => {
-    skel.style.display = 'none';
-    img.style.display  = 'block';
+    skel.style.display  = 'none';
+    frame.style.display = 'block';
     const w = document.getElementById('r-wrap');
     w.classList.remove('card-reveal');
     void w.offsetWidth;
@@ -659,9 +701,9 @@ function addSparkles(wrapEl) {
   spots.forEach(([rx,ry], i) => {
     const s = document.createElement('div');
     s.textContent = icons[i];
-    s.style.cssText = `position:fixed;left:${rect.left+rect.width*rx}px;top:${rect.top+rect.height*ry}px;font-size:${22+Math.random()*12}px;pointer-events:none;z-index:9999;opacity:0;animation:sparkleFly .85s ${i*0.07}s ease forwards;`;
+    s.style.cssText = `position:fixed;left:${rect.left+rect.width*rx}px;top:${rect.top+rect.height*ry}px;font-size:${22+Math.random()*14}px;pointer-events:none;z-index:9999;opacity:0;animation:sparkleFly 1.6s ${i*0.1}s ease forwards;`;
     document.body.appendChild(s);
-    setTimeout(() => s.remove(), 1500);
+    setTimeout(() => s.remove(), 3000);
   });
 }
 
