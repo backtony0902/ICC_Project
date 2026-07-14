@@ -165,7 +165,7 @@
     .result-label { font-size:12px; font-weight:700; color:rgba(255,255,255,0.8); letter-spacing:2px; margin-bottom:4px; }
     .result-title { font-size:22px; font-weight:900; color:white; text-align:center; margin-bottom:14px; text-shadow:2px 2px 0 rgba(0,0,80,0.2); }
     .result-img-wrap {
-      width:calc(100% - 32px); max-width:320px; border-radius:20px; overflow:hidden;
+      width:100%; max-width:360px; border-radius:20px; overflow:hidden;
       box-shadow:0 8px 40px rgba(0,0,0,0.3), 0 0 0 3px rgba(255,255,255,0.25);
       margin:0 auto;
       background:rgba(255,255,255,0.15);
@@ -178,7 +178,7 @@
     .result-fallback .fe { font-size:40px; display:block; margin-bottom:8px; }
     .result-fallback .fd { font-size:14px; opacity:.9; line-height:1.6; }
     .share-nudge { font-size:14px; color:rgba(255,255,255,.9); text-align:center; margin-bottom:16px; font-weight:700; }
-    .btn-group { display:flex; flex-direction:column; gap:10px; width:100%; max-width:340px; }
+    .btn-group { display:flex; flex-direction:column; gap:10px; width:100%; max-width:360px; }
 
     /* ── 궁합 ── */
     .compat-section { width:100%; margin-top:36px; }
@@ -229,7 +229,7 @@
     .btn-insta:active { box-shadow:2px 2px 0 rgba(140,0,100,0.25); }
     .btn-kakao { background:#FEE500; color:#3C1E1E; box-shadow:4px 4px 0 rgba(180,150,0,0.3); }
     .btn-kakao:active { box-shadow:2px 2px 0 rgba(180,150,0,0.3); }
-    .friend-share-box { width:100%; max-width:380px; margin-top:16px; text-align:center; }
+    .friend-share-box { width:100%; max-width:360px; margin-top:16px; text-align:center; }
     .friend-share-label { font-size:13px; color:rgba(255,255,255,.8); margin-bottom:8px; }
 
     @media(max-width:360px){
@@ -320,7 +320,7 @@
         <button class="btn btn-primary" onclick="shareFriend()">💌 친구에게 공유하기</button>
       </div>
 
-      <div style="display:flex;gap:10px;width:100%;max-width:340px;margin-top:10px">
+      <div style="display:flex;gap:10px;width:100%;max-width:360px;margin-top:10px">
         <button class="btn btn-outline" onclick="restartTest()" style="flex:1">🔄 다시하기</button>
         <button class="btn btn-outline" onclick="location.href='index.html'" style="flex:1;border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 목록으로</button>
       </div>
