@@ -300,29 +300,28 @@
 
   <!-- ━━ 결과 화면 ━━ -->
   <div id="s-result" class="screen">
-    <div style="text-align:center;width:100%">
+    <div style="text-align:center;width:100%;display:flex;flex-direction:column;align-items:center">
       <div class="result-label">당신의 바다 유형은...</div>
       <div class="result-title" id="r-title"></div>
 
-      <div class="result-img-wrap" id="r-wrap">
-        <div class="skel skel-block" id="r-skel"></div>
-        <img id="r-img" src="" alt="결과카드" style="display:none">
-      </div>
+      <!-- 이미지 + 버튼 전체를 같은 너비 컨테이너로 묶음 -->
+      <div style="width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px">
+        <div class="result-img-wrap" id="r-wrap" style="width:100%;max-width:none;margin:0">
+          <div class="skel skel-block" id="r-skel"></div>
+          <img id="r-img" src="" alt="결과카드" style="display:none">
+        </div>
 
-      <div class="btn-group" style="margin-top:24px">
         <button class="btn btn-kakao"  onclick="shareKakao()">💬 카카오톡 공유</button>
         <button class="btn btn-insta"  onclick="shareInstagram()">📸 인스타 공유하기</button>
         <button class="btn btn-yellow" onclick="saveImage()">💾 이미지 저장</button>
-      </div>
 
-      <div class="friend-share-box">
-        <div class="friend-share-label">같이 바다 가고 싶은 친구에게 공유해보세요 🌊</div>
-        <button class="btn btn-primary" onclick="shareFriend()">💌 친구에게 공유하기</button>
-      </div>
+        <button class="btn btn-primary" onclick="shareFriend()" style="margin-top:6px">💌 친구에게 공유하기</button>
+        <div style="font-size:13px;color:rgba(255,255,255,.8);margin-top:-4px">같이 바다 가고 싶은 친구에게 공유해보세요 🌊</div>
 
-      <div style="display:flex;gap:10px;width:100%;max-width:360px;margin-top:10px">
-        <button class="btn btn-outline" onclick="restartTest()" style="flex:1">🔄 다시하기</button>
-        <button class="btn btn-outline" onclick="location.href='index.html'" style="flex:1;border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 목록으로</button>
+        <div style="display:flex;gap:10px;width:100%;margin-top:6px">
+          <button class="btn btn-outline" onclick="restartTest()" style="flex:1">🔄 다시하기</button>
+          <button class="btn btn-outline" onclick="location.href='index.html'" style="flex:1;border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 목록으로</button>
+        </div>
       </div>
 
       <!-- 궁합 -->
