@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>나의 바다 MBTI 심리테스트</title>
+  <meta property="og:title" content="나의 바다 MBTI 심리테스트">
+  <meta property="og:description" content="8개의 질문으로 알아보는 나의 바다 성향! 친구와 바다 궁합도 확인해보세요.">
+  <meta property="og:image" content="https://backtony0902.github.io/ICC_Project/thumbnail2.png">
+  <meta property="og:url" content="https://backtony0902.github.io/ICC_Project/mbti.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -221,6 +227,8 @@
     /* ── 추가 버튼 ── */
     .btn-insta { background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af); color:#fff; box-shadow:4px 4px 0 rgba(140,0,100,0.25); }
     .btn-insta:active { box-shadow:2px 2px 0 rgba(140,0,100,0.25); }
+    .btn-kakao { background:#FEE500; color:#3C1E1E; box-shadow:4px 4px 0 rgba(180,150,0,0.3); }
+    .btn-kakao:active { box-shadow:2px 2px 0 rgba(180,150,0,0.3); }
     .friend-share-box { width:100%; max-width:380px; margin-top:16px; text-align:center; }
     .friend-share-label { font-size:13px; color:rgba(255,255,255,.8); margin-bottom:8px; }
 
@@ -302,15 +310,19 @@
       </div>
 
       <div class="btn-group" style="margin-top:24px">
-        <button class="btn btn-yellow"  onclick="saveImage()">💾 이미지 저장</button>
-        <button class="btn btn-insta"   onclick="shareInstagram()">📸 인스타 공유하기</button>
-        <button class="btn btn-outline" onclick="restartTest()">🔄 다시 테스트하기</button>
-        <button class="btn btn-outline" onclick="location.href='index.html'" style="border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 다른 테스트 보러 가기</button>
+        <button class="btn btn-kakao"  onclick="shareKakao()">💬 카카오톡 공유</button>
+        <button class="btn btn-insta"  onclick="shareInstagram()">📸 인스타 공유하기</button>
+        <button class="btn btn-yellow" onclick="saveImage()">💾 이미지 저장</button>
       </div>
 
       <div class="friend-share-box">
         <div class="friend-share-label">같이 바다 가고 싶은 친구에게 공유해보세요 🌊</div>
         <button class="btn btn-primary" onclick="shareFriend()">💌 친구에게 공유하기</button>
+      </div>
+
+      <div style="display:flex;gap:10px;width:100%;max-width:340px;margin-top:10px">
+        <button class="btn btn-outline" onclick="restartTest()" style="flex:1">🔄 다시하기</button>
+        <button class="btn btn-outline" onclick="location.href='index.html'" style="flex:1;border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 목록으로</button>
       </div>
 
       <!-- 궁합 -->
@@ -480,6 +492,7 @@ function showResult(type) {
   const r = RESULTS[type];
   document.getElementById('r-title').textContent = r.title;
   document.getElementById('my-type-display').textContent = r.title;
+  history.replaceState(null, '', '?type=' + type);
   const wrap = document.getElementById('r-wrap');
   wrap.innerHTML = '<div class="skel skel-block" id="r-skel"></div><img id="r-img" src="" alt="" style="display:none">';
   const skel = document.getElementById('r-skel');
@@ -609,8 +622,21 @@ function shareFriend() {
 function showInstaModal() { document.getElementById('insta-modal').style.display='flex'; }
 function closeModal()     { document.getElementById('insta-modal').style.display='none'; }
 
+// ── 카카오톡 공유 ──
+function shareKakao() {
+  const r = RESULTS[myType];
+  const text = `${r.shareText}\n👉 ${location.href}`;
+  if (navigator.share) {
+    navigator.share({ title:'나의 바다 MBTI 심리테스트', text, url:location.href }).catch(()=>{});
+  } else {
+    copyText(location.href);
+    toast('링크가 복사됐어요! 카카오톡에 붙여넣기 해보세요. 💬');
+  }
+}
+
 // ── 다시 시작 ──
 function restartTest() {
+  history.replaceState(null, '', location.pathname);
   document.getElementById('compat-result').classList.remove('show');
   document.getElementById('friend-sel').value = '';
   show('s-start');
@@ -628,6 +654,12 @@ function fallbackCopy(t) {
   try { document.execCommand('copy'); } catch(e) {}
   document.body.removeChild(ta);
 }
+
+// ── URL 파라미터로 결과 바로 보기 ──
+(function() {
+  const t = new URLSearchParams(location.search).get('type');
+  if (t && RESULTS[t]) showResult(t);
+})();
 
 // ── 토스트 ──
 let toastT;
