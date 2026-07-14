@@ -3,201 +3,567 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>바다 테스트</title>
+  <title>KOREA COAST GUARD RESTORE PROJECT</title>
   <meta property="og:title" content="친구야, 나랑 바다 가자!">
   <meta property="og:description" content="바다에서 당신은 어떤 사람인가요? 해양경찰 상황판단 테스트와 바다 MBTI로 알아보세요.">
   <meta property="og:image" content="https://backtony0902.github.io/ICC_Project/thumbnail.png">
   <meta property="og:url" content="https://backtony0902.github.io/ICC_Project/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg:     #070c1a;
+      --border: rgba(70, 130, 220, 0.25);
+      --cyan:   #4dd9ff;
+      --red:    #ff3333;
+      --yellow: #f0a500;
+      --muted:  rgba(160, 196, 255, 0.65);
+    }
+
     body {
       font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: white;
       min-height: 100vh;
-      background: linear-gradient(160deg, #0a1628 0%, #0d2a4a 40%, #0a3d6b 70%, #0a2a50 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(4, 8, 22, 0.98);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 20px;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .nav-badge {
+      width: 38px; height: 38px;
+      background: #0e1f4a;
+      border: 2px solid #3a6abf;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    .nav-logo-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6.5px;
+      color: #a0c4ff;
+      line-height: 1.9;
+    }
+
+    .nav-links {
+      display: flex;
+      flex: 1;
+    }
+
+    .nav-link {
+      height: 56px;
+      padding: 0 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow-x: hidden;
+      justify-content: center;
+      gap: 2px;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      cursor: pointer;
     }
 
-    /* 별 배경 */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 20% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 80% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 40% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 90% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.2) 0%, transparent 100%);
-      pointer-events: none; z-index: 0;
+    .nl-en {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7.5px;
+      color: rgba(160, 196, 255, 0.45);
     }
 
-    /* 파도 */
-    body::after {
-      content: '';
-      position: fixed;
-      width: 250%; height: 300px;
-      bottom: -100px; left: -75%;
-      background: rgba(100,180,255,0.07);
-      border-radius: 45%;
-      animation: wave 12s linear infinite;
-      z-index: 0;
-    }
-    @keyframes wave { 0%{transform:translateX(0)} 100%{transform:translateX(20%)} }
-
-    /* 컨테이너 */
-    .wrap {
-      position: relative; z-index: 10;
-      width: 100%; max-width: 900px;
-      padding: 60px 24px 80px;
-      display: flex; flex-direction: column; align-items: center;
+    .nl-ko {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(160, 196, 255, 0.45);
     }
 
-    /* 헤더 */
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid rgba(100,180,255,0.4);
-      color: #7dd3fc;
-      font-size: 12px; font-weight: 700; letter-spacing: 2px;
-      padding: 6px 18px; border-radius: 50px;
-      background: rgba(100,180,255,0.08);
-      margin-bottom: 24px;
-    }
-    .badge::before { content: '⚓'; font-size: 14px; }
+    .nav-link.active .nl-en,
+    .nav-link.active .nl-ko { color: var(--cyan); }
+    .nav-link.active { border-bottom-color: var(--cyan); }
 
-    .main-title {
-      font-size: clamp(28px, 6vw, 48px);
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .nav-btn {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: rgba(160,196,255,0.7);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 52px 24px 36px;
+    }
+
+    .error-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(12px, 2.2vw, 18px);
+      color: var(--red);
+      text-align: center;
+      margin-bottom: 18px;
+      text-shadow: 0 0 24px rgba(255,50,50,0.55);
+      letter-spacing: 4px;
+    }
+
+    .error-title {
+      font-size: clamp(22px, 4.5vw, 40px);
       font-weight: 900;
       color: white;
       text-align: center;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      letter-spacing: -1px;
+      margin-bottom: 14px;
     }
-    .main-title span { color: #7dd3fc; }
 
-    .main-sub {
-      font-size: 15px;
-      color: rgba(255,255,255,0.55);
+    .error-sub {
+      font-size: 14px;
+      color: var(--muted);
       text-align: center;
-      margin-bottom: 56px;
-      line-height: 1.7;
+      line-height: 2;
+      margin-bottom: 36px;
     }
 
-    /* 카드 그리드 */
-    .grid {
+    /* Progress */
+    .progress-box {
+      width: 100%; max-width: 700px;
+      background: rgba(6, 14, 38, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 22px;
+      margin-bottom: 28px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .progress-pct {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: var(--cyan);
+    }
+
+    .progress-track {
+      width: 100%; height: 13px;
+      background: rgba(0, 8, 36, 0.9);
+      border-radius: 4px;
+      border: 1px solid rgba(70,130,220,0.18);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1a5aff, var(--cyan));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 14px rgba(77,217,255,0.5);
+    }
+
+    /* Mission cards */
+    .missions-hint {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 18px;
+      letter-spacing: 1px;
+    }
+
+    .missions-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      width: 100%;
+      gap: 18px;
+      width: 100%; max-width: 900px;
     }
 
-    .card {
+    .mission-card {
+      background: rgba(5, 12, 34, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 26px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
       position: relative;
-      border-radius: 24px;
       overflow: hidden;
-      cursor: pointer;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(12px);
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-    }
-    .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(100,180,255,0.3);
-      border-color: rgba(100,180,255,0.3);
+      transition: border-color 0.3s;
     }
 
-    .card-thumb {
-      width: 100%; aspect-ratio: 16/9;
-      background: rgba(255,255,255,0.05);
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .card-thumb::after {
+    .mission-card::before {
       content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 40%, rgba(0,10,30,0.7) 100%);
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
     }
 
-    .card-body {
-      padding: 20px 22px 24px;
+    .mission-card.done { border-color: rgba(0,255,136,0.35); }
+    .mission-card.done::before {
+      background: linear-gradient(90deg, transparent, #00ff88, transparent);
     }
-    .card-tag {
-      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-      color: #7dd3fc; margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-    .card-title {
-      font-size: 18px; font-weight: 900;
-      color: white; line-height: 1.35;
-      margin-bottom: 8px;
-    }
-    .card-desc {
-      font-size: 13px; color: rgba(255,255,255,0.5);
-      line-height: 1.6;
-    }
-    .card-arrow {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 16px; font-size: 13px; font-weight: 700;
-      color: #7dd3fc;
-      transition: gap 0.2s;
-    }
-    .card:hover .card-arrow { gap: 10px; }
 
-    /* 하단 문구 */
-    .footer-hint {
-      margin-top: 48px;
-      font-size: 13px; color: rgba(255,255,255,0.3);
+    .mission-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--cyan);
+      letter-spacing: 1.5px;
+    }
+    .mission-card.done .mission-num { color: #00ff88; }
+
+    .mission-title {
+      font-size: 22px; font-weight: 900;
+      color: white;
+      line-height: 1.3;
+    }
+
+    .mission-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+      flex: 1;
+    }
+
+    .mission-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--yellow);
+      color: #1a0800;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 16px; font-weight: 900;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+    .mission-btn:hover { background: #ffb800; transform: translateY(-2px); }
+    .mission-btn:active { transform: translateY(0); }
+
+    .mission-btn.done {
+      background: rgba(0,255,136,0.08);
+      color: #00ff88;
+      border: 1px solid rgba(0,255,136,0.3);
+      font-size: 13px;
+    }
+    .mission-btn.done:hover { background: rgba(0,255,136,0.13); transform: none; }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      width: 100%;
+      background: rgba(4, 8, 20, 0.98);
+      border-top: 1px solid var(--border);
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .status-current {
+      display: flex; flex-direction: column;
+      gap: 5px;
+      min-width: 140px;
+    }
+
+    .status-tag {
+      font-size: 10px; font-weight: 700;
+      color: var(--cyan);
+      border: 1px solid rgba(77,217,255,0.4);
+      border-radius: 3px;
+      padding: 2px 8px;
+      width: fit-content;
+    }
+
+    .status-text {
+      font-size: 12px; font-weight: 700;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.55;
+    }
+
+    .status-div {
+      width: 1px; height: 36px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .status-items {
+      display: flex;
+      gap: 18px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .status-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 3px;
+    }
+
+    .s-icon { font-size: 20px; }
+
+    .s-name {
+      font-size: 9px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .s-sw {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+    }
+    .s-sw.off { color: var(--red); }
+    .s-sw.on  { color: #00ff88; }
+
+    .status-radio {
+      margin-left: auto;
+      background: rgba(6,14,38,0.8);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.75;
+      text-align: right;
+      flex-shrink: 0;
+      max-width: 210px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
       text-align: center;
+      padding: 10px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: rgba(70,100,160,0.35);
+      background: rgba(4,8,20,0.98);
+    }
+
+    @media (max-width: 600px) {
+      .nav-logo-text { display: none; }
+      .nav-link { padding: 0 10px; }
+      .nl-en { font-size: 6px; }
+      .status-bar { padding: 12px 16px; gap: 12px; }
+      .status-radio { display: none; }
+      .status-items { gap: 10px; }
     }
   </style>
 </head>
 <body>
-  <audio autoplay loop><source src="bgm.mp3" type="audio/mpeg"></audio>
+  <audio id="bgm" loop><source src="bgm.mp3" type="audio/mpeg"></audio>
 
-  <div class="wrap">
-    <div class="badge">KOREA COAST GUARD</div>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-badge">⚓</div>
+      <div class="nav-logo-text">KOREA COAST GUARD<br>RESTORE PROJECT</div>
+    </div>
+    <div class="nav-links">
+      <div class="nav-link"><span class="nl-en">.ABOUT</span><span class="nl-ko">세계관</span></div>
+      <div class="nav-link active"><span class="nl-en">.MISSION</span><span class="nl-ko">테스트</span></div>
+      <div class="nav-link"><span class="nl-en">.RESTORE</span><span class="nl-ko">복원 현황</span></div>
+      <div class="nav-link"><span class="nl-en">.ARCHIVE</span><span class="nl-ko">기록 보관소</span></div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" id="bgm-btn" onclick="toggleBGM()">🔇</button>
+      <button class="nav-btn">?</button>
+      <button class="nav-btn" onclick="sharePage()">⬆</button>
+    </div>
+  </nav>
 
-    <h1 class="main-title">친구야,<br><span>나랑 바다 가자!</span></h1>
-    <p class="main-sub">바다에서 당신은 어떤 사람인가요?<br>테스트로 알아보세요.</p>
-
-    <div class="grid">
-
-      <!-- 카드 1: 해양경찰 상황판단 -->
-      <div class="card" onclick="location.href='cover.html'">
-        <div class="card-thumb" style="background-image:url('thumbnail.png')"></div>
-        <div class="card-body">
-          <div class="card-tag">🚨 상황판단 게임</div>
-          <div class="card-title">당신의 판단으로<br>몇 명을 살릴 수 있을까?</div>
-          <div class="card-desc">신입 해양경찰이 되어 긴박한 바다 상황을 판단해보세요.</div>
-          <div class="card-arrow">테스트 시작하기 →</div>
-        </div>
-      </div>
-
-      <!-- 카드 2: 바다 MBTI -->
-      <div class="card" onclick="location.href='mbti.html'">
-        <div class="card-thumb" style="background-image:url('thumbnail2.png')"></div>
-        <div class="card-body">
-          <div class="card-tag">🌊 심리테스트</div>
-          <div class="card-title">나의 바다 MBTI<br>심리테스트</div>
-          <div class="card-desc">8개의 질문으로 나의 바다 유형을 알아보고 친구와 궁합을 확인해보세요.</div>
-          <div class="card-arrow">테스트 시작하기 →</div>
-        </div>
-      </div>
-
+  <!-- MAIN -->
+  <main>
+    <div class="error-label">⚠ SYSTEM ERROR ⚠</div>
+    <div class="error-title">해양경찰청을 찾을 수 없습니다.</div>
+    <div class="error-sub">
+      바다의 일부 기능이 비활성화되었습니다.<br>
+      당신의 선택으로 복원을 시작하세요.
     </div>
 
-    <div class="footer-hint">결과를 같이 바다 가고 싶은 사람에게 공유해보세요 🌊</div>
+    <div class="progress-box">
+      <div class="progress-header">
+        <span class="progress-label">복원율</span>
+        <span class="progress-pct" id="restore-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="missions-hint">복원을 위한 미션을 선택하세요.</div>
+
+    <div class="missions-grid">
+      <div class="mission-card" id="card-game">
+        <div class="mission-num">[ RESTORE MISSION 01 ]</div>
+        <div class="mission-title">구조 대응 시스템 복구</div>
+        <div class="mission-desc">위기 상황에서 당신의 판단을 통해 사라진 구조 기능을 복원합니다.</div>
+        <button class="mission-btn" id="btn-game" onclick="location.href='cover.html'">테스트 시작 →</button>
+      </div>
+
+      <div class="mission-card" id="card-mbti">
+        <div class="mission-num">[ RESTORE MISSION 02 ]</div>
+        <div class="mission-title">바다 심리테스트</div>
+        <div class="mission-desc">당신의 바다 성향을 분석하여 당신만의 바다 유형을 확인합니다.</div>
+        <button class="mission-btn" id="btn-mbti" onclick="location.href='mbti.html'">테스트 시작 →</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="status-current">
+      <span class="status-tag">현재 상태</span>
+      <span class="status-text" id="status-text">바다의 역할이<br>사라지고 있습니다.</span>
+    </div>
+    <div class="status-div"></div>
+    <div class="status-items">
+      <div class="status-item">
+        <span class="s-icon">🔭</span>
+        <span class="s-name">실종자 수색</span>
+        <span class="s-sw off" id="sw-1">OFF</span>
+      </div>
+      <div class="status-item">
+        <span class="s-icon">🛟</span>
+        <span class="s-name">해양 구조</span>
+        <span class="s-sw off" id="sw-2">OFF</span>
+      </div>
+      <div class="status-item">
+        <span class="s-icon">🚢</span>
+        <span class="s-name">불법조업 단속</span>
+        <span class="s-sw off" id="sw-3">OFF</span>
+      </div>
+      <div class="status-item">
+        <span class="s-icon">🛢</span>
+        <span class="s-name">해양오염 대응</span>
+        <span class="s-sw off" id="sw-4">OFF</span>
+      </div>
+      <div class="status-item">
+        <span class="s-icon">⚓</span>
+        <span class="s-name">해상교통 안전관리</span>
+        <span class="s-sw off" id="sw-5">OFF</span>
+      </div>
+    </div>
+    <div class="status-div"></div>
+    <div class="status-radio" id="radio-msg">
+      바다에 문제가<br>생기고 있습니다.<br>지금, 복원이 필요합니다.
+    </div>
   </div>
+
+  <footer>© 2026 KOREA COAST GUARD RESTORE PROJECT</footer>
+
+  <script>
+    // ── 미션 완료 상태 읽기 ──
+    const done = {
+      game: localStorage.getItem('icc_game_done') === 'true',
+      mbti: localStorage.getItem('icc_mbti_done') === 'true'
+    };
+    const count = (done.game ? 1 : 0) + (done.mbti ? 1 : 0);
+    const rate  = count * 50;
+
+    // 복원율
+    document.getElementById('restore-pct').textContent = rate + '%';
+    setTimeout(() => { document.getElementById('progress-fill').style.width = rate + '%'; }, 300);
+
+    // 미션 카드 상태
+    if (done.game) {
+      document.getElementById('card-game').classList.add('done');
+      const b = document.getElementById('btn-game');
+      b.textContent = '✔ 복원 완료 — 다시하기 →';
+      b.classList.add('done');
+    }
+    if (done.mbti) {
+      document.getElementById('card-mbti').classList.add('done');
+      const b = document.getElementById('btn-mbti');
+      b.textContent = '✔ 복원 완료 — 다시하기 →';
+      b.classList.add('done');
+    }
+
+    // 상태 스위치
+    function setOn(id) {
+      const el = document.getElementById(id);
+      el.textContent = 'ON';
+      el.classList.replace('off', 'on');
+    }
+    if (done.game) { setOn('sw-1'); setOn('sw-2'); }
+    if (done.mbti) { setOn('sw-4'); setOn('sw-5'); }
+    if (done.game && done.mbti) setOn('sw-3');
+
+    // 상태 텍스트
+    const statusMsgs = [
+      '바다의 역할이<br>사라지고 있습니다.',
+      '복원이 시작되었습니다.',
+      '모든 시스템이<br>복원되었습니다.'
+    ];
+    const radioMsgs = [
+      '바다에 문제가<br>생기고 있습니다.<br>지금, 복원이 필요합니다.',
+      '복원이 진행 중입니다.<br>계속하세요.',
+      '모든 시스템이<br>정상화되었습니다.<br>감사합니다.'
+    ];
+    document.getElementById('status-text').innerHTML = statusMsgs[count];
+    document.getElementById('radio-msg').innerHTML   = radioMsgs[count];
+
+    // BGM
+    let bgmOn = false;
+    const bgm    = document.getElementById('bgm');
+    const bgmBtn = document.getElementById('bgm-btn');
+
+    function toggleBGM() {
+      if (bgmOn) { bgm.pause(); bgmOn = false; bgmBtn.textContent = '🔇'; }
+      else { bgm.play(); bgmOn = true; bgmBtn.textContent = '🔊'; }
+    }
+    document.addEventListener('click', () => {
+      if (!bgmOn) bgm.play().then(() => { bgmOn = true; bgmBtn.textContent = '🔊'; }).catch(() => {});
+    }, { once: true });
+
+    // 공유
+    function sharePage() {
+      if (navigator.share) navigator.share({ title: 'KOREA COAST GUARD RESTORE PROJECT', url: location.href }).catch(() => {});
+      else if (navigator.clipboard) { navigator.clipboard.writeText(location.href); alert('링크가 복사됐어요!'); }
+    }
+  </script>
 </body>
 </html>

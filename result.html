@@ -38,12 +38,10 @@
 <script>
 
 const params=new URLSearchParams(location.search);
-
 const score=params.get("score");
-
 document.getElementById("score").innerHTML=
-
 "당신은 "+score+"점을 획득했습니다.<br><br>실제 해양경찰은 매일 이런 판단을 하고 있습니다.";
+localStorage.setItem('icc_game_done', 'true');
 
 </script>
 

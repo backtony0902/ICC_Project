@@ -549,6 +549,7 @@ function calcResult() {
 // ── 결과 표시 ──
 function showResult(type) {
   myType = type;
+  localStorage.setItem('icc_mbti_done', 'true');
   const r = RESULTS[type];
   document.getElementById('r-title').textContent = r.title;
   document.getElementById('my-type-display').textContent = r.title;
