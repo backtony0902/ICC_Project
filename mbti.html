@@ -214,20 +214,14 @@
 
     /* ── 카드 등장 애니메이션 ── */
     @keyframes cardReveal {
-      0%   { transform: rotate(0deg) scale(0.1); opacity: 0; }
-      55%  { transform: rotate(680deg) scale(1.12); opacity: 1; }
-      72%  { transform: rotate(705deg) scale(0.93); }
-      86%  { transform: rotate(720deg) scale(1.06); }
-      100% { transform: rotate(720deg) scale(1); }
-    }
-    @keyframes cardFlash {
-      0%, 68% { filter: brightness(1); }
-      80%     { filter: brightness(1.6) drop-shadow(0 0 24px rgba(255,220,80,.9)); }
-      100%    { filter: brightness(1); }
+      0%   { transform: rotate(0deg) scale(0.1);    opacity: 0; filter: brightness(1); }
+      55%  { transform: rotate(680deg) scale(1.12); opacity: 1; filter: brightness(1); }
+      72%  { transform: rotate(705deg) scale(0.93);             filter: brightness(1); }
+      84%  { transform: rotate(720deg) scale(1.08);             filter: brightness(2.2) drop-shadow(0 0 32px rgba(255,215,0,1)) drop-shadow(0 0 60px rgba(255,180,0,.7)); }
+      100% { transform: rotate(720deg) scale(1);                filter: brightness(1); }
     }
     .card-reveal {
-      animation: cardReveal 1.2s cubic-bezier(0.34, 1.2, 0.64, 1) forwards,
-                 cardFlash 1.2s ease forwards;
+      animation: cardReveal 1.3s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
       transform-origin: center center;
     }
 
@@ -324,7 +318,7 @@
       <div class="result-title" id="r-title"></div>
 
       <!-- 이미지 + 버튼 전체를 같은 너비 컨테이너로 묶음 -->
-      <div style="width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px">
+      <div style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:10px">
         <div class="result-img-wrap" id="r-wrap" style="width:100%;max-width:none;margin:0">
           <div class="skel skel-block" id="r-skel"></div>
           <img id="r-img" src="" alt="결과카드" style="display:none">
