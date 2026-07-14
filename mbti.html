@@ -111,14 +111,13 @@
     }
     .start-sub { font-size: 15px; color: rgba(255,255,255,0.9); text-align:center; margin-bottom:20px; }
     .thumb-wrap {
-      width:100%; max-width:380px;
+      width:100%;
       border-radius:16px; overflow:hidden;
       box-shadow:0 8px 32px rgba(0,0,0,0.2);
-      margin:12px 0; min-height:180px;
+      margin:12px 0;
       background:rgba(255,255,255,0.15);
-      display:flex; align-items:center; justify-content:center;
     }
-    .thumb-wrap img { width:100%; height:auto; display:block; object-fit:contain; }
+    .thumb-wrap img { width:100%; height:auto; display:block; }
     .thumb-fallback { text-align:center; padding:40px 20px; color:white; }
     .tags { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:14px 0; }
     .tag {
@@ -297,36 +296,33 @@
 
   <!-- ━━ 시작 화면 ━━ -->
   <div id="s-start" class="screen active">
-    <div style="text-align:center;width:100%;display:flex;flex-direction:column;align-items:center">
+    <div style="text-align:center;width:100%;max-width:440px;margin:0 auto">
       <div class="bubble">친구야, 나랑 바다 가자! 🌊</div>
       <div class="start-title">나의 바다 MBTI<br>심리테스트</div>
       <div class="start-sub">당신은 어떤 바다 유형일까?</div>
 
-      <!-- 이미지 + 버튼 동일 너비 컨테이너 -->
-      <div style="width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:12px">
-        <div class="thumb-wrap" style="width:100%;max-width:none;margin:0">
-          <img src="./thumbnail2.png" alt="바다 MBTI"
-            onerror="this.style.display='none';document.getElementById('tf').style.display='block'">
-          <div id="tf" class="thumb-fallback" style="display:none">
-            <div style="font-size:60px">🌊</div>
-            <div style="font-size:18px;font-weight:900;margin-top:8px">나의 바다 MBTI</div>
-            <div style="font-size:13px;opacity:.8;margin-top:6px">8개의 질문으로 알아보는 바다 성향</div>
-          </div>
+      <div class="thumb-wrap">
+        <img src="./thumbnail2.png" alt="바다 MBTI"
+          onerror="this.style.display='none';document.getElementById('tf').style.display='block'">
+        <div id="tf" class="thumb-fallback" style="display:none">
+          <div style="font-size:60px">🌊</div>
+          <div style="font-size:18px;font-weight:900;margin-top:8px">나의 바다 MBTI</div>
+          <div style="font-size:13px;opacity:.8;margin-top:6px">8개의 질문으로 알아보는 바다 성향</div>
         </div>
-
-        <div class="tags" style="justify-content:center">
-          <span class="tag">#친구야바다가자</span>
-          <span class="tag">#여름</span>
-          <span class="tag">#물놀이</span>
-          <span class="tag">#바다MBTI</span>
-          <span class="tag">#바다궁합</span>
-        </div>
-        <div style="font-size:13px;color:rgba(255,255,255,.75)">
-          8개의 질문으로 알아보는 나의 바다 성향
-        </div>
-        <button class="btn btn-primary" onclick="startTest()" style="width:100%;margin-top:4px">START 🚢</button>
-        <div class="share-hint">결과를 같이 바다 가고 싶은 사람에게 공유해보세요!</div>
       </div>
+
+      <div class="tags">
+        <span class="tag">#친구야바다가자</span>
+        <span class="tag">#여름</span>
+        <span class="tag">#물놀이</span>
+        <span class="tag">#바다MBTI</span>
+        <span class="tag">#바다궁합</span>
+      </div>
+      <div style="font-size:13px;color:rgba(255,255,255,.75);margin-bottom:14px">
+        8개의 질문으로 알아보는 나의 바다 성향
+      </div>
+      <button class="btn btn-primary" onclick="startTest()" style="width:100%">START 🚢</button>
+      <div class="share-hint" style="margin-top:12px">결과를 같이 바다 가고 싶은 사람에게 공유해보세요!</div>
     </div>
   </div>
 
