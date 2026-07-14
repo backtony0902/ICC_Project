@@ -248,6 +248,16 @@
       background: linear-gradient(90deg, transparent, #00ff88, transparent);
     }
 
+    .mission-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background-size: cover;
+      background-position: center;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      opacity: 0.85;
+    }
+
     .mission-num {
       font-family: 'Press Start 2P', monospace;
       font-size: 8px;
@@ -438,6 +448,7 @@
 
     <div class="missions-grid">
       <div class="mission-card" id="card-game">
+        <div class="mission-thumb" style="background-image:url('thumbnail.png')"></div>
         <div class="mission-num">[ RESTORE MISSION 01 ]</div>
         <div class="mission-title">구조 대응 시스템 복구</div>
         <div class="mission-desc">위기 상황에서 당신의 판단을 통해 사라진 구조 기능을 복원합니다.</div>
@@ -445,6 +456,7 @@
       </div>
 
       <div class="mission-card" id="card-mbti">
+        <div class="mission-thumb" style="background-image:url('thumbnail2.png')"></div>
         <div class="mission-num">[ RESTORE MISSION 02 ]</div>
         <div class="mission-title">바다 심리테스트</div>
         <div class="mission-desc">당신의 바다 성향을 분석하여 당신만의 바다 유형을 확인합니다.</div>
