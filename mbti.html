@@ -372,6 +372,11 @@
         <button class="btn btn-primary" onclick="shareFriend()" style="margin-top:6px">💌 친구에게 공유하기</button>
         <div style="font-size:13px;color:rgba(255,255,255,.8);margin-top:-4px">같이 바다 가고 싶은 친구에게 공유해보세요 🌊</div>
 
+        <div id="friend-compat-wrap" style="display:none">
+          <button class="btn" onclick="checkCompatWithFriend()" style="width:100%;background:linear-gradient(135deg,#0d47a1,#1565c0);color:white;box-shadow:4px 4px 0 rgba(0,30,120,0.3)">💑 친구와 바다 궁합 보기</button>
+          <div id="friend-compat-label" style="font-size:13px;color:rgba(255,255,255,.85);text-align:center;margin-top:6px"></div>
+        </div>
+
         <div style="display:flex;gap:10px;width:100%;margin-top:6px">
           <button class="btn btn-outline" onclick="restartTest()" style="flex:1">🔄 다시하기</button>
           <button class="btn btn-outline" onclick="location.href='index.html'" style="flex:1;border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 목록으로</button>
@@ -469,7 +474,7 @@ const COMPAT = {
 };
 
 // ── 상태 ──
-let curQ = 0, scores = {}, answers = [], myType = null;
+let curQ = 0, scores = {}, answers = [], myType = null, fromType = null;
 const EMOJIS = ['🌊','🚢','🐚','📡','🌙','🛢','🚨','🧭'];
 
 // ── 화면 전환 ──
@@ -546,6 +551,15 @@ function showResult(type) {
   document.getElementById('r-title').textContent = r.title;
   document.getElementById('my-type-display').textContent = r.title;
   history.replaceState(null, '', '?type=' + type);
+
+  // 친구 공유 링크로 들어온 경우 궁합 버튼 표시
+  const fcWrap = document.getElementById('friend-compat-wrap');
+  if (fromType && fromType !== type && RESULTS[fromType]) {
+    document.getElementById('friend-compat-label').textContent = `${RESULTS[fromType].title} 친구가 공유한 테스트예요!`;
+    fcWrap.style.display = 'block';
+  } else {
+    fcWrap.style.display = 'none';
+  }
   const wrap = document.getElementById('r-wrap');
   wrap.innerHTML =
     `<div class="skel skel-block" id="r-skel"></div>
@@ -598,16 +612,29 @@ function retryImg() {
   img.src = r.image + '?t=' + Date.now();
 }
 
+// ── 공유 URL (친구는 시작화면부터 보도록 ?from= 사용) ──
+function getShareUrl() {
+  return location.origin + location.pathname + '?from=' + myType;
+}
+
 // ── 공유 ──
 function shareResult() {
   const r = RESULTS[myType];
-  const text = r.shareText + '\n👉 ' + location.href;
+  const url = getShareUrl();
+  const text = r.shareText + '\n👉 ' + url;
   if (navigator.share) {
-    navigator.share({ title:'나의 바다 MBTI 심리테스트', text:r.shareText, url:location.href }).catch(()=>{});
+    navigator.share({ title:'나의 바다 MBTI 심리테스트', text:r.shareText, url }).catch(()=>{});
   } else {
     copyText(text);
     toast('링크가 복사됐어요! 같이 바다 가고 싶은 사람에게 보내보세요. 🌊');
   }
+}
+
+// ── 친구 공유 링크로 들어온 경우 궁합 바로 확인 ──
+function checkCompatWithFriend() {
+  document.getElementById('friend-sel').value = fromType;
+  checkCompat();
+  setTimeout(() => document.getElementById('compat-section').scrollIntoView({ behavior:'smooth' }), 100);
 }
 
 // ── 이미지 저장 ──
@@ -632,7 +659,7 @@ async function shareInstagram() {
       const blob = await resp.blob();
       const file = new File([blob], `나의바다MBTI_${r.name}.png`, { type: blob.type });
       if (navigator.canShare && navigator.canShare({ files:[file] })) {
-        await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + location.href });
+        await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + getShareUrl() });
         return;
       }
     } catch(e) {}
@@ -680,9 +707,10 @@ function shareCompat() {
 // ── 친구 공유 ──
 function shareFriend() {
   const r = RESULTS[myType];
-  const text = `${r.title}\n\n너도 해봐! 바다 MBTI 👉 ${location.href}`;
+  const url = getShareUrl();
+  const text = `${r.title}\n\n너도 해봐! 바다 MBTI 👉 ${url}`;
   if (navigator.share) {
-    navigator.share({ title:'나의 바다 MBTI 심리테스트', text, url:location.href }).catch(()=>{});
+    navigator.share({ title:'나의 바다 MBTI 심리테스트', text, url }).catch(()=>{});
   } else {
     copyText(text);
     toast('링크가 복사됐어요! 같이 바다 가고 싶은 사람에게 보내보세요. 🌊');
@@ -713,11 +741,12 @@ function closeModal()     { document.getElementById('insta-modal').style.display
 // ── 카카오톡 공유 ──
 function shareKakao() {
   const r = RESULTS[myType];
-  const text = `${r.shareText}\n👉 ${location.href}`;
+  const url = getShareUrl();
+  const text = `${r.shareText}\n👉 ${url}`;
   if (navigator.share) {
-    navigator.share({ title:'나의 바다 MBTI 심리테스트', text, url:location.href }).catch(()=>{});
+    navigator.share({ title:'나의 바다 MBTI 심리테스트', text, url }).catch(()=>{});
   } else {
-    copyText(location.href);
+    copyText(url);
     toast('링크가 복사됐어요! 카카오톡에 붙여넣기 해보세요. 💬');
   }
 }
@@ -743,10 +772,16 @@ function fallbackCopy(t) {
   document.body.removeChild(ta);
 }
 
-// ── URL 파라미터로 결과 바로 보기 ──
+// ── URL 파라미터 처리 ──
 (function() {
-  const t = new URLSearchParams(location.search).get('type');
-  if (t && RESULTS[t]) showResult(t);
+  const params = new URLSearchParams(location.search);
+  const t = params.get('type');
+  const f = params.get('from');
+  if (f && RESULTS[f]) {
+    fromType = f; // 친구 공유 링크 → 시작화면 유지, fromType 저장
+  } else if (t && RESULTS[t]) {
+    showResult(t); // 직접 결과 링크
+  }
 })();
 
 // ── 토스트 ──
