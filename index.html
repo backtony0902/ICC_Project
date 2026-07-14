@@ -16,7 +16,7 @@
 
     :root {
       --bg:     #070c1a;
-      --border: rgba(70, 130, 220, 0.25);
+      --border: rgba(70, 130, 220, 0.3);
       --cyan:   #4dd9ff;
       --red:    #ff3333;
       --yellow: #f0a500;
@@ -25,11 +25,94 @@
 
     body {
       font-family: 'Noto Sans KR', sans-serif;
-      background: var(--bg);
+      background: #060b18;
       color: white;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── 배경 그리드 오버레이 ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        linear-gradient(rgba(30,80,200,0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,80,200,0.055) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── 스캔라인 ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.12) 3px, rgba(0,0,0,0.12) 4px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ── 사이드 배경 이미지 ── */
+    .bg-left, .bg-right {
+      position: fixed;
+      top: 56px; bottom: 0;
+      width: clamp(160px, 20vw, 280px);
+      background-size: cover;
+      background-position: center top;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .bg-left {
+      left: 0;
+      background-image: url('thumbnail.png');
+      filter: brightness(0.55) saturate(0.7);
+      -webkit-mask-image: linear-gradient(to right, black 0%, black 40%, transparent 100%);
+      mask-image: linear-gradient(to right, black 0%, black 40%, transparent 100%);
+    }
+    .bg-right {
+      right: 0;
+      background-image: url('thumbnail2.png');
+      filter: brightness(0.55) saturate(0.7);
+      -webkit-mask-image: linear-gradient(to left, black 0%, black 40%, transparent 100%);
+      mask-image: linear-gradient(to left, black 0%, black 40%, transparent 100%);
+    }
+
+    /* ── 비 레이어 ── */
+    .rain-wrap {
+      position: fixed; inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .drop {
+      position: absolute;
+      top: -60px;
+      width: 1.5px;
+      background: linear-gradient(transparent, rgba(150,200,255,0.55));
+      border-radius: 2px;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) translateX(-30px); opacity: 0; }
+    }
+
+    /* ── 스윕 라인 ── */
+    .sweep {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 160px;
+      background: linear-gradient(transparent, rgba(77,217,255,0.05), transparent);
+      animation: sweep 12s linear infinite;
+      pointer-events: none;
+      z-index: 5;
+    }
+    @keyframes sweep {
+      0%   { transform: translateY(-160px); }
+      100% { transform: translateY(100vh); }
     }
 
     /* ── NAV ── */
@@ -38,18 +121,14 @@
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: rgba(4, 8, 22, 0.98);
+      background: rgba(3, 7, 18, 0.97);
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
+      position: sticky; top: 0;
       z-index: 100;
-      gap: 0;
     }
 
     .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
       padding-right: 20px;
       border-right: 1px solid var(--border);
       flex-shrink: 0;
@@ -71,46 +150,26 @@
       line-height: 1.9;
     }
 
-    .nav-links {
-      display: flex;
-      flex: 1;
-    }
+    .nav-links { display: flex; flex: 1; }
 
     .nav-link {
-      height: 56px;
-      padding: 0 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
+      height: 56px; padding: 0 18px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
       text-decoration: none;
       border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-      cursor: pointer;
+      transition: all 0.2s; cursor: pointer;
     }
-
     .nl-en {
       font-family: 'Press Start 2P', monospace;
-      font-size: 7.5px;
-      color: rgba(160, 196, 255, 0.45);
+      font-size: 7.5px; color: rgba(160,196,255,0.4);
     }
-
-    .nl-ko {
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(160, 196, 255, 0.45);
-    }
-
+    .nl-ko { font-size: 11px; font-weight: 700; color: rgba(160,196,255,0.4); }
     .nav-link.active .nl-en,
     .nav-link.active .nl-ko { color: var(--cyan); }
     .nav-link.active { border-bottom-color: var(--cyan); }
 
-    .nav-actions {
-      display: flex;
-      gap: 8px;
-      margin-left: auto;
-    }
+    .nav-actions { display: flex; gap: 8px; margin-left: auto; }
 
     .nav-btn {
       width: 36px; height: 36px;
@@ -120,291 +179,256 @@
       color: rgba(160,196,255,0.7);
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      font-size: 15px;
-      transition: background 0.2s;
+      font-size: 15px; transition: background 0.2s;
     }
     .nav-btn:hover { background: rgba(255,255,255,0.1); }
 
     /* ── MAIN ── */
     main {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 52px 24px 36px;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 48px 24px 32px;
+      position: relative; z-index: 10;
     }
 
     .error-label {
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(12px, 2.2vw, 18px);
+      font-size: clamp(13px, 2.2vw, 20px);
       color: var(--red);
-      text-align: center;
-      margin-bottom: 18px;
-      text-shadow: 0 0 24px rgba(255,50,50,0.55);
+      text-align: center; margin-bottom: 16px;
+      text-shadow: 0 0 30px rgba(255,50,50,0.7), 0 0 60px rgba(255,50,50,0.3);
       letter-spacing: 4px;
     }
 
     .error-title {
-      font-size: clamp(22px, 4.5vw, 40px);
-      font-weight: 900;
-      color: white;
-      text-align: center;
+      font-size: clamp(24px, 4.5vw, 44px);
+      font-weight: 900; color: white; text-align: center;
       margin-bottom: 14px;
+      text-shadow: 0 2px 20px rgba(77,217,255,0.15);
     }
 
     .error-sub {
-      font-size: 14px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 2;
-      margin-bottom: 36px;
+      font-size: 14px; color: var(--muted);
+      text-align: center; line-height: 2; margin-bottom: 32px;
     }
 
-    /* Progress */
+    /* ── 복원율 ── */
     .progress-box {
-      width: 100%; max-width: 700px;
-      background: rgba(6, 14, 38, 0.9);
+      width: 100%; max-width: 720px;
+      background: rgba(4, 10, 30, 0.85);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 16px 22px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(4px);
     }
 
     .progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 10px;
     }
 
     .progress-label {
       font-family: 'Press Start 2P', monospace;
-      font-size: 9px;
-      color: var(--muted);
+      font-size: 9px; color: var(--muted);
     }
 
     .progress-pct {
       font-family: 'Press Start 2P', monospace;
-      font-size: 11px;
-      color: var(--cyan);
+      font-size: 11px; color: var(--cyan);
     }
 
     .progress-track {
-      width: 100%; height: 13px;
-      background: rgba(0, 8, 36, 0.9);
+      width: 100%; height: 14px;
+      background: rgba(0,6,28,0.9);
       border-radius: 4px;
-      border: 1px solid rgba(70,130,220,0.18);
+      border: 1px solid rgba(70,130,220,0.2);
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #1a5aff, var(--cyan));
+      background: repeating-linear-gradient(
+        90deg,
+        #1a5aff 0px, #3a8aff 6px,
+        rgba(77,217,255,0.6) 6px, rgba(77,217,255,0.6) 8px
+      );
       border-radius: 4px;
       width: 0%;
-      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: 0 0 14px rgba(77,217,255,0.5);
+      transition: width 1.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 16px rgba(77,217,255,0.6);
     }
 
-    /* Mission cards */
+    /* ── 미션 카드 ── */
     .missions-hint {
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      margin-bottom: 18px;
-      letter-spacing: 1px;
+      font-size: 12px; color: var(--muted);
+      text-align: center; margin-bottom: 18px; letter-spacing: 0.5px;
     }
 
     .missions-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 18px;
-      width: 100%; max-width: 900px;
+      width: 100%; max-width: 920px;
     }
 
     .mission-card {
-      background: rgba(5, 12, 34, 0.92);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 26px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
       position: relative;
+      border-radius: 12px;
       overflow: hidden;
-      transition: border-color 0.3s;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.3s, transform 0.2s;
+      min-height: 340px;
+      display: flex; flex-direction: column;
+    }
+    .mission-card:hover { border-color: rgba(77,217,255,0.5); transform: translateY(-3px); }
+    .mission-card.done  { border-color: rgba(0,255,136,0.4); }
+
+    .card-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transition: transform 0.4s;
+    }
+    .mission-card:hover .card-bg { transform: scale(1.03); }
+
+    .card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(4,10,28,0.45) 0%,
+        rgba(4,10,28,0.65) 50%,
+        rgba(4,10,28,0.92) 100%
+      );
     }
 
-    .mission-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 15%; right: 15%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    }
-
-    .mission-card.done { border-color: rgba(0,255,136,0.35); }
-    .mission-card.done::before {
-      background: linear-gradient(90deg, transparent, #00ff88, transparent);
-    }
-
-    .mission-thumb {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background-size: cover;
-      background-position: center;
-      border-radius: 6px;
-      margin-bottom: 4px;
-      opacity: 0.85;
+    .card-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      flex: 1;
+      padding: 22px;
     }
 
     .mission-num {
       font-family: 'Press Start 2P', monospace;
-      font-size: 8px;
-      color: var(--cyan);
-      letter-spacing: 1.5px;
+      font-size: 7.5px; color: var(--cyan);
+      letter-spacing: 1.5px; margin-bottom: 10px;
     }
     .mission-card.done .mission-num { color: #00ff88; }
 
     .mission-title {
       font-size: 22px; font-weight: 900;
-      color: white;
-      line-height: 1.3;
+      color: white; line-height: 1.3;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
     }
 
     .mission-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.8;
-      flex: 1;
+      font-size: 13px; color: rgba(200,220,255,0.8);
+      line-height: 1.8; margin-bottom: 16px;
     }
 
     .mission-btn {
-      width: 100%;
-      padding: 14px;
+      width: 100%; padding: 14px;
       background: var(--yellow);
       color: #1a0800;
-      border: none;
-      border-radius: 6px;
+      border: none; border-radius: 6px;
       font-family: 'Noto Sans KR', sans-serif;
       font-size: 16px; font-weight: 900;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
-      margin-top: 4px;
+      box-shadow: 0 4px 20px rgba(240,165,0,0.3);
     }
-    .mission-btn:hover { background: #ffb800; transform: translateY(-2px); }
-    .mission-btn:active { transform: translateY(0); }
-
+    .mission-btn:hover { background: #ffb800; }
     .mission-btn.done {
-      background: rgba(0,255,136,0.08);
+      background: rgba(0,255,136,0.1);
       color: #00ff88;
-      border: 1px solid rgba(0,255,136,0.3);
+      border: 1px solid rgba(0,255,136,0.35);
       font-size: 13px;
+      box-shadow: none;
     }
-    .mission-btn.done:hover { background: rgba(0,255,136,0.13); transform: none; }
+    .mission-btn.done:hover { background: rgba(0,255,136,0.15); }
 
     /* ── STATUS BAR ── */
     .status-bar {
       width: 100%;
-      background: rgba(4, 8, 20, 0.98);
+      background: rgba(3,7,18,0.97);
       border-top: 1px solid var(--border);
       padding: 12px 28px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
+      display: flex; align-items: center; gap: 20px;
+      position: relative; z-index: 10;
       flex-wrap: wrap;
     }
 
     .status-current {
-      display: flex; flex-direction: column;
-      gap: 5px;
+      display: flex; flex-direction: column; gap: 5px;
       min-width: 140px;
     }
 
     .status-tag {
-      font-size: 10px; font-weight: 700;
-      color: var(--cyan);
+      font-size: 10px; font-weight: 700; color: var(--cyan);
       border: 1px solid rgba(77,217,255,0.4);
-      border-radius: 3px;
-      padding: 2px 8px;
-      width: fit-content;
+      border-radius: 3px; padding: 2px 8px; width: fit-content;
     }
 
     .status-text {
       font-size: 12px; font-weight: 700;
-      color: rgba(255,255,255,0.75);
-      line-height: 1.55;
+      color: rgba(255,255,255,0.75); line-height: 1.55;
     }
 
-    .status-div {
-      width: 1px; height: 36px;
-      background: var(--border);
-      flex-shrink: 0;
-    }
+    .status-div { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
 
-    .status-items {
-      display: flex;
-      gap: 18px;
-      flex: 1;
-      flex-wrap: wrap;
-    }
+    .status-items { display: flex; gap: 18px; flex: 1; flex-wrap: wrap; }
 
-    .status-item {
-      display: flex; flex-direction: column;
-      align-items: center; gap: 3px;
-    }
-
+    .status-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
     .s-icon { font-size: 20px; }
-
-    .s-name {
-      font-size: 9px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .s-sw {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 7px;
-    }
+    .s-name { font-size: 9px; color: var(--muted); white-space: nowrap; }
+    .s-sw { font-family: 'Press Start 2P', monospace; font-size: 7px; }
     .s-sw.off { color: var(--red); }
     .s-sw.on  { color: #00ff88; }
 
     .status-radio {
       margin-left: auto;
-      background: rgba(6,14,38,0.8);
+      background: rgba(4,10,30,0.85);
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 10px 14px;
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.75;
-      text-align: right;
-      flex-shrink: 0;
-      max-width: 210px;
+      font-size: 11px; color: var(--muted);
+      line-height: 1.75; text-align: right;
+      flex-shrink: 0; max-width: 210px;
     }
 
     /* ── FOOTER ── */
     footer {
-      text-align: center;
-      padding: 10px;
+      text-align: center; padding: 10px;
       font-family: 'Press Start 2P', monospace;
-      font-size: 7px;
-      color: rgba(70,100,160,0.35);
-      background: rgba(4,8,20,0.98);
+      font-size: 7px; color: rgba(70,100,160,0.35);
+      background: rgba(3,7,18,0.97);
+      position: relative; z-index: 10;
     }
 
     @media (max-width: 600px) {
       .nav-logo-text { display: none; }
-      .nav-link { padding: 0 10px; }
       .nl-en { font-size: 6px; }
-      .status-bar { padding: 12px 16px; gap: 12px; }
+      .nav-link { padding: 0 10px; }
+      .bg-left, .bg-right { width: 80px; }
       .status-radio { display: none; }
       .status-items { gap: 10px; }
     }
   </style>
 </head>
 <body>
-  <audio id="bgm" loop><source src="bgm.mp3" type="audio/mpeg"></audio>
+
+  <!-- 사이드 배경 -->
+  <div class="bg-left"></div>
+  <div class="bg-right"></div>
+
+  <!-- 비 -->
+  <div class="rain-wrap" id="rain"></div>
+
+  <!-- 스윕 라인 -->
+  <div class="sweep"></div>
 
   <!-- NAV -->
   <nav>
@@ -444,23 +468,29 @@
       </div>
     </div>
 
-    <div class="missions-hint">복원을 위한 미션을 선택하세요.</div>
+    <div class="missions-hint">모든 미션을 완료하면 해양경찰청이 복원됩니다.</div>
 
     <div class="missions-grid">
       <div class="mission-card" id="card-game">
-        <div class="mission-thumb" style="background-image:url('thumbnail.png')"></div>
-        <div class="mission-num">[ RESTORE MISSION 01 ]</div>
-        <div class="mission-title">구조 대응 시스템 복구</div>
-        <div class="mission-desc">위기 상황에서 당신의 판단을 통해 사라진 구조 기능을 복원합니다.</div>
-        <button class="mission-btn" id="btn-game" onclick="location.href='cover.html'">테스트 시작 →</button>
+        <div class="card-bg" style="background-image:url('thumbnail.png')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="mission-num">[ RESTORE MISSION 01 ]</div>
+          <div class="mission-title">구조 대응 시스템 복구</div>
+          <div class="mission-desc">위기 상황에서 당신의 판단을 통해 사라진 구조 기능을 복원합니다.</div>
+          <button class="mission-btn" id="btn-game" onclick="location.href='cover.html'">테스트 시작 →</button>
+        </div>
       </div>
 
       <div class="mission-card" id="card-mbti">
-        <div class="mission-thumb" style="background-image:url('thumbnail2.png')"></div>
-        <div class="mission-num">[ RESTORE MISSION 02 ]</div>
-        <div class="mission-title">바다 심리테스트</div>
-        <div class="mission-desc">당신의 바다 성향을 분석하여 당신만의 바다 유형을 확인합니다.</div>
-        <button class="mission-btn" id="btn-mbti" onclick="location.href='mbti.html'">테스트 시작 →</button>
+        <div class="card-bg" style="background-image:url('thumbnail2.png')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="mission-num">[ RESTORE MISSION 02 ]</div>
+          <div class="mission-title">바다 심리테스트</div>
+          <div class="mission-desc">당신의 바다 성향을 분석하여 당신만의 바다 유형을 확인합니다.</div>
+          <button class="mission-btn" id="btn-mbti" onclick="location.href='mbti.html'">테스트 시작 →</button>
+        </div>
       </div>
     </div>
   </main>
@@ -473,42 +503,36 @@
     </div>
     <div class="status-div"></div>
     <div class="status-items">
-      <div class="status-item">
-        <span class="s-icon">🔭</span>
-        <span class="s-name">실종자 수색</span>
-        <span class="s-sw off" id="sw-1">OFF</span>
-      </div>
-      <div class="status-item">
-        <span class="s-icon">🛟</span>
-        <span class="s-name">해양 구조</span>
-        <span class="s-sw off" id="sw-2">OFF</span>
-      </div>
-      <div class="status-item">
-        <span class="s-icon">🚢</span>
-        <span class="s-name">불법조업 단속</span>
-        <span class="s-sw off" id="sw-3">OFF</span>
-      </div>
-      <div class="status-item">
-        <span class="s-icon">🛢</span>
-        <span class="s-name">해양오염 대응</span>
-        <span class="s-sw off" id="sw-4">OFF</span>
-      </div>
-      <div class="status-item">
-        <span class="s-icon">⚓</span>
-        <span class="s-name">해상교통 안전관리</span>
-        <span class="s-sw off" id="sw-5">OFF</span>
-      </div>
+      <div class="status-item"><span class="s-icon">🔭</span><span class="s-name">실종자 수색</span><span class="s-sw off" id="sw-1">OFF</span></div>
+      <div class="status-item"><span class="s-icon">🛟</span><span class="s-name">해양 구조</span><span class="s-sw off" id="sw-2">OFF</span></div>
+      <div class="status-item"><span class="s-icon">🚢</span><span class="s-name">불법조업 단속</span><span class="s-sw off" id="sw-3">OFF</span></div>
+      <div class="status-item"><span class="s-icon">🛢</span><span class="s-name">해양오염 대응</span><span class="s-sw off" id="sw-4">OFF</span></div>
+      <div class="status-item"><span class="s-icon">⚓</span><span class="s-name">해상교통 안전관리</span><span class="s-sw off" id="sw-5">OFF</span></div>
     </div>
     <div class="status-div"></div>
-    <div class="status-radio" id="radio-msg">
-      바다에 문제가<br>생기고 있습니다.<br>지금, 복원이 필요합니다.
-    </div>
+    <div class="status-radio" id="radio-msg">바다에 문제가<br>생기고 있습니다.<br>지금, 복원이 필요합니다.</div>
   </div>
 
   <footer>© 2026 KOREA COAST GUARD RESTORE PROJECT</footer>
 
   <script>
-    // ── 미션 완료 상태 읽기 ──
+    // ── 비 생성 ──
+    const rainWrap = document.getElementById('rain');
+    for (let i = 0; i < 55; i++) {
+      const d = document.createElement('div');
+      d.className = 'drop';
+      const h = 40 + Math.random() * 80;
+      d.style.cssText = `
+        left: ${Math.random() * 100}%;
+        height: ${h}px;
+        animation-duration: ${0.6 + Math.random() * 0.8}s;
+        animation-delay: ${Math.random() * 3}s;
+        opacity: ${0.2 + Math.random() * 0.4};
+      `;
+      rainWrap.appendChild(d);
+    }
+
+    // ── 미션 완료 상태 ──
     const done = {
       game: localStorage.getItem('icc_game_done') === 'true',
       mbti: localStorage.getItem('icc_mbti_done') === 'true'
@@ -516,11 +540,9 @@
     const count = (done.game ? 1 : 0) + (done.mbti ? 1 : 0);
     const rate  = count * 50;
 
-    // 복원율
     document.getElementById('restore-pct').textContent = rate + '%';
     setTimeout(() => { document.getElementById('progress-fill').style.width = rate + '%'; }, 300);
 
-    // 미션 카드 상태
     if (done.game) {
       document.getElementById('card-game').classList.add('done');
       const b = document.getElementById('btn-game');
@@ -534,17 +556,14 @@
       b.classList.add('done');
     }
 
-    // 상태 스위치
     function setOn(id) {
       const el = document.getElementById(id);
-      el.textContent = 'ON';
-      el.classList.replace('off', 'on');
+      el.textContent = 'ON'; el.classList.replace('off','on');
     }
     if (done.game) { setOn('sw-1'); setOn('sw-2'); }
     if (done.mbti) { setOn('sw-4'); setOn('sw-5'); }
     if (done.game && done.mbti) setOn('sw-3');
 
-    // 상태 텍스트
     const statusMsgs = [
       '바다의 역할이<br>사라지고 있습니다.',
       '복원이 시작되었습니다.',
@@ -558,10 +577,11 @@
     document.getElementById('status-text').innerHTML = statusMsgs[count];
     document.getElementById('radio-msg').innerHTML   = radioMsgs[count];
 
-    // BGM
-    let bgmOn = false;
-    const bgm    = document.getElementById('bgm');
+    // ── BGM ──
+    const bgm    = new Audio('bgm.mp3');
+    bgm.loop = true;
     const bgmBtn = document.getElementById('bgm-btn');
+    let bgmOn = false;
 
     function toggleBGM() {
       if (bgmOn) { bgm.pause(); bgmOn = false; bgmBtn.textContent = '🔇'; }
@@ -571,10 +591,10 @@
       if (!bgmOn) bgm.play().then(() => { bgmOn = true; bgmBtn.textContent = '🔊'; }).catch(() => {});
     }, { once: true });
 
-    // 공유
+    // ── 공유 ──
     function sharePage() {
-      if (navigator.share) navigator.share({ title: 'KOREA COAST GUARD RESTORE PROJECT', url: location.href }).catch(() => {});
-      else if (navigator.clipboard) { navigator.clipboard.writeText(location.href); alert('링크가 복사됐어요!'); }
+      if (navigator.share) navigator.share({ title:'KOREA COAST GUARD RESTORE PROJECT', url: location.href }).catch(()=>{});
+      else if (navigator.clipboard) { navigator.clipboard.writeText(location.href); }
     }
   </script>
 </body>
