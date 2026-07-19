@@ -331,7 +331,10 @@
     .compat-result.show { display:block; }
     .compat-pct { font-size:34px; font-weight:900; color:#ff6b6b; text-align:center; margin-bottom:4px; }
     .compat-pair { font-size:13px; text-align:center; color:#0d47a1; font-weight:700; margin-bottom:10px; }
+    .compat-nickname { font-size:16px; font-weight:900; color:#ff6b6b; text-align:center; margin-bottom:10px; }
     .compat-desc { font-size:14px; color:#555; line-height:1.7; text-align:center; }
+    .compat-flag { font-size:13px; color:#8a5a00; background:#fff6e0; border:1.5px dashed #ffd166; border-radius:12px; padding:10px 12px; margin-top:12px; line-height:1.6; }
+    .compat-ending { font-size:13px; color:#0d47a1; background:#eef6ff; border-radius:12px; padding:10px 12px; margin-top:8px; line-height:1.6; font-weight:700; }
 
     /* 토스트 */
     .toast {
@@ -589,7 +592,10 @@
           <div class="compat-result" id="compat-result">
             <div class="compat-pct" id="c-pct"></div>
             <div class="compat-pair" id="c-pair"></div>
+            <div class="compat-nickname" id="c-nickname"></div>
             <div class="compat-desc" id="c-desc"></div>
+            <div class="compat-flag" id="c-conflict"></div>
+            <div class="compat-ending" id="c-ending"></div>
             <button class="btn btn-outline" onclick="shareCompat()" style="margin-top:14px">🌊 우리 바다 궁합 공유하기</button>
           </div>
         </div>
@@ -882,34 +888,118 @@ function scrollToCompat() {
 function checkCompat() {
   const ft = document.getElementById('friend-sel').value;
   if (!ft) { toast('친구의 바다 유형을 선택해주세요!'); return; }
-  const c = getCompat(myType, ft);
+  const c = getPairDetail(myType, ft);
   document.getElementById('c-pct').textContent = `궁합 ${c.pct}%`;
   document.getElementById('c-pair').textContent = `${RESULTS[myType].title} + ${RESULTS[ft].title}`;
-  document.getElementById('c-desc').textContent = c.desc;
+  document.getElementById('c-nickname').textContent = `💫 ${c.nickname}`;
+  document.getElementById('c-desc').textContent = c.reason;
+  document.getElementById('c-conflict').textContent = `💥 여행 갈등 포인트: ${c.conflict}`;
+  document.getElementById('c-ending').textContent = `😂 결국 이렇게 끝남: ${c.ending}`;
   const el = document.getElementById('compat-result');
   el.classList.add('show');
   el.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
-function getCompat(a, b) {
-  if (!a || !b) return { pct:0, desc:'' };
-  if (a === b) return { pct:88, desc:'완전히 같은 바다 스타일! 취향이 딱 맞지만, 서로가 놓치는 부분도 있으니 조심해요.' };
-  let diff = 0;
-  for (let i = 0; i < 4; i++) if (a[i] !== b[i]) diff++;
-  const data = {
-    1: { pct:76, desc:'거의 비슷한 바다 스타일. 딱 하나 다른 그 부분이 오히려 여행의 포인트가 됩니다.' },
-    2: { pct:83, desc:'비슷한 듯 달라서 균형이 맞는 조합. 서로의 다른 면이 여행을 더 풍부하게 만들어줘요.' },
-    3: { pct:79, desc:'서로 다른 바다 스타일이지만, 그 차이가 여행의 재미가 됩니다.' },
-    4: { pct:95, desc:'정반대인데 오히려 완벽한 조합! 서로 부족한 부분을 채워주는 최강의 바다 파트너예요.' }
+// ── 궁합 데이터: 카드에 이미 적힌 12쌍은 고정, 나머지는 축 기반으로 생성 ──
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+const ANCHOR_CONTENT = {
+  'ESTJ-ISTP': { pct:97, nickname:'말없이 다 되는 조합', reason:'한 명은 계획하고 한 명은 바로 실행해서 손발이 척척 맞아요.', conflict:'계획표는 짰는데 세부 일정은 서로 안 물어봄', ending:'말은 없었는데 어느새 완벽한 하루였음.' },
+  'ENFJ-ESFP': { pct:98, nickname:'텐션 최고 듀오', reason:'둘 다 사람들과 함께일 때 제일 빛나서 같이 있으면 분위기가 폭발해요.', conflict:'분위기 띄우다가 정작 둘이 할 얘기는 못 함', ending:'다 같이 논다고 밤새고 다음날 둘 다 늦잠.' },
+  'ESTJ-ISTJ': { pct:96, nickname:'계획표 원탑 듀오', reason:'둘 다 계획을 신뢰해서 일정 짜다가 싸울 일이 없어요.', conflict:'계획표를 각자 따로 짜와서 서로 자기 게 낫다고 우김', ending:'결국 두 계획 합쳐서 더 완벽한 계획표 완성.' },
+  'ESTP-ISTP': { pct:99, nickname:'액티비티 실전파', reason:'둘 다 몸으로 먼저 부딪히는 타입이라 망설임 없이 바로 바다에 뛰어들어요.', conflict:'둘 다 계획이 없어서 숙소를 여행 당일에 검색함', ending:'무계획으로 갔는데 이상하게 제일 재밌었던 여행으로 기억됨.' },
+  'ENTJ-INTP': { pct:97, nickname:'브레인 콤비', reason:'한 명은 아이디어를 던지고 한 명은 그걸 진짜 실행 가능하게 만들어줘요.', conflict:'이야기가 너무 진지해져서 정작 바다는 안 보고 있음', ending:'계획은 완벽했는데 정작 사진이 한 장도 없음.' },
+  'ENFJ-INFP': { pct:97, nickname:'감성 케어 듀오', reason:'서로의 마음을 제일 먼저 알아채는 타입이라 여행 내내 편안해요.', conflict:'서로 배려하다가 정작 뭐 먹을지 30분째 못 정함', ending:'메뉴는 늦게 골랐지만 대화는 새벽까지 이어짐.' },
+  'ENFP-ESFJ': { pct:99, nickname:'인생샷 듀오', reason:'한 명은 분위기를 만들고 한 명은 그 순간을 놓치지 않고 다 챙겨줘서 여행이 완벽해져요.', conflict:'사진 찍다가 버스 놓침', ending:'사진은 인생샷 건졌는데 버스는 다음 차 탐.' },
+  'ENFP-ESTP': { pct:95, nickname:'즉흥 폭주 콤비', reason:'둘 다 계획보다 순간의 재미를 따라가서 여행이 예측불가하게 재밌어져요.', conflict:'즉흥으로 간 곳이 알고 보니 아까 갔던 곳이었음', ending:'계획은 없었지만 추억은 제일 많았던 여행.' },
+  'ENFP-INFJ': { pct:90, nickname:'밤바다 수다 콤비', reason:'표현 방식은 달라도 둘 다 깊은 대화를 좋아해서 밤바다에서 얘기가 끊이질 않아요.', conflict:'얘기하다가 정작 노을 놓침', ending:'노을은 놓쳤지만 마음은 훨씬 가까워짐.' },
+  'ESFP-ISTP': { pct:99, nickname:'밤낮 완전체', reason:'낮에는 실전파가 이끌고 밤에는 텐션 메이커가 분위기를 살려서 하루 종일 재밌어요.', conflict:'물놀이 끝났는데 또 들어감', ending:'체력은 방전됐는데 웃음은 안 멈춤.' },
+  'ENFP-ESFP': { pct:94, nickname:'낭만 텐션즈', reason:'둘 다 에너지가 넘쳐서 만나자마자 여행이 시작돼요.', conflict:'편의점만 네 번째', ending:'결국 둘 다 편의점에서 컵라면 먹으며 화해.' },
+  'ESFJ-ESFP': { pct:89, nickname:'먹잘알 브이로그팀', reason:'둘 다 사람 챙기고 분위기 만드는 걸 좋아해서 다 같이 있을 때 제일 빛나요.', conflict:'맛집 웨이팅 때문에 일정 붕괴', ending:'일정은 망했지만 먹은 건 다 맛있었음.' },
+};
+
+const NICKNAME_POOL = ['여행 밸런스 조합','브이로그 장인','맛집 탐험단','노을 감성 듀오','액티비티 듀오','최고의 여행 메이트','물놀이 티키타카','짐싸기 정반대즈','새벽까지 수다팀','계획 vs 즉흥 조합','인생네컷 콤비','해변 산책 파트너','조개구이 메이트','선크림 챙김즈','카페인 충전 듀오','노젓기 밸런스팀','서핑 도전 콤비','밤바다 감성팀','편의점 단골즈','일정표 파괴단','인생샷 사냥꾼즈','조용한 힐링 콤비','텐트 설치 콤비','물놀이 마니아즈','여행 케미 조합','짜장짬뽕 고민팀','발견왕 콤비','낮바다 밤바다 조합','든든한 서포트팀','여행 로그 기록팀'];
+
+const CONFLICT_POOL = ['사진 찍다가 버스 놓침','맛집 웨이팅 때문에 일정 붕괴','노을 보다가 귀가 미룸','물놀이 끝났는데 또 들어감','카페에서 3시간','짐 싸는 스타일 정반대','계획표 만들었는데 아무도 안 지킴','편의점만 네 번째','숙소 예약 착각','짐 하나 두고 옴','길 잘못 들어 숨은 명소 발견','사진 100장 찍는데 한 명은 계속 기다림','메뉴 못 정해서 30분째 서 있음','한 명은 계속 자고 한 명은 계속 돌아다님','흥정하다가 정작 물건은 못 삼','인생샷 찍는다고 파도에 휩쓸릴 뻔함','이미 지나온 길을 또 걸음','일정 줄였는데 결국 처음 계획대로 감','한 명은 얼리버드, 한 명은 올빼미라 아침마다 실랑이','차 안 노래 선곡 취향 대전쟁'];
+
+const ENDING_POOL = ['결국 둘 다 편의점에서 컵라면 먹으며 화해.','싸우긴 했는데 다음 여행도 같이 감.','사진은 600장, 남은 배터리는 2%.','계획은 망했지만 추억은 성공.','결국 예정보다 두 배 오래 놀고 옴.','돌아오는 차 안에서 벌써 다음 여행 얘기함.','다투다가도 노을 보면서 풀림.','숙소 도착하자마자 둘 다 기절.','예산은 초과했지만 후회는 없음.','결국 사진첩 1등은 같이 찍은 사진.','짐은 엉망이었지만 여행은 완벽했음.','말은 안 통했는데 웃음 코드는 완전 통함.','계획표는 버렸지만 그게 신의 한 수였음.','서로 다른 걸 좋아하는데 결과는 둘 다 만족.','피곤한데 벌써 다음 바다 검색 중.'];
+
+const REASON_EI = { E:'둘 다 사람 많은 곳에서 에너지가 올라가는 타입이라 만나자마자 여행 텐션이 최고조예요.', I:'둘 다 조용히 즐기는 스타일이라 굳이 애쓰지 않아도 편안한 여행이 돼요.', diff:'한 명은 분위기를 이끌고 한 명은 그 분위기를 편하게 즐겨서 균형이 잘 맞아요.' };
+const REASON_SN = { S:'둘 다 눈앞의 맛집과 풍경을 놓치지 않아서 취향이 잘 통해요.', N:'둘 다 숨겨진 스팟이나 새로운 걸 찾는 걸 좋아해서 여행이 늘 신선해요.', diff:'한 명은 확실한 걸 챙기고 한 명은 새로운 걸 찾아서 여행이 더 풍부해져요.' };
+const REASON_TF = { T:'둘 다 낮바다 활동파라 스케줄이 착착 진행돼요.', F:'둘 다 밤바다 감성파라 대화가 끊기질 않아요.', diff:'한 명은 낮바다, 한 명은 밤바다를 좋아해서 하루를 알차게 다 즐길 수 있어요.' };
+const REASON_JP = { J:'둘 다 계획을 믿는 타입이라 일정 갈등이 거의 없어요.', P:'둘 다 즉흥을 즐기는 타입이라 예상 밖의 재미가 계속 생겨요.', diff:'한 명은 계획하고 한 명은 그 계획을 즉흥적으로 비틀어줘서 딱 좋은 밸런스예요.' };
+
+function axisReason(pool, x, y) { return x === y ? pool[x] : pool.diff; }
+
+// 기존 MBTI 궁합 통설 기반 베이스 점수 (정반대 유형 = 듀얼리티 = 최고 궁합이라는
+// 대중적으로 잘 알려진 궁합설을 기준으로, 일치하는 글자 수/어떤 축이 다른지에 따라 계층화)
+function basePctFromLore(a, b) {
+  const diffAxes = [0, 1, 2, 3].filter(i => a[i] !== b[i]);
+  const d = diffAxes.length;
+  if (d === 0) return 78;  // 완전 동일 유형: 편하지만 짜릿함은 덜함
+  if (d === 4) return 97;  // 완전 반대(듀얼리티): 통설상 최고 궁합
+  if (d === 1) {
+    const table = { 0:76, 1:66, 2:71, 3:89 }; // J/P 한 글자만 다른 조합이 통설상 제일 좋음
+    return table[diffAxes[0]];
+  }
+  if (d === 2) {
+    const key = diffAxes.join('');
+    if (key === '12') return 38; // S/N·T/F(가치관 축)가 같이 다르면 통설상 안 맞는 조합
+    if (key === '03') return 61; // E/I·J/P만 다르고 가치관은 같음
+    return 50;
+  }
+  return 15; // d===3: 반대에 가깝지만 한 끗 아쉬운 조합, 통설상 제일 아쉬운 궁합
+}
+
+function calcPct(a, b) {
+  const key = [a, b].sort().join('-');
+  const jitter = (hashStr(key + 'j') % 13) - 6; // -6 ~ +6, 같은 계층 안에서도 결과가 다양하게
+  return Math.max(3, Math.min(100, basePctFromLore(a, b) + jitter));
+}
+
+function genPairContent(a, b, pct) {
+  const key = [a, b].sort().join('-');
+  const nickname = NICKNAME_POOL[hashStr(key + 'n') % NICKNAME_POOL.length];
+  const conflict = CONFLICT_POOL[hashStr(key + 'c') % CONFLICT_POOL.length];
+  const ending = ENDING_POOL[hashStr(key + 'e') % ENDING_POOL.length];
+  const axes = [
+    () => axisReason(REASON_EI, a[0], b[0]),
+    () => axisReason(REASON_SN, a[1], b[1]),
+    () => axisReason(REASON_TF, a[2], b[2]),
+  ];
+  const secondary = axes[hashStr(key + 'ax') % axes.length]();
+  const reason = axisReason(REASON_JP, a[3], b[3]) + ' ' + secondary;
+  return { pct, nickname, reason, conflict, ending };
+}
+
+function selfCompat(a) {
+  const r = RESULTS[a];
+  const jitter = (hashStr(a + a + 'j') % 13) - 6;
+  return {
+    pct: Math.max(60, Math.min(90, 78 + jitter)),
+    nickname: '완전판박이즈',
+    reason: `${r.title}끼리 만나면 취향이 다 똑같아서 고민 없이 다 통해요.`,
+    conflict: '같은 실수를 동시에 함 (둘 다 놓친 준비물이 똑같음)',
+    ending: '똑같아서 편했는데 똑같아서 아무도 못 챙겨줌 ㅋㅋ',
   };
-  return data[diff];
+}
+
+function getPairDetail(a, b) {
+  if (a === b) return selfCompat(a);
+  const key = [a, b].sort().join('-');
+  if (ANCHOR_CONTENT[key]) return ANCHOR_CONTENT[key];
+  return genPairContent(a, b, calcPct(a, b));
 }
 
 function shareCompat() {
   const ft = document.getElementById('friend-sel').value;
   if (!ft || !myType) return;
-  const c = getCompat(myType, ft);
-  const text = `우리 바다 궁합 ${c.pct}%!\n나: ${RESULTS[myType].title}\n친구: ${RESULTS[ft].title}\n\n너도 해보고 우리 궁합 확인해봐 👉 ${location.href}`;
+  const c = getPairDetail(myType, ft);
+  const text = `우리 바다 궁합 ${c.pct}%! ${c.nickname} ㅋㅋ\n나: ${RESULTS[myType].title}\n친구: ${RESULTS[ft].title}\n\n너도 해보고 우리 궁합 확인해봐 👉 ${location.href}`;
   if (navigator.share) {
     navigator.share({ title:'바다 궁합 결과', text, url:location.href }).catch(()=>{});
   } else {
