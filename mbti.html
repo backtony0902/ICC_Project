@@ -144,8 +144,10 @@
     /* ── 결과 공개 전 안내 화면 ── */
     #s-preresult {
       background: linear-gradient(180deg,#020c1e 0%,#041530 55%,#072040 100%);
-      display: flex; align-items: center; justify-content: center;
       min-height: 100vh; overflow: hidden; position: relative;
+    }
+    #s-preresult.active {
+      display: flex; align-items: center; justify-content: center;
     }
     .pr-ocean {
       position: absolute; bottom: 0; left: 0; right: 0; height: 140px; pointer-events: none;
@@ -304,6 +306,27 @@
       background:rgba(255,255,255,0.15);
     }
     .result-img-wrap img { width:100%; height:auto; display:block; }
+    .insta-cta {
+      width:100%; margin-top:2px;
+      background: linear-gradient(135deg, rgba(245,133,41,.20), rgba(221,42,123,.20), rgba(129,52,175,.20));
+      border: 1.5px solid rgba(255,255,255,.35);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      text-align: center;
+    }
+    .insta-cta-title { font-size:15px; font-weight:900; color:#fff; margin-bottom:4px; }
+    .insta-cta-handle { font-size:14px; font-weight:700; color:#ffd166; margin-bottom:10px; }
+    .insta-cta-list { list-style:none; text-align:left; margin:0 0 14px; padding:0; }
+    .insta-cta-list li { font-size:13px; color:rgba(255,255,255,.9); line-height:1.9; }
+    .btn-insta-link {
+      display:flex; align-items:center; justify-content:center;
+      padding:14px 20px; border-radius:50px; text-decoration:none;
+      font-family:inherit; font-size:15px; font-weight:700;
+      background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af); color:#fff;
+      box-shadow:4px 4px 0 rgba(140,0,100,0.25);
+      transition:transform 0.1s, box-shadow 0.1s;
+    }
+    .btn-insta-link:active { transform:translate(2px,2px); box-shadow:2px 2px 0 rgba(140,0,100,0.25); }
     .result-fallback {
       background:linear-gradient(135deg,#4fc3f7,#0288d1);
       padding:24px 20px; text-align:center; color:white; width:100%;
@@ -414,12 +437,18 @@
     .modal-box h3 { font-size:18px; font-weight:900; color:#1a237e; margin-bottom:10px; }
     .modal-box p { font-size:14px; color:#555; line-height:1.6; margin-bottom:20px; }
     .modal-close { background:#f0f4ff; color:#0288d1; border:none; border-radius:50px; padding:12px 0; width:100%; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
+    .share-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px; }
+    .share-opt {
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      padding:16px 8px; border:2px solid #eef2fb; border-radius:14px;
+      background:#fafcff; font-family:inherit; font-size:13px; font-weight:700;
+      color:#1a237e; cursor:pointer; transition:transform 0.1s, border-color 0.15s;
+    }
+    .share-opt:hover { border-color:#0288d1; }
+    .share-opt:active { transform:translate(1px,1px); }
+    .share-opt-icon { font-size:26px; }
 
     /* ── 추가 버튼 ── */
-    .btn-insta { background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af); color:#fff; box-shadow:4px 4px 0 rgba(140,0,100,0.25); }
-    .btn-insta:active { box-shadow:2px 2px 0 rgba(140,0,100,0.25); }
-    .btn-kakao { background:#FEE500; color:#3C1E1E; box-shadow:4px 4px 0 rgba(180,150,0,0.3); }
-    .btn-kakao:active { box-shadow:2px 2px 0 rgba(180,150,0,0.3); }
     .friend-share-box { width:100%; max-width:360px; margin-top:16px; text-align:center; }
     .friend-share-label { font-size:13px; color:rgba(255,255,255,.8); margin-bottom:8px; }
 
@@ -525,6 +554,20 @@
           <img id="r-img" src="" alt="결과카드" style="display:none">
         </div>
 
+        <!-- 다른 유형 안내 CTA -->
+        <div class="insta-cta">
+          <div class="insta-cta-title">🌊 다른 유형도 궁금하다면?</div>
+          <div class="insta-cta-handle">@who_guards_the_sea</div>
+          <ul class="insta-cta-list">
+            <li>✔ 다른 15가지 유형 보기</li>
+            <li>✔ 바다 밈</li>
+            <li>✔ 해양경찰 이벤트 진행 중</li>
+            <li>✔ 설빙 1만원 쿠폰 이벤트 진행 중!</li>
+            <li>✔ 바다 심리테스트후 후기를 들려주세요! 추천코스도 실행해보세요!</li>
+          </ul>
+          <a class="btn-insta-link" href="https://www.instagram.com/who_guards_the_sea?igsh=MW5tNGV3NTU3NmRsaw%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener noreferrer">📸 인스타 보러가기</a>
+        </div>
+
         <!-- 추천 공유 문구 -->
         <div class="tagline-box">
           <div class="tagline-label">💬 추천 공유 문구</div>
@@ -533,11 +576,7 @@
           <button class="btn btn-copy" onclick="copyTagline()">📋 문구 복사하기</button>
         </div>
 
-        <button class="btn btn-kakao"  onclick="shareKakao()">💬 카카오톡 공유</button>
-        <button class="btn btn-insta"  onclick="shareInstagram()">📸 인스타 공유하기</button>
-        <button class="btn btn-yellow" onclick="saveImage()">💾 이미지 저장</button>
-
-        <button class="btn btn-primary" onclick="shareFriend()" style="margin-top:6px">💌 친구에게 공유하기</button>
+        <button class="btn btn-primary" onclick="openShareModal()">📤 공유하기</button>
         <div style="font-size:13px;color:rgba(255,255,255,.8);margin-top:-4px">같이 바다 가고 싶은 친구에게 공유해보세요 🌊</div>
 
         <div id="friend-compat-wrap" style="display:none">
@@ -555,7 +594,7 @@
       <div class="friend-nudge">
         <div class="friend-nudge-main">너랑 나, 같이 바다 가도 되는 조합일까?</div>
         <div class="friend-nudge-sub">친구 유형까지 알아야 바다 궁합 완성 🌊<br>같이 바다 갈 친구한테 보내보세요.</div>
-        <button class="btn-nudge" onclick="shareFriend()">친구한테 보내기 →</button>
+        <button class="btn-nudge" onclick="openShareModal()">친구한테 보내기 →</button>
       </div>
 
       <!-- 궁합 -->
@@ -606,6 +645,20 @@
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- 공유하기 시트 -->
+<div class="modal-overlay" id="share-modal">
+  <div class="modal-box">
+    <h3>🌊 결과 공유하기</h3>
+    <div class="share-grid">
+      <button class="share-opt" onclick="shareKakao(); closeShareModal()"><span class="share-opt-icon">💬</span>카카오톡</button>
+      <button class="share-opt" onclick="shareInstagram(); closeShareModal()"><span class="share-opt-icon">📸</span>인스타그램</button>
+      <button class="share-opt" onclick="saveImage(); closeShareModal()"><span class="share-opt-icon">💾</span>이미지 저장</button>
+      <button class="share-opt" onclick="shareFriend(); closeShareModal()"><span class="share-opt-icon">🔗</span>링크 복사</button>
+    </div>
+    <button class="modal-close" onclick="closeShareModal()" style="margin-top:16px">닫기</button>
+  </div>
+</div>
+
 <!-- 인스타그램 공유 안내 모달 -->
 <div class="modal-overlay" id="insta-modal">
   <div class="modal-box">
@@ -639,7 +692,7 @@ const RESULTS = {
 // ── 질문 데이터 ──
 const QUESTIONS = [
   { text:'여행 마지막 날, 시간이 딱 1시간 남았다.',
-    ans:[{t:'🏖 바다 한 번 더 들어간다.',k:'P'},{t:'🍜 마지막 맛집을 간다.',k:'S'},{t:'☕ 감성 카페를 간다.',k:'F'},{t:'🛍 기념품을 산다.',k:'J'}] },
+    ans:[{t:'🏖 바다 한 번 더 들어간다.',k:'P'},{t:'🍜 마지막 맛집을 간다.',k:'S'},{t:'😴 너무 지쳐서 숙소에서 쉰다.',k:'I'},{t:'🛍 기념품을 산다.',k:'J'}] },
   { text:'바다를 보면 가장 먼저 눈에 들어오는 것은?',
     ans:[{t:'🌊 파도',k:'P'},{t:'🌅 하늘',k:'N'},{t:'🚢 배',k:'T'},{t:'👣 사람들',k:'E'}] },
   { text:'바다 갈 때 무조건 데려가고 싶은 친구는?',
@@ -1050,6 +1103,10 @@ function addSparkles(wrapEl) {
 // ── 인스타 모달 ──
 function showInstaModal() { document.getElementById('insta-modal').style.display='flex'; }
 function closeModal()     { document.getElementById('insta-modal').style.display='none'; }
+
+// ── 공유하기 시트 ──
+function openShareModal()  { document.getElementById('share-modal').style.display='flex'; }
+function closeShareModal() { document.getElementById('share-modal').style.display='none'; }
 
 // ── 카카오톡 공유 ──
 function shareKakao() {
