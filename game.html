@@ -14,7 +14,9 @@
 </head>
 
 <body>
-  <audio autoplay loop><source src="bgm.mp3" type="audio/mpeg"></audio>
+  <audio autoplay loop id="bgm"><source src="bgm.mp3" type="audio/mpeg"></audio>
+
+<button class="bgm-hint" id="bgm-hint" onclick="document.getElementById('bgm').play().catch(()=>{});this.remove()">🔊 BGM이 있어요, 소리를 켜보세요</button>
 
 <div class="overlay">
 

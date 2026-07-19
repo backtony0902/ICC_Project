@@ -327,6 +327,19 @@
       transition:transform 0.1s, box-shadow 0.1s;
     }
     .btn-insta-link:active { transform:translate(2px,2px); box-shadow:2px 2px 0 rgba(140,0,100,0.25); }
+
+    /* ── BGM 안내 ── */
+    .bgm-hint {
+      position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:2000;
+      display:flex; align-items:center; gap:6px;
+      padding:9px 18px; border-radius:50px; border:none;
+      background:rgba(255,255,255,.95); color:#0288d1;
+      font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
+      box-shadow:0 4px 16px rgba(0,0,0,.18);
+      animation: bgmPulse 1.8s ease-in-out infinite;
+    }
+    .bgm-hint:active { transform:translateX(-50%) scale(0.97); }
+    @keyframes bgmPulse { 0%,100%{opacity:1} 50%{opacity:.7} }
     .result-fallback {
       background:linear-gradient(135deg,#4fc3f7,#0288d1);
       padding:24px 20px; text-align:center; color:white; width:100%;
@@ -458,7 +471,8 @@
   </style>
 </head>
 <body>
-<audio autoplay loop><source src="ocean.mp3" type="audio/mpeg"></audio>
+<audio autoplay loop id="bgm"><source src="ocean.mp3" type="audio/mpeg"></audio>
+<button class="bgm-hint" id="bgm-hint" onclick="document.getElementById('bgm').play().catch(()=>{});this.remove()">🔊 BGM이 있어요, 소리를 켜보세요</button>
 
 <div class="container">
 
