@@ -141,6 +141,58 @@
       border-bottom-color: rgba(255,255,255,0.8);
     }
 
+    /* ── 결과 공개 전 안내 화면 ── */
+    #s-preresult {
+      background: linear-gradient(180deg,#020c1e 0%,#041530 55%,#072040 100%);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; overflow: hidden; position: relative;
+    }
+    .pr-ocean {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 140px; pointer-events: none;
+    }
+    .pr-ocean::before, .pr-ocean::after {
+      content: ''; position: absolute; bottom: 0; left: -50%; width: 200%; height: 90px;
+      background: rgba(10,50,120,0.35);
+      border-radius: 45% 55% 55% 45% / 40% 40% 60% 60%;
+      animation: prWave 7s ease-in-out infinite;
+    }
+    .pr-ocean::after {
+      background: rgba(5,30,80,0.45); bottom: -12px;
+      animation: prWave 9s ease-in-out infinite reverse;
+    }
+    @keyframes prWave { 0%,100%{transform:translateX(0) scaleY(1)} 50%{transform:translateX(-4%) scaleY(1.08)} }
+    .pr-wrap {
+      position: relative; z-index: 2; width: 100%; max-width: 460px;
+      padding: 48px 28px 72px; display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+    }
+    #s-preresult.active .pr-wrap { animation: prFadeUp .9s ease forwards; }
+    @keyframes prFadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+    .pr-emoji {
+      font-size: 52px; margin-bottom: 20px;
+      animation: prFloat 3s ease-in-out infinite;
+    }
+    @keyframes prFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+    .pr-heading {
+      font-size: 21px; font-weight: 800; color: #fff;
+      letter-spacing: -.01em; margin-bottom: 24px;
+    }
+    .pr-body {
+      font-size: 15px; color: rgba(200,225,255,.82); line-height: 2;
+      margin-bottom: 40px;
+    }
+    .pr-body strong { color: #fff; font-weight: 700; }
+    .btn-reveal {
+      background: linear-gradient(135deg,#0d47a1,#1976d2);
+      color: #fff; border: none; border-radius: 50px;
+      padding: 16px 44px; font-size: 16px; font-weight: 700;
+      font-family: inherit; cursor: pointer; letter-spacing: .03em;
+      box-shadow: 0 0 28px rgba(25,118,210,.45);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-reveal:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(25,118,210,.65); }
+    .btn-reveal:active { transform: translateY(0); }
+
     /* ── 추천 공유 문구 박스 ── */
     .tagline-box {
       background: rgba(0,80,160,0.35);
@@ -436,6 +488,27 @@
     </div>
   </div>
 
+  <!-- ━━ 결과 공개 전 안내 화면 ━━ -->
+  <div id="s-preresult" class="screen">
+    <div class="pr-ocean"></div>
+    <div class="pr-wrap">
+      <div class="pr-emoji">🌊</div>
+      <div class="pr-heading">결과보기 전, 잠깐!</div>
+      <div class="pr-body">
+        우리가 당연하게 즐기는 바다의 순간들.<br>
+        그 뒤에는 언제나 <strong>해양경찰청</strong>이 있었습니다.<br><br>
+        구조와 수색,<br>
+        해양사고 예방,<br>
+        해양오염 대응,<br>
+        그리고 우리의 안전한 바다까지.<br><br>
+        우리가 마음 놓고 바다를 즐길 수 있는 오늘은<br>
+        누군가의 24시간 노력으로 지켜지고 있습니다.<br><br>
+        잠시 후,<br>당신의 바다 유형을 확인해 보세요.
+      </div>
+      <button class="btn-reveal" onclick="revealResult()">결과 확인하기 →</button>
+    </div>
+  </div>
+
   <!-- ━━ 결과 화면 ━━ -->
   <div id="s-result" class="screen">
     <div style="text-align:center;width:100%;display:flex;flex-direction:column;align-items:center">
@@ -602,7 +675,7 @@ const QUESTIONS = [
 ];
 
 // ── 상태 ──
-let curQ = 0, scores = {}, answers = [], myType = null, fromType = null;
+let curQ = 0, scores = {}, answers = [], myType = null, fromType = null, pendingType = null;
 const EMOJIS = ['🏖','🌊','👫','🏝','😊','🌅','🎵','🌙','🐬','🗺','🚪','⚓','📸','🏖','🛟','😤','🚤','🎨','🌟','✈️'];
 
 // ── 화면 전환 ──
@@ -657,7 +730,14 @@ function pick(type, btn, weight) {
 // ── 로딩 ──
 function startLoading() {
   show('s-loading');
-  setTimeout(() => showResult(calcResult()), 1500);
+  setTimeout(() => {
+    pendingType = calcResult();
+    show('s-preresult');
+  }, 1500);
+}
+
+function revealResult() {
+  showResult(pendingType);
 }
 
 // ── 결과 계산 ──
