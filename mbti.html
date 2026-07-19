@@ -697,7 +697,7 @@
           <a class="btn-insta-link" href="https://www.instagram.com/who_guards_the_sea?igsh=MW5tNGV3NTU3NmRsaw%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener noreferrer">📸 인스타 보러가기</a>
         </div>
 
-        <button class="btn btn-primary" onclick="openShareModal()">📤 공유하기</button>
+        <button class="btn btn-primary" onclick="openShareModal()">📤 내 카드 공유하기</button>
         <div style="font-size:13px;color:rgba(255,255,255,.8);margin-top:-4px">같이 바다 가고 싶은 친구에게 공유해보세요 🌊</div>
 
         <div id="friend-compat-wrap" style="display:none">
@@ -732,7 +732,7 @@
       <button class="share-opt" onclick="shareInstagram(); closeShareModal()"><span class="share-opt-icon">📸</span>인스타그램</button>
       <button class="share-opt" onclick="saveImage(); closeShareModal()"><span class="share-opt-icon">💾</span>이미지 저장</button>
       <button class="share-opt" onclick="shareFriend(); closeShareModal()"><span class="share-opt-icon">🔗</span>링크 복사</button>
-      <button class="share-opt share-opt-wide" onclick="shareStoryThumb(); closeShareModal()"><span class="share-opt-icon">🖼️</span>테스트 썸네일로 공유하기</button>
+      <button class="share-opt share-opt-wide" onclick="shareStoryThumb(); closeShareModal()"><span class="share-opt-icon">🖼️</span>테스트 공유</button>
     </div>
     <button class="modal-close" onclick="closeShareModal()" style="margin-top:16px">닫기</button>
   </div>
@@ -997,13 +997,16 @@ async function shareInstagram() {
   if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'instagram', mbti_type: myType });
   const img = document.getElementById('r-img');
   const r = RESULTS[myType];
+  const url = getShareUrl();
+  copyText(url);
   if (img && img.complete && img.naturalWidth > 0) {
     try {
       const resp = await fetch(img.src);
       const blob = await resp.blob();
       const file = new File([blob], `나의바다MBTI_${r.name}.png`, { type: blob.type });
       if (navigator.canShare && navigator.canShare({ files:[file] })) {
-        await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + getShareUrl() });
+        await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + url });
+        toast('링크도 복사해뒀어요! 스토리에서 "링크" 스티커에 붙여넣기 하면 완성 🌊');
         return;
       }
     } catch(e) {}
@@ -1017,12 +1020,14 @@ async function shareStoryThumb() {
   if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'story_thumbnail', mbti_type: myType });
   const inviteUrl = location.origin + location.pathname;
   const text = '나의 바다 MBTI 심리테스트! 너도 해봐 🌊\n👉 ' + inviteUrl;
+  copyText(inviteUrl);
   try {
     const resp = await fetch('thumbnail2.png');
     const blob = await resp.blob();
     const file = new File([blob], '바다MBTI_테스트.png', { type: blob.type });
     if (navigator.canShare && navigator.canShare({ files:[file] })) {
       await navigator.share({ files:[file], title:'나의 바다 MBTI 심리테스트', text });
+      toast('링크도 복사해뒀어요! 스토리에서 "링크" 스티커에 붙여넣기 하면 완성 🌊');
       return;
     }
   } catch(e) {}
@@ -1030,8 +1035,7 @@ async function shareStoryThumb() {
   a.href = 'thumbnail2.png';
   a.download = '바다MBTI_테스트.png';
   a.click();
-  copyText(text);
-  toast('썸네일이 저장되고 링크가 복사됐어요! 스토리에 올려보세요 🌊');
+  toast('썸네일이 저장되고 링크가 복사됐어요! 스토리에서 "링크" 스티커에 붙여넣기 하세요 🌊');
 }
 
 // ── 궁합 ──
