@@ -1005,7 +1005,7 @@ async function shareInstagram() {
       const blob = await resp.blob();
       const file = new File([blob], `나의바다MBTI_${r.name}.png`, { type: blob.type });
       if (navigator.canShare && navigator.canShare({ files:[file] })) {
-        await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + url });
+        await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + url, url });
         toast('링크도 복사해뒀어요! 스토리에서 "링크" 스티커에 붙여넣기 하면 완성 🌊');
         return;
       }
@@ -1026,7 +1026,7 @@ async function shareStoryThumb() {
     const blob = await resp.blob();
     const file = new File([blob], '바다MBTI_테스트.png', { type: blob.type });
     if (navigator.canShare && navigator.canShare({ files:[file] })) {
-      await navigator.share({ files:[file], title:'나의 바다 MBTI 심리테스트', text });
+      await navigator.share({ files:[file], title:'나의 바다 MBTI 심리테스트', text, url: inviteUrl });
       toast('링크도 복사해뒀어요! 스토리에서 "링크" 스티커에 붙여넣기 하면 완성 🌊');
       return;
     }
