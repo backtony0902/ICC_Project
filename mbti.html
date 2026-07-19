@@ -503,6 +503,7 @@
     .share-opt:hover { border-color:#0288d1; }
     .share-opt:active { transform:translate(1px,1px); }
     .share-opt-icon { font-size:26px; }
+    .share-opt-wide { grid-column: span 2; flex-direction:row; gap:10px; padding:12px 8px; }
 
     /* ── 추가 버튼 ── */
     .friend-share-box { width:100%; max-width:360px; margin-top:16px; text-align:center; }
@@ -731,6 +732,7 @@
       <button class="share-opt" onclick="shareInstagram(); closeShareModal()"><span class="share-opt-icon">📸</span>인스타그램</button>
       <button class="share-opt" onclick="saveImage(); closeShareModal()"><span class="share-opt-icon">💾</span>이미지 저장</button>
       <button class="share-opt" onclick="shareFriend(); closeShareModal()"><span class="share-opt-icon">🔗</span>링크 복사</button>
+      <button class="share-opt share-opt-wide" onclick="shareStoryThumb(); closeShareModal()"><span class="share-opt-icon">🖼️</span>테스트 스토리 공유</button>
     </div>
     <button class="modal-close" onclick="closeShareModal()" style="margin-top:16px">닫기</button>
   </div>
@@ -1012,6 +1014,28 @@ async function shareInstagram() {
   }
   saveImage();
   showInstaModal();
+}
+
+// ── 시작 썸네일로 테스트 초대 스토리 공유 ──
+async function shareStoryThumb() {
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'story_thumbnail', mbti_type: myType });
+  const inviteUrl = location.origin + location.pathname;
+  const text = '나의 바다 MBTI 심리테스트! 너도 해봐 🌊\n👉 ' + inviteUrl;
+  try {
+    const resp = await fetch('thumbnail2.png');
+    const blob = await resp.blob();
+    const file = new File([blob], '바다MBTI_테스트.png', { type: blob.type });
+    if (navigator.canShare && navigator.canShare({ files:[file] })) {
+      await navigator.share({ files:[file], title:'나의 바다 MBTI 심리테스트', text });
+      return;
+    }
+  } catch(e) {}
+  const a = document.createElement('a');
+  a.href = 'thumbnail2.png';
+  a.download = '바다MBTI_테스트.png';
+  a.click();
+  copyText(text);
+  toast('썸네일이 저장되고 링크가 복사됐어요! 스토리에 올려보세요 🌊');
 }
 
 // ── 궁합 ──
