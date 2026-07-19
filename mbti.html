@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DR5E2L2XRV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DR5E2L2XRV');
+  </script>
   <meta charset="UTF-8">
   <clmeta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>나의 바다 MBTI 심리테스트</title>
@@ -271,6 +279,13 @@
       background:rgba(255,255,255,0.15);
     }
     .result-img-wrap img { width:100%; height:auto; display:block; }
+    .btn-save-small {
+      display:block; margin:0 auto; padding:6px 16px; border-radius:50px;
+      background:rgba(255,255,255,.18); color:#fff; font-family:inherit;
+      font-size:12px; font-weight:700; cursor:pointer;
+      border:1.5px solid rgba(255,255,255,.4);
+    }
+    .btn-save-small:active { background:rgba(255,255,255,.3); }
     .insta-cta {
       width:100%; margin-top:2px;
       background: linear-gradient(135deg, rgba(245,133,41,.20), rgba(221,42,123,.20), rgba(129,52,175,.20));
@@ -547,6 +562,7 @@
           <div class="skel skel-block" id="r-skel"></div>
           <img id="r-img" src="" alt="결과카드" style="display:none">
         </div>
+        <button class="btn-save-small" onclick="saveImage()">💾 카드 저장</button>
 
         <!-- 궁합 (핵심 기능 강조) -->
         <div class="compat-section" id="compat-section" style="margin-top:0">
@@ -738,6 +754,7 @@ function startTest() {
   myType = null;
   loadQ();
   show('s-question');
+  if (typeof gtag === 'function') gtag('event', 'test_start', { from_shared_link: !!fromType });
 }
 
 // ── 질문 로드 ──
@@ -784,6 +801,7 @@ function startLoading() {
 
 function revealResult() {
   showResult(pendingType);
+  if (typeof gtag === 'function') gtag('event', 'test_complete', { mbti_type: pendingType, from_shared_link: !!fromType });
 }
 
 // ── 결과 계산 ──
@@ -890,6 +908,7 @@ function checkCompatWithFriend() {
 
 // ── 이미지 저장 ──
 function saveImage() {
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'save_image', mbti_type: myType });
   const img = document.getElementById('r-img');
   const r = RESULTS[myType];
   if (img && img.complete && img.naturalWidth > 0) {
@@ -902,6 +921,7 @@ function saveImage() {
 
 // ── 인스타그램 공유 ──
 async function shareInstagram() {
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'instagram', mbti_type: myType });
   const img = document.getElementById('r-img');
   const r = RESULTS[myType];
   if (img && img.complete && img.naturalWidth > 0) {
@@ -927,6 +947,7 @@ function scrollToCompat() {
 function checkCompat() {
   const ft = document.getElementById('friend-sel').value;
   if (!ft) { toast('친구의 바다 유형을 선택해주세요!'); return; }
+  if (typeof gtag === 'function') gtag('event', 'compat_check', { my_type: myType, friend_type: ft });
   const c = getPairDetail(myType, ft);
   document.getElementById('c-pct').textContent = `궁합 ${c.pct}%`;
   document.getElementById('c-pair').textContent = `${RESULTS[myType].title} + ${RESULTS[ft].title}`;
@@ -1037,6 +1058,7 @@ function getPairDetail(a, b) {
 function shareCompat() {
   const ft = document.getElementById('friend-sel').value;
   if (!ft || !myType) return;
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'compat', mbti_type: myType });
   const c = getPairDetail(myType, ft);
   const text = `우리 바다 궁합 ${c.pct}%! ${c.nickname} ㅋㅋ\n나: ${RESULTS[myType].title}\n친구: ${RESULTS[ft].title}\n\n너도 해보고 우리 궁합 확인해봐 👉 ${location.href}`;
   if (navigator.share) {
@@ -1049,6 +1071,7 @@ function shareCompat() {
 
 // ── 친구 공유 ──
 function shareFriend() {
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'link_copy', mbti_type: myType });
   const r = RESULTS[myType];
   const url = getShareUrl();
   const text = `${r.tagline}\n\n너도 해봐! 바다 MBTI 👉 ${url}`;
@@ -1083,11 +1106,15 @@ function showInstaModal() { document.getElementById('insta-modal').style.display
 function closeModal()     { document.getElementById('insta-modal').style.display='none'; }
 
 // ── 공유하기 시트 ──
-function openShareModal()  { document.getElementById('share-modal').style.display='flex'; }
+function openShareModal()  {
+  document.getElementById('share-modal').style.display='flex';
+  if (typeof gtag === 'function') gtag('event', 'share_modal_open', { mbti_type: myType });
+}
 function closeShareModal() { document.getElementById('share-modal').style.display='none'; }
 
 // ── 카카오톡 공유 ──
 function shareKakao() {
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'kakao', mbti_type: myType });
   const r = RESULTS[myType];
   const url = getShareUrl();
   const text = `${r.tagline}\n👉 ${url}`;
@@ -1127,8 +1154,10 @@ function fallbackCopy(t) {
   const f = params.get('from');
   if (f && RESULTS[f]) {
     fromType = f; // 친구 공유 링크 → 시작화면 유지, fromType 저장
+    if (typeof gtag === 'function') gtag('event', 'shared_link_visit', { referrer_mbti_type: f });
   } else if (t && RESULTS[t]) {
     showResult(t); // 직접 결과 링크
+    if (typeof gtag === 'function') gtag('event', 'shared_result_view', { mbti_type: t });
   }
 })();
 
