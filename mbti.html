@@ -349,6 +349,54 @@
       border:2px solid #ffd166;
       box-shadow:0 0 24px rgba(255,209,102,.4), 0 4px 24px rgba(0,0,0,.12);
     }
+
+    /* ── 팀 여행 궁합 ── */
+    .team-section { width:100%; margin-top:14px; }
+    .team-cta {
+      background:rgba(255,255,255,.12); border:1.5px dashed rgba(255,255,255,.4);
+      border-radius:16px; padding:14px; text-align:center;
+    }
+    .team-cta-text { font-size:13px; color:#fff; font-weight:700; line-height:1.5; }
+    .team-form, .team-summary {
+      background:rgba(255,255,255,.93); border-radius:18px; padding:16px;
+      box-shadow:0 4px 24px rgba(0,0,0,.12);
+    }
+    .team-title { font-size:16px; font-weight:900; color:#1a237e; margin-bottom:6px; text-align:center; }
+    .team-my { font-size:13px; color:#0d47a1; text-align:center; margin-bottom:10px; }
+    .team-member-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .team-member-row select {
+      flex:1; padding:10px 12px; border-radius:10px; border:2px solid #dce8f8;
+      font-size:14px; font-family:inherit; color:#1a237e; background:#fff;
+    }
+    .team-remove-btn {
+      flex-shrink:0; width:34px; height:34px; border-radius:50%; border:none;
+      background:#ffe3e3; color:#c62828; font-weight:900; cursor:pointer;
+    }
+    .team-name { font-size:18px; font-weight:900; color:#1a237e; text-align:center; margin-bottom:4px; }
+    .team-rate { font-size:22px; font-weight:900; color:#ff6b6b; text-align:center; margin-bottom:10px; }
+    .team-roles-mini { font-size:13px; color:#333; line-height:1.9; text-align:center; margin-bottom:8px; }
+    .team-big-mini { font-size:12.5px; color:#555; text-align:center; background:#f5f8ff; border-radius:10px; padding:8px; }
+    .team-report {
+      background:rgba(255,255,255,.93); border-radius:18px; padding:16px;
+      margin-top:10px; box-shadow:0 4px 24px rgba(0,0,0,.12);
+    }
+    .team-report-block { margin-bottom:16px; }
+    .team-report-block:last-child { margin-bottom:0; }
+    .team-report-title { font-size:14px; font-weight:900; color:#1a237e; margin-bottom:8px; }
+    .team-role-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .team-role-item {
+      font-size:12px; background:#f5f8ff; border-radius:10px; padding:8px;
+      display:flex; flex-direction:column; gap:2px;
+    }
+    .team-role-name { color:#0d47a1; font-weight:700; font-size:11px; }
+    .team-timeline-row {
+      display:flex; gap:10px; font-size:12.5px; color:#333;
+      padding:4px 0; border-bottom:1px dashed #eee;
+    }
+    .team-timeline-t { flex-shrink:0; font-weight:900; color:#0288d1; width:44px; }
+    .team-report-text { font-size:13px; color:#333; line-height:1.6; text-align:center; }
+    .team-final-review { font-weight:700; color:#ff6b6b; }
+    .team-stat-row { display:flex; justify-content:space-between; font-size:12.5px; color:#333; padding:3px 0; }
     .compat-my { font-size:13px; color:#0d47a1; margin-bottom:4px; }
     .compat-my strong { font-size:15px; color:#1a237e; }
     .compat-plus { text-align:center; font-size:22px; margin:8px 0; }
@@ -608,6 +656,33 @@
           </div>
         </div>
 
+        <!-- 팀 여행 궁합 (2~6명) -->
+        <div class="team-section" id="team-section">
+          <div class="team-cta" id="team-cta">
+            <div class="team-cta-text">🌊 친구들이랑 다 같이 가면?<br>2~6명 팀 궁합도 확인해보세요</div>
+            <button class="btn btn-outline" onclick="openTeamForm()" style="width:auto;padding:10px 22px;margin-top:8px">팀 궁합 보기 →</button>
+          </div>
+
+          <div class="team-form" id="team-form" style="display:none">
+            <div class="team-title">🌊 우리 팀 여행 궁합</div>
+            <div class="team-my"><strong id="team-my-type"></strong> (나) 포함</div>
+            <div id="team-member-rows"></div>
+            <button class="btn btn-outline" onclick="addTeamFriend()">+ 친구 추가</button>
+            <button class="btn btn-teal" onclick="analyzeTeam()" style="margin-top:10px">🔍 우리 팀 분석하기</button>
+          </div>
+
+          <div class="team-summary" id="team-summary" style="display:none">
+            <div class="team-name" id="team-name"></div>
+            <div class="team-rate" id="team-rate"></div>
+            <div class="team-roles-mini" id="team-roles-mini"></div>
+            <div class="team-big-mini" id="team-big-mini"></div>
+            <button class="btn btn-outline" onclick="toggleTeamReport()" style="margin-top:10px">🔍 우리 팀 여행 보고서 보기</button>
+            <button class="btn-nudge" onclick="resetTeamForm()" style="margin-top:6px">🔄 다른 조합으로 다시 보기</button>
+          </div>
+
+          <div class="team-report" id="team-report" style="display:none"></div>
+        </div>
+
         <!-- 다른 유형 안내 CTA -->
         <div class="insta-cta">
           <div class="insta-cta-title">🌊 다른 결과카드들도 궁금하다면?</div>
@@ -736,7 +811,7 @@ const QUESTIONS = [
 ];
 
 // ── 상태 ──
-let curQ = 0, scores = {}, answers = [], myType = null, fromType = null, pendingType = null;
+let curQ = 0, scores = {}, answers = [], myType = null, fromType = null, pendingType = null, currentTeamReport = null;
 const EMOJIS = ['🏖','🌊','👫','🏝','😊','🌅','🎵','🌙','🐬','🗺','🚪','⚓','📸','🏖','🛟','😤','🚤','🎨','🌟','✈️'];
 
 // ── 화면 전환 ──
@@ -1053,6 +1128,251 @@ function getPairDetail(a, b) {
   const key = [a, b].sort().join('-');
   if (ANCHOR_CONTENT[key]) return ANCHOR_CONTENT[key];
   return genPairContent(a, b, calcPct(a, b));
+}
+
+// ══════════════ 2~6명 팀 여행 궁합 리포트 ══════════════
+
+const TEAM_NAME_POOL = [
+  '새벽조개원정대','파도폭주단','오늘만산다호','노을수집가들','물개특공대','즉흥만렙즈','바다정복단','편의점연구회',
+  '인생샷헌터즈','계획파괴클럽','물놀이특공대','밤바다유랑단','갯바위탐험대','해변브이로그팀','조개구이원정대','노을중독자들',
+  '파도타기챌린저즈','바캉스본부','서핑입문단','텐트치는사람들','여행즉흥연구소','바다한량들','짠내투어단','물개클럽',
+  '선셋헌터즈','백사장탐사대','여름한정단','갯벌원정대',
+];
+
+const ROLE_POOL = [
+  '👑 일정 조종사','📸 추억 수집가','🍜 위장 총책임자','💳 계산 회피 전문가','🎵 플레이리스트 DJ','🧃 간식 밀수업자',
+  '🌅 노을 알리미','🏄 입수 선발대','🗺 길 잃음 전문가','🧳 준비물 검사관','🪑 자리 맡기 장인','🔥 불멍 감독',
+  '🎒 응급상황 해결사','🚗 운전 보조','🐚 조개 줍기 중독자','🪼 해파리 감시관','🐟 물고기 발견왕','🎆 불꽃놀이 담당',
+  '🎲 즉흥 이벤트 기획자','☀️ 선크림 관리자','🕶 분위기 메이커','📱 릴스 감독','🎤 노래방 선곡 장인','🚩 집합시간 관리자',
+  '🥤 카페 탐험가','🛟 안전 총괄','🧭 내비게이션 담당','💰 예산 관리자','🎯 액티비티 예약러','🍹 음료 셔틀',
+  '🛏 숙소 컨디션 체커','⏰ 알람 담당','📋 메뉴 결정권자',
+];
+
+const ROLE_AFFINITY = {
+  E: ['🎤 노래방 선곡 장인','🎆 불꽃놀이 담당','🕶 분위기 메이커','🎲 즉흥 이벤트 기획자'],
+  I: ['📱 릴스 감독','📸 추억 수집가','🍹 음료 셔틀'],
+  S: ['🍜 위장 총책임자','🥤 카페 탐험가','📋 메뉴 결정권자','🧃 간식 밀수업자'],
+  N: ['🐟 물고기 발견왕','🐚 조개 줍기 중독자','🪼 해파리 감시관','🗺 길 잃음 전문가'],
+  T: ['🚗 운전 보조','🧭 내비게이션 담당','🛟 안전 총괄','🎒 응급상황 해결사'],
+  F: ['🌅 노을 알리미','🔥 불멍 감독','🕶 분위기 메이커'],
+  J: ['👑 일정 조종사','🧳 준비물 검사관','🚩 집합시간 관리자','⏰ 알람 담당','💰 예산 관리자','🪑 자리 맡기 장인'],
+  P: ['🏄 입수 선발대','🎲 즉흥 이벤트 기획자','☀️ 선크림 관리자','🎯 액티비티 예약러','🛏 숙소 컨디션 체커'],
+};
+
+const TIMELINE_SLOTS = [
+  { t:'09:30', variants:['출발! 늦잠 잔 사람 아무도 없음','출발! 한 명이 5분 지각','출발! 다들 각자 차 타고 집합'] },
+  { t:'10:15', variants:['도착하자마자 한 명은 이미 입수','도착하자마자 사진부터 찍기 시작','도착하자마자 짐부터 정리'] },
+  { t:'11:30', variants:['맛집 웨이팅 줄 서기 시작','간식부터 꺼내서 흡입','액티비티 예약 확인하러 뛰어감'] },
+  { t:'13:00', variants:['계획표가 슬슬 무너지기 시작','계획대로 착착 진행 중','그냥 느낌 가는 대로 가자는 말 나옴'] },
+  { t:'15:00', variants:['한 명이 갑자기 사라짐 (편의점행)','다 같이 그늘에서 낮잠','노을 스팟 미리 찾아보기 시작'] },
+  { t:'18:30', variants:['노을 보다가 귀가 시간 자꾸 미뤄짐','저녁 메뉴로 30분째 회의 중','벌써 다음 여행 얘기가 나옴'] },
+  { t:'21:00', variants:['숙소 도착하자마자 다 같이 기절','다 같이 모여서 불멍','편의점 2차 출동'] },
+];
+
+const BIG_EVENT_POOL = [
+  '노을 보다가 귀가가 계속 미뤄짐','사진 찍다가 집합시간을 놓침','편의점에서 2시간을 보냄','바다보다 카페에 더 오래 있었음',
+  '숙소 예약을 착각해서 한바탕 소동','짐 하나를 통째로 두고 옴','길을 잘못 들었는데 숨은 명소를 발견함','물놀이 시간이 계속 연장됨',
+  '계산할 때마다 서로 눈치싸움','사진 스팟 하나에서 30분을 씀','예정에 없던 야식 타임이 생김','일정표를 만들었는데 첫 항목부터 안 지켜짐',
+  '갑자기 소나기가 와서 계획이 통째로 바뀜','한 명이 길을 잃었다가 기적적으로 다시 만남','다 같이 같은 메뉴를 시켰다가 후회함',
+];
+
+const QUOTE_POOL = [
+  '잠깐 사진 하나만','밥부터 먹고 하자','5분만 더','여기까지 왔는데 그냥 가자','일단 가보자','편의점 들를 사람?',
+  '이게 진짜 마지막이야','다음에 또 오자','누가 시간 좀 봐줘','이거 완전 인생샷이다','배터리 몇 프로 남았어?','그냥 발길 닿는 대로 가자',
+];
+
+const FINAL_REVIEW_POOL = [
+  '다시는 같이 안 간다면서 다음 여행 날짜부터 잡는 팀.','예산은 사라졌지만 추억은 남았다.','사진은 600장, 남은 배터리는 2%.',
+  '숙소보다 편의점에서 더 오래 있었다.','계획표는 장식이었다.','싸운 기억보다 웃은 기억이 더 많다.',
+  '다들 다르게 노는데 이상하게 합이 잘 맞았다.','돌아오는 길에 벌써 다음 여행 얘기가 나왔다.','짐은 엉망이었지만 팀워크는 완벽했다.',
+  '말보다 몸이 먼저 움직인 하루였다.','각자 할 일을 알아서 척척 해낸 팀.','예상은 다 빗나갔지만 결과는 최고였다.',
+];
+
+const STAT_DEFS = [
+  { label:'웃음', key:'E' }, { label:'사진', key:'F' }, { label:'먹방', key:'S' },
+  { label:'체력', key:'E' }, { label:'계획성', key:'J' }, { label:'즉흥력', key:'P' },
+  { label:'길찾기', key:'T' }, { label:'예산관리', key:'J' }, { label:'추억생성력', key:'N' },
+];
+
+const FRIEND_OPTIONS_HTML = `
+  <option value="">친구 유형 선택</option>
+  <option value="ESTJ">🛟 보디가드형 (ESTJ)</option>
+  <option value="ESTP">🌊 입수 선발대형 (ESTP)</option>
+  <option value="ESFJ">☀️ 바다 햇살메이커형 (ESFJ)</option>
+  <option value="ESFP">🍜 밤까지 노는 먹방인싸형 (ESFP)</option>
+  <option value="ENTJ">🎖 바다 커맨더형 (ENTJ)</option>
+  <option value="ENTP">💡 바다 챌린저형 (ENTP)</option>
+  <option value="ENFJ">🎉 바다 치어리더형 (ENFJ)</option>
+  <option value="ENFP">✨ 낭만 폭주형 (ENFP)</option>
+  <option value="ISTJ">📋 바다 계획 마스터형 (ISTJ)</option>
+  <option value="ISTP">🏄 바다 실전 플레이어형 (ISTP)</option>
+  <option value="ISFJ">🐚 바다 힐링 케어형 (ISFJ)</option>
+  <option value="ISFP">🌙 밤바다 감성폭주형 (ISFP)</option>
+  <option value="INTJ">🗺 여행 총괄 PM형 (INTJ)</option>
+  <option value="INTP">🔬 바다 탐구 덕후형 (INTP)</option>
+  <option value="INFJ">🧭 바다 가이드형 (INFJ)</option>
+  <option value="INFP">🌸 바다 감성 시인형 (INFP)</option>
+`;
+
+function assignRoles(team) {
+  const teamKey = team.join('-');
+  const used = new Set();
+  return team.map((type, idx) => {
+    for (const L of type) {
+      const cands = (ROLE_AFFINITY[L] || []).filter(r => !used.has(r));
+      if (cands.length) {
+        const pick = cands[hashStr(teamKey + idx + L) % cands.length];
+        used.add(pick);
+        return { type, role: pick };
+      }
+    }
+    const remaining = ROLE_POOL.filter(r => !used.has(r));
+    const pick = remaining.length
+      ? remaining[hashStr(teamKey + idx + 'x') % remaining.length]
+      : ROLE_POOL[hashStr(teamKey + idx) % ROLE_POOL.length];
+    used.add(pick);
+    return { type, role: pick };
+  });
+}
+
+function buildTeamStats(team) {
+  return STAT_DEFS.map(({ label, key }) => {
+    const ratio = team.filter(t => t.includes(key)).length / team.length;
+    const star = Math.max(1, Math.min(5, Math.round(1 + ratio * 4)));
+    return { label, star };
+  });
+}
+
+function pairAvgPct(team) {
+  let sum = 0, n = 0;
+  for (let i = 0; i < team.length; i++) {
+    for (let j = i + 1; j < team.length; j++) {
+      sum += getPairDetail(team[i], team[j]).pct;
+      n++;
+    }
+  }
+  return n ? sum / n : 84;
+}
+
+function pickN(pool, n, seed) {
+  const idxs = [];
+  let i = 0;
+  while (idxs.length < n && i < pool.length * 3) {
+    const idx = hashStr(seed + i) % pool.length;
+    if (!idxs.includes(idx)) idxs.push(idx);
+    i++;
+  }
+  return idxs.map(idx => pool[idx]);
+}
+
+function buildTeamReport(team) {
+  const sortedKey = [...team].sort().join('-');
+  return {
+    teamName: TEAM_NAME_POOL[hashStr(sortedKey + 'name') % TEAM_NAME_POOL.length],
+    roles: assignRoles(team),
+    successRate: Math.round(pairAvgPct(team)),
+    timeline: TIMELINE_SLOTS.map((slot, i) => ({
+      t: slot.t,
+      text: slot.variants[hashStr(sortedKey + 'tl' + i) % slot.variants.length],
+    })),
+    bigEvent: BIG_EVENT_POOL[hashStr(sortedKey + 'big') % BIG_EVENT_POOL.length],
+    quotes: pickN(QUOTE_POOL, 3, sortedKey + 'quote'),
+    finalReview: FINAL_REVIEW_POOL[hashStr(sortedKey + 'final') % FINAL_REVIEW_POOL.length],
+    stats: buildTeamStats(team),
+  };
+}
+
+// ── 팀 UI ──
+function openTeamForm() {
+  document.getElementById('team-cta').style.display = 'none';
+  document.getElementById('team-form').style.display = 'block';
+  document.getElementById('team-my-type').textContent = RESULTS[myType].title;
+  if (document.getElementById('team-member-rows').children.length === 0) addTeamFriend();
+}
+
+function addTeamFriend() {
+  const rows = document.getElementById('team-member-rows');
+  if (rows.children.length >= 5) { toast('최대 5명까지 추가할 수 있어요 (나 포함 6명)'); return; }
+  const row = document.createElement('div');
+  row.className = 'team-member-row';
+  row.innerHTML = `<select class="friend-sel">${FRIEND_OPTIONS_HTML}</select><button class="team-remove-btn" onclick="this.parentElement.remove()">✕</button>`;
+  rows.appendChild(row);
+}
+
+function analyzeTeam() {
+  const selects = document.querySelectorAll('#team-member-rows select');
+  const friends = Array.from(selects).map(s => s.value).filter(Boolean);
+  if (friends.length < 1) { toast('친구를 최소 1명 추가해주세요! (나 포함 2명부터)'); return; }
+  const team = [myType, ...friends];
+  currentTeamReport = buildTeamReport(team);
+  renderTeamSummary(currentTeamReport);
+  document.getElementById('team-form').style.display = 'none';
+  document.getElementById('team-summary').style.display = 'block';
+  document.getElementById('team-report').style.display = 'none';
+  if (typeof gtag === 'function') gtag('event', 'team_analyze', { team_size: team.length });
+}
+
+function renderTeamSummary(report) {
+  document.getElementById('team-name').textContent = `🌊 ${report.teamName}`;
+  document.getElementById('team-rate').textContent = `⭐ 여행 성공률 ${report.successRate}%`;
+  document.getElementById('team-roles-mini').innerHTML = report.roles.map(r =>
+    `<div>${r.role} — ${RESULTS[r.type].title}</div>`).join('');
+  document.getElementById('team-big-mini').textContent = `💥 오늘의 사건: ${report.bigEvent}`;
+}
+
+function toggleTeamReport() {
+  const el = document.getElementById('team-report');
+  const willShow = el.style.display === 'none';
+  if (willShow) {
+    renderTeamReportFull(currentTeamReport);
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior:'smooth', block:'start' });
+    if (typeof gtag === 'function') gtag('event', 'team_report_expand', { team_size: currentTeamReport.roles.length });
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function renderTeamReportFull(report) {
+  const el = document.getElementById('team-report');
+  el.innerHTML = `
+    <div class="team-report-block">
+      <div class="team-report-title">🎭 팀원 역할</div>
+      <div class="team-role-grid">
+        ${report.roles.map(r => `<div class="team-role-item"><span>${r.role}</span><span class="team-role-name">${RESULTS[r.type].title}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="team-report-block">
+      <div class="team-report-title">🎬 여행 시뮬레이션</div>
+      <div class="team-timeline">
+        ${report.timeline.map(ev => `<div class="team-timeline-row"><span class="team-timeline-t">${ev.t}</span><span>${ev.text}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="team-report-block">
+      <div class="team-report-title">💥 오늘의 대형 사건</div>
+      <div class="team-report-text">${report.bigEvent}</div>
+    </div>
+    <div class="team-report-block">
+      <div class="team-report-title">😂 오늘 가장 많이 나온 대사</div>
+      <div class="team-report-text">${report.quotes.map(q => `"${q}"`).join(' · ')}</div>
+    </div>
+    <div class="team-report-block">
+      <div class="team-report-title">📊 여행 스탯</div>
+      <div class="team-stats">
+        ${report.stats.map(s => `<div class="team-stat-row"><span>${s.label}</span><span>${'★'.repeat(s.star)}${'☆'.repeat(5 - s.star)}</span></div>`).join('')}
+      </div>
+    </div>
+    <div class="team-report-block">
+      <div class="team-report-title">🤣 팀 최종 한 줄 평가</div>
+      <div class="team-report-text team-final-review">${report.finalReview}</div>
+    </div>
+  `;
+}
+
+function resetTeamForm() {
+  document.getElementById('team-summary').style.display = 'none';
+  document.getElementById('team-report').style.display = 'none';
+  document.getElementById('team-form').style.display = 'block';
 }
 
 function shareCompat() {
