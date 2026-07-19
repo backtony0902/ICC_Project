@@ -494,14 +494,22 @@
           <div class="compat-plus">+</div>
           <select class="friend-sel" id="friend-sel">
             <option value="">친구의 바다 유형 선택</option>
-            <option value="night">🌙 미스터리한 밤바다형</option>
-            <option value="wave">🌊 파도를 타는 모험가형</option>
-            <option value="sunset">🐚 노을빛 산책 바다형</option>
-            <option value="pollution">🛢 검은 파도 감지형</option>
-            <option value="radar">📡 레이더 관찰 바다형</option>
-            <option value="rescue">🚨 골든타임 구조 바다형</option>
-            <option value="compass">🧭 항로를 읽는 나침반형</option>
-            <option value="food">🍽 바다와 식탁 연결형</option>
+            <option value="ESTJ">🌊 바다 여행 대장 (ESTJ)</option>
+            <option value="ESTP">🏄 즉흥 파도 모험가 (ESTP)</option>
+            <option value="ESFJ">🎊 감성 파티 기획자 (ESFJ)</option>
+            <option value="ESFP">🎉 바다 파티 인싸 (ESFP)</option>
+            <option value="ENTJ">🧭 바다 탐험 대장 (ENTJ)</option>
+            <option value="ENTP">💡 바다 아이디어맨 (ENTP)</option>
+            <option value="ENFJ">🌅 감성 바다 리더 (ENFJ)</option>
+            <option value="ENFP">✨ 바다 낭만주의자 (ENFP)</option>
+            <option value="ISTJ">🔭 꼼꼼한 바다 탐사원 (ISTJ)</option>
+            <option value="ISTP">🏕 조용한 바다 탐험가 (ISTP)</option>
+            <option value="ISFJ">🐚 따뜻한 바다 수호자 (ISFJ)</option>
+            <option value="ISFP">🌸 혼자 빛나는 바다인 (ISFP)</option>
+            <option value="INTJ">🌌 밤바다 전략가 (INTJ)</option>
+            <option value="INTP">🔬 바다 연구원 (INTP)</option>
+            <option value="INFJ">🌙 신비로운 바다 철학자 (INFJ)</option>
+            <option value="INFP">🌊 내면 바다 여행자 (INFP)</option>
           </select>
           <button class="btn btn-teal" onclick="checkCompat()">🔍 궁합 보기</button>
 
@@ -531,50 +539,71 @@
 <script>
 // ── 결과 데이터 ──
 const RESULTS = {
-  night:     { name:"밤바다형",     title:"🌙 미스터리한 밤바다형",  emoji:"🌙", image:"./public/results/night-sea.png.png",      shareText:"나는 🌙 미스터리한 밤바다형! 너는 무슨 바다인지 해보고 나랑 바다 궁합 보자.",        shareMsg:"나는 🌙 미스터리한 밤바다형!\n조용하지만 깊은 사람. 같이 밤바다 걸을 친구 어디 없나요?\n#바다MBTI #친구야바다가자",    shortDesc:"겉으로는 조용하지만, 마음속에는 깊은 생각이 많은 사람", tagline:"나 실종잘되는 유형이래" },
-  wave:      { name:"파도모험가형", title:"🌊 파도를 타는 모험가형",  emoji:"🌊", image:"./public/results/adventure-wave.png.png", shareText:"나는 🌊 파도를 타는 모험가형! 나는 뛰어들 테니까 너는 날 말려줘.",                  shareMsg:"나는 🌊 파도를 타는 모험가형!\n망설임 없이 뛰어드는 사람. 같이 파도 타러 갈 친구 구함!\n#바다MBTI #친구야바다가자",   shortDesc:"가만히 있기보다 직접 부딪히며 살아가는 사람", tagline:"나랑 바다 가면 모험해야 재밌대 같이 모험하러 바다가자" },
-  sunset:    { name:"노을산책형",   title:"🐚 노을빛 산책 바다형",    emoji:"🐚", image:"./public/results/sunset-walk.png.png",    shareText:"나는 🐚 노을빛 산책 바다형! 나랑 노을 보러 갈 친구를 찾습니다.",                  shareMsg:"나는 🐚 노을빛 산책 바다형!\n감성을 오래 기억하는 사람. 노을 보러 갈 사람 있나요?\n#바다MBTI #친구야바다가자",       shortDesc:"분위기와 감정을 오래 기억하는 사람", tagline:"나 감성형 나왔어 같이 감성사진찍으러 바다가자" },
-  pollution: { name:"검은파도형",   title:"🛢 검은 파도 감지형",      emoji:"🛢", image:"./public/results/black-wave.png.png",     shareText:"나는 🛢 검은 파도 감지형! 근데 저 물 색 좀 이상하지 않아?",                      shareMsg:"나는 🛢 검은 파도 감지형!\n남들이 못 보는 걸 먼저 느끼는 사람.\n#바다MBTI #친구야바다가자",                          shortDesc:"겉으로 드러나지 않는 변화까지 민감하게 느끼는 사람", tagline:"나 바다에서도 이상한 거 제일 먼저 눈치채는 유형이래" },
-  radar:     { name:"레이더관찰형", title:"📡 레이더 관찰 바다형",    emoji:"📡", image:"./public/results/radar-observer.png.png", shareText:"나는 📡 레이더 관찰 바다형! 나는 배 보고 너는 분위기 봐.",                        shareMsg:"나는 📡 레이더 관찰 바다형!\n작은 단서에서 큰 흐름을 읽는 사람.\n#바다MBTI #친구야바다가자",                          shortDesc:"작은 단서에서 큰 흐름을 읽는 사람", tagline:"나 주위사항 다 살피는 눈치빠른 바다 유형이래" },
-  rescue:    { name:"골든타임형",   title:"🚨 골든타임 구조 바다형",  emoji:"🚨", image:"./public/results/golden-time.png.png",    shareText:"나는 🚨 골든타임 구조 바다형! 위험하면 내가 바로 말릴게.",                        shareMsg:"나는 🚨 골든타임 구조 바다형!\n위기 앞에서 망설이지 않는 사람.\n#바다MBTI #친구야바다가자",                          shortDesc:"위기 앞에서 망설이기보다 먼저 움직이는 사람", tagline:"나랑 바다 가면 일단 든든하대ㅋㅋ 너도 해봐" },
-  compass:   { name:"나침반형",     title:"🧭 항로를 읽는 나침반형",  emoji:"🧭", image:"./public/results/compass-route.png.png",  shareText:"나는 🧭 항로를 읽는 나침반형! 계획은 내가 짤게, 너는 신나게 놀아.",              shareMsg:"나는 🧭 항로를 읽는 나침반형!\n감정보다 방향을 먼저 챙기는 사람.\n#바다MBTI #친구야바다가자",                         shortDesc:"감정보다 방향과 계획을 중요하게 생각하는 사람", tagline:"나랑 바다 가면 길 잃을 일은 없대 너도 해봐" },
-  food:      { name:"식탁연결형",   title:"🍽 바다와 식탁 연결형",    emoji:"🍽", image:"./public/results/sea-table.png.png",      shareText:"나는 🍽 바다와 식탁 연결형! 바다 보고 회 먹으러 가는 코스 어때?",                shareMsg:"나는 🍽 바다와 식탁 연결형!\n바다 보고 회 먹으러 가는 코스. 같이 갈 사람?\n#바다MBTI #친구야바다가자",              shortDesc:"멀리 있는 문제도 결국 내 일상과 연결해 생각하는 사람", tagline:"결국 난 바다 가서도 먹을 거 생각하는 유형이래" }
+  ESTJ: { name:"바다 여행 대장",    title:"🌊 바다 여행 대장",       emoji:"🌊", image:"./public/results/ESTJ.png", shareText:"나 바다MBTI 했는데 여행 대장 나왔어 ㅋㅋ 너도 해봐",        shareMsg:"나는 🌊 바다 여행 대장!\n계획도 실행도 내가 다 하는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"계획하고 실행하고 챙기는 것까지 다 해내는 바다 리더",     tagline:"나 바다 여행 계획 짜는 거 좋아하는 유형 나왔어" },
+  ESTP: { name:"즉흥 파도 모험가",  title:"🏄 즉흥 파도 모험가",     emoji:"🏄", image:"./public/results/ESTP.png", shareText:"나 즉흥 파도 모험가래 갑자기 바다 가자",                     shareMsg:"나는 🏄 즉흥 파도 모험가!\n계획 없이 바다 가도 제일 신나는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"계획 없이 바다 가도 가장 신나는 사람",                   tagline:"나랑 바다 가면 진짜 즉흥 모험 하게 된대 같이 가자" },
+  ESFJ: { name:"감성 파티 기획자",  title:"🎊 감성 파티 기획자",     emoji:"🎊", image:"./public/results/ESFJ.png", shareText:"나 감성 파티 기획자 나왔어 맛집도 분위기도 내가 다 챙긴대",  shareMsg:"나는 🎊 감성 파티 기획자!\n맛집도 분위기도 같이 챙기는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"맛집과 분위기를 함께 챙기는 바다 여행 기획자",           tagline:"나랑 바다 가면 맛집 분위기 다 챙겨준대 너도 해봐" },
+  ESFP: { name:"바다 파티 인싸",    title:"🎉 바다 파티 인싸",       emoji:"🎉", image:"./public/results/ESFP.png", shareText:"나 바다 파티 인싸 나왔어 ㅋㅋ 바다 가서 맛있는 거 먹자",    shareMsg:"나는 🎉 바다 파티 인싸!\n바다에서 제일 신나게 노는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"바다에서 제일 신나게 노는 사람",                         tagline:"나 바다 파티 인싸 유형이래 ㅋㅋ 너도 해봐" },
+  ENTJ: { name:"바다 탐험 대장",    title:"🧭 바다 탐험 대장",       emoji:"🧭", image:"./public/results/ENTJ.png", shareText:"나 바다 탐험 대장 나왔어 같이 바다 탐험하러 가자",           shareMsg:"나는 🧭 바다 탐험 대장!\n어디든 직접 찾아가는 탐험 리더 타입.\n#바다MBTI #친구야바다가자", shortDesc:"어디든 직접 찾아가는 바다 탐험 리더",                    tagline:"나랑 바다 가면 새로운 데 찾아가는 탐험 된대 같이 가자" },
+  ENTP: { name:"바다 아이디어맨",   title:"💡 바다 아이디어맨",      emoji:"💡", image:"./public/results/ENTP.png", shareText:"나 바다 아이디어맨 나왔어 바다 가서 새로운 거 해보자",       shareMsg:"나는 💡 바다 아이디어맨!\n바다에서 새로운 것 계속 찾는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"바다에서도 새로운 아이디어를 찾아내는 사람",             tagline:"나 바다에서도 새로운 거 계속 찾는 유형이래 너도 해봐" },
+  ENFJ: { name:"감성 바다 리더",    title:"🌅 감성 바다 리더",       emoji:"🌅", image:"./public/results/ENFJ.png", shareText:"나 감성 바다 리더 나왔어 같이 노을 보러 바다 가자",          shareMsg:"나는 🌅 감성 바다 리더!\n감성도 리더십도 다 갖춘 타입.\n#바다MBTI #친구야바다가자", shortDesc:"감성과 리더십을 모두 갖춘 바다 여행 리더",               tagline:"나랑 바다 가면 감성적인 순간 다 만들어준대 같이 가자" },
+  ENFP: { name:"바다 낭만주의자",   title:"✨ 바다 낭만주의자",      emoji:"✨", image:"./public/results/ENFP.png", shareText:"나 바다 낭만주의자 나왔어 ㅋㅋ 낭만 있는 바다 가자",         shareMsg:"나는 ✨ 바다 낭만주의자!\n바다의 모든 순간이 낭만인 타입.\n#바다MBTI #친구야바다가자", shortDesc:"바다의 모든 순간에서 낭만을 발견하는 사람",             tagline:"나 바다 낭만주의자 유형이래 너도 해봐" },
+  ISTJ: { name:"꼼꼼한 바다 탐사원", title:"🔭 꼼꼼한 바다 탐사원",  emoji:"🔭", image:"./public/results/ISTJ.png", shareText:"나 꼼꼼한 바다 탐사원 나왔어 바다 탐사 같이 가자",           shareMsg:"나는 🔭 꼼꼼한 바다 탐사원!\n놓치는 게 없는 꼼꼼한 바다 탐험가.\n#바다MBTI #친구야바다가자", shortDesc:"아무것도 놓치지 않는 꼼꼼한 바다 탐험가",               tagline:"나랑 바다 가면 아무것도 놓치는 게 없대 너도 해봐" },
+  ISTP: { name:"조용한 바다 탐험가", title:"🏕 조용한 바다 탐험가",  emoji:"🏕", image:"./public/results/ISTP.png", shareText:"나 조용한 바다 탐험가 나왔어 조용히 바다 같이 가자",          shareMsg:"나는 🏕 조용한 바다 탐험가!\n말 없이도 바다를 탐험하는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"말없이 바다를 가장 깊이 탐험하는 사람",                  tagline:"나 혼자 조용히 바다 즐기는 유형이래 같이 가자" },
+  ISFJ: { name:"따뜻한 바다 수호자", title:"🐚 따뜻한 바다 수호자",  emoji:"🐚", image:"./public/results/ISFJ.png", shareText:"나 따뜻한 바다 수호자 나왔어 같이 바다 가자 내가 다 챙길게", shareMsg:"나는 🐚 따뜻한 바다 수호자!\n같이 가는 사람 다 챙겨주는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"함께 가는 사람을 항상 따뜻하게 챙겨주는 사람",             tagline:"나랑 바다 가면 내가 다 챙겨준대 ㅋㅋ 너도 해봐" },
+  ISFP: { name:"혼자 빛나는 바다인", title:"🌸 혼자 빛나는 바다인",  emoji:"🌸", image:"./public/results/ISFP.png", shareText:"나 혼자 빛나는 바다인 나왔어 바다에서 감성 사진 같이 찍자",  shareMsg:"나는 🌸 혼자 빛나는 바다인!\n혼자여도 빛나는 감성 바다 타입.\n#바다MBTI #친구야바다가자", shortDesc:"혼자여도 가장 아름답게 빛나는 바다 감성인",              tagline:"나 감성형 나왔어 같이 감성사진찍으러 바다가자" },
+  INTJ: { name:"밤바다 전략가",     title:"🌌 밤바다 전략가",        emoji:"🌌", image:"./public/results/INTJ.png", shareText:"나 밤바다 전략가 나왔어 같이 밤바다 보러 가자",               shareMsg:"나는 🌌 밤바다 전략가!\n밤바다에서 혼자 생각 정리하는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"밤바다에서 혼자 깊이 생각하는 전략가",                   tagline:"나 밤바다에서 생각 정리하는 유형이래 같이 밤바다 가자" },
+  INTP: { name:"바다 연구원",       title:"🔬 바다 연구원",          emoji:"🔬", image:"./public/results/INTP.png", shareText:"나 바다 연구원 나왔어 바다에서 이상한 거 찾는 게 재밌대",    shareMsg:"나는 🔬 바다 연구원!\n바다에서 새로운 걸 분석하는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"바다에서 항상 새로운 것을 발견하고 분석하는 사람",       tagline:"나 바다에서도 이상한 거 제일 먼저 눈치채는 유형이래" },
+  INFJ: { name:"신비로운 바다 철학자", title:"🌙 신비로운 바다 철학자", emoji:"🌙", image:"./public/results/INFJ.png", shareText:"나 신비로운 바다 철학자 나왔어 같이 밤바다 걸으러 가자",   shareMsg:"나는 🌙 신비로운 바다 철학자!\n밤바다에서 혼자 생각에 잠기는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"밤바다에서 깊은 생각에 잠기는 신비로운 사람",             tagline:"나 실종잘되는 유형이래 ㅋㅋ 밤바다 같이 가자" },
+  INFP: { name:"내면 바다 여행자",  title:"🌊 내면 바다 여행자",     emoji:"🌊", image:"./public/results/INFP.png", shareText:"나 내면 바다 여행자 나왔어 감성 넘치는 바다 같이 가자",      shareMsg:"나는 🌊 내면 바다 여행자!\n바다를 보며 마음 속 여행을 하는 타입.\n#바다MBTI #친구야바다가자", shortDesc:"바다를 보며 마음속 깊이 여행하는 감성인",               tagline:"나랑 바다 가면 감성 넘친대 같이 바다 가자" }
 };
 
 // ── 질문 데이터 ──
 const QUESTIONS = [
-  { text:'친구가 갑자기 "우리 바다 갈래?"라고 했다. 내 첫마디는?',
-    ans:[{t:'좋아 수영하러 가자는거지?',k:'rescue'},{t:'언제갈까 ?!',k:'wave'},{t:'갈꺼면 풍경예쁘고 사진잘나오는데로 가자',k:'sunset'},{t:'가서 뭐먹지?',k:'food'}] },
-  { text:'수상한 선박을 보면 나는?',
-    ans:[{t:'위치랑 특징을 기억해둔다.',k:'radar'},{t:'주변 물 색이나 기름 흔적도 같이 살핀다.',k:'pollution'},{t:'혹시 위험 상황일 수 있으니 주변에 알린다.',k:'rescue'},{t:'일단 내 위치와 안전한 거리부터 확인한다.',k:'compass'}] },
-  { text:'바다 속 비밀문을 발견하면?',
-    ans:[{t:'이 문에 어떤 사연이 있을지 상상한다.',k:'night'},{t:'일단 열어보고 싶다.',k:'wave'},{t:'사진부터 찍고 기록한다.',k:'sunset'},{t:'녹슨 흔적이나 이상한 냄새가 있는지 먼저 본다.',k:'pollution'}] },
-  { text:'바다에서 이상한 신호를 받았다면?',
-    ans:[{t:'무슨 의미인지 조심히 생각해본다.',k:'night'},{t:'신호가 온 위치와 방향을 기억해둔다.',k:'radar'},{t:'구조 신호일 수 있으니 바로 상황을 확인한다.',k:'rescue'},{t:'내 위치와 돌아갈 경로부터 확인한다.',k:'compass'}] },
-  { text:'바다 다녀온 뒤, 내가 제일 오래 기억할 것 같은 건?',
-    ans:[{t:'밤에 바다 보면서 친구랑 했던 얘기',k:'night'},{t:'계획에도 없었는데 갑자기 했던 물놀이',k:'wave'},{t:'노을 질 때 건진 인생 사진',k:'sunset'},{t:'솔직히 바다보다 거기서 먹은 거',k:'food'}] },
-  { text:'바다에 쓰레기나 오염 흔적이 보이면?',
-    ans:[{t:'이건 작은 이상 신호일 수도 있다고 느낀다.',k:'pollution'},{t:'위험해 보이면 바로 주변에 알려야겠다고 생각한다.',k:'rescue'},{t:'예쁜 풍경이 망가진 것 같아 아쉽다.',k:'sunset'},{t:'결국 바다와 먹거리까지 이어질 문제라고 느낀다.',k:'food'}] },
-  { text:'내가 해양경찰이라면 제일 잘할 것 같은 임무는?',
-    ans:[{t:'해양오염을 조사하고 피해 확산을 막는 일',k:'pollution'},{t:'수상한 선박을 관찰하고 해상 질서를 지키는 일',k:'radar'},{t:'신고 받고 빠르게 출동해서 사람을 구하는 일',k:'rescue'},{t:'선박 이동 방향과 해상교통을 관리하는 일',k:'compass'}] },
-  { text:'친구에게 공유하고 싶은 테스트 문구는?',
-    ans:[{t:'이거 바다 궁합 테스트라는데? 같이해보자',k:'night'},{t:'바다 가기 전에 이거 은근 유용하니까 해봐!',k:'wave'},{t:'이게 요즘유행하는 해양경찰청에서 하는 테스트래',k:'rescue'},{t:'결과 카드 이쁘니까 너도 해봐',k:'sunset'}] }
+  { text:'여행 마지막 날, 시간이 딱 1시간 남았다.',
+    ans:[{t:'🏖 바다 한 번 더 들어간다.',k:'P'},{t:'🍜 마지막 맛집을 간다.',k:'S'},{t:'☕ 감성 카페를 간다.',k:'F'},{t:'🛍 기념품을 산다.',k:'J'}] },
+  { text:'바다를 보면 가장 먼저 눈에 들어오는 것은?',
+    ans:[{t:'🌊 파도',k:'P'},{t:'🌅 하늘',k:'N'},{t:'🚢 배',k:'T'},{t:'👣 사람들',k:'E'}] },
+  { text:'바다 갈 때 무조건 데려가고 싶은 친구는?',
+    ans:[{t:'📸 인생샷 장인',k:'F'},{t:'🚗 운전·길찾기 장인',k:'J'},{t:'🍜 맛집 장인',k:'S'},{t:'🏕 준비성 장인',k:'T'}] },
+  { text:'무료 이용권이 생겼다! 가장 끌리는 여행은?',
+    ans:[{t:'🏝 안 친한 사람과 에메랄드빛 바다',k:'N'},{t:'🏕 친한 사람과 무인도 1박',k:'F'},{t:'🌊 혼자 바다에서 하루',k:'I'},{t:'🎉 친구 여러 명과 해수욕장',k:'E'}] },
+  { text:'바다에서 가장 행복한 순간은?',
+    ans:[{t:'😂 친구들과 크게 웃고 있을 때',k:'E'},{t:'📸 다 같이 인생샷을 찍을 때',k:'J'},{t:'🚶 혼자 바닷길을 천천히 걸을 때',k:'I'},{t:'🍜 파도를 보며 컵라면 먹을 때',k:'S'}] },
+  { text:'바다에서 가장 설레는 순간은?',
+    ans:[{t:'🌅 첫 햇살을 볼 때',k:'T'},{t:'🏄 햇빛 아래 물놀이할 때',k:'S'},{t:'🌙 조명이 하나둘 켜질 때',k:'F'},{t:'✨ 별이 보이기 시작할 때',k:'N'}] },
+  { text:'바다에서 가장 듣기 좋은 소리는?',
+    ans:[{t:'🌊 갈매기와 파도',k:'I'},{t:'🏄 사람들의 웃음소리',k:'E'},{t:'🎸 밤바다 버스킹',k:'F'},{t:'🌙 조용한 밤 파도',k:'N'}] },
+  { text:'바다에서 가장 낭만적인 순간은?',
+    ans:[{t:'🍜 밤바다 컵라면',k:'S'},{t:'🌅 노을 보며 멍 때리기',k:'F'},{t:'🚶 해변 산책',k:'I'},{t:'✨ 별이 가득한 밤하늘',k:'N'}] },
+  { text:'바다에서 하루 동안 특별한 능력을 얻는다면?',
+    ans:[{t:'🌊 물속에서도 숨 쉬기',k:'P'},{t:'🐬 바다 생물과 대화하기',k:'N'},{t:'🌌 모든 심해 미스터리를 알아내기',k:'T'},{t:'🗺 세상의 모든 바다를 자유롭게 이동하기',k:'E'}] },
+  { text:'바다에서 가장 발견해 보고 싶은 것은?',
+    ans:[{t:'⚓ 오래된 난파선',k:'T'},{t:'✨ 전설 속 보물',k:'F'},{t:'🐠 한 번도 본 적 없는 생물',k:'N'},{t:'🏝 지도에 없는 섬',k:'P'}] },
+  { text:'바다 속 비밀문을 발견했다.',
+    ans:[{t:'✨ 어떤 사연인지 상상한다.',k:'N'},{t:'🚪 바로 열어본다.',k:'P'},{t:'📸 사진부터 찍는다.',k:'J'},{t:'🔍 주변 흔적부터 조사한다.',k:'T'}] },
+  { text:'바다에서 딱 하나를 얻을 수 있다면?',
+    ans:[{t:'🧭 절대 길을 잃지 않는 나침반',k:'J'},{t:'📷 모든 순간을 담는 카메라',k:'F'},{t:'⛵ 어디든 갈 수 있는 작은 배',k:'P'},{t:'🐚 소원을 들어주는 조개',k:'I'}] },
+  { text:'평생 하나만 가능하다면?',
+    ans:[{t:'📸 사진은 남지만 기억이 없다.',k:'T'},{t:'🧠 기억은 생생하지만 사진이 없다.',k:'F'},{t:'🎥 여행 영상을 평생 볼 수 있다.',k:'S'},{t:'🤝 같이 갔던 사람만 평생 기억난다.',k:'I'}] },
+  { text:'바다 다녀온 뒤 가장 오래 기억날 것은?',
+    ans:[{t:'🌙 친구와 나눈 이야기',k:'F'},{t:'🌊 계획에도 없던 물놀이',k:'P'},{t:'📸 인생 사진',k:'J'},{t:'🍜 음식',k:'S'}] },
+  { text:'바다에서 가장 믿음직한 것은?',
+    ans:[{t:'🛟 구명조끼',k:'J'},{t:'🧭 나침반',k:'T'},{t:'🤝 함께 온 친구',k:'F'},{t:'🚨 해양경찰',k:'E'}] },
+  { text:'같이 여행 가기 가장 힘든 친구는?',
+    ans:[{t:'📸 사진만 100장 찍는 친구',k:'T'},{t:'🍜 메뉴를 1시간 고민하는 친구',k:'J'},{t:'😴 늦잠 자는 친구',k:'E'},{t:'🛍 갑자기 쇼핑하는 친구',k:'I'}] },
+  { text:'내가 해양경찰이라면 가장 잘할 것 같은 임무는?',
+    ans:[{t:'🌊 해양오염 조사',k:'N'},{t:'🚤 해상 질서 유지',k:'J'},{t:'🛟 구조·구난',k:'P'},{t:'🧭 해상교통 관리',k:'T'}] },
+  { text:'바다를 색으로 표현한다면?',
+    ans:[{t:'💙 파란색',k:'T'},{t:'🧡 주황색',k:'E'},{t:'💜 보라색',k:'F'},{t:'🖤 검정색',k:'I'}] },
+  { text:'바다에서 가장 오래 바라볼 수 있는 것은?',
+    ans:[{t:'🌊 파도',k:'P'},{t:'🌅 노을',k:'F'},{t:'⭐ 밤하늘',k:'N'},{t:'🚢 수평선',k:'T'}] },
+  { text:'바다 여행이 갑자기 하루 더 연장됐다!',
+    ans:[{t:'🎉 친구들과 새로운 액티비티를 해본다.',k:'E'},{t:'🍜 현지 맛집을 더 찾아다닌다.',k:'S'},{t:'🧭 아무 계획 없이 발길 닿는 대로 돌아다닌다.',k:'P'},{t:'🌊 조용한 바다를 보며 하루를 마무리한다.',k:'I'}] }
 ];
-
-// ── 궁합 데이터 (알파벳순 키) ──
-const COMPAT = {
-  'night+rescue':     { pct:92, desc:'조용한 감성과 빠른 판단이 만난 든든한 조합. 밤바다에서도 서로를 잃지 않는 안정형 페어입니다.' },
-  'compass+wave':     { pct:90, desc:'한 명은 뛰어들고, 한 명은 방향을 잡아주는 조합. 재미와 안전의 밸런스가 좋은 바다 페어입니다.' },
-  'radar+sunset':     { pct:88, desc:'한 명은 노을을 보고, 한 명은 발밑과 주변을 봅니다. 감성은 살리고 위험은 줄이는 산책 조합입니다.' },
-  'pollution+radar':  { pct:91, desc:'한 명은 이상 신호를 감지하고, 한 명은 단서를 읽습니다. 바다의 변화를 놓치지 않는 관찰 페어입니다.' },
-  'food+pollution':   { pct:87, desc:'한 명은 바다를 식탁까지 연결하고, 한 명은 바다의 작은 변화를 감지합니다. 깨끗한 바다에 진심인 현실형 페어입니다.' },
-  'compass+night':    { pct:84, desc:'한 명은 조용히 깊이 생각하고, 한 명은 길을 잡습니다. 분위기와 안정감이 함께 있는 페어입니다.' },
-  'rescue+wave':      { pct:86, desc:'한 명은 먼저 움직이고, 한 명은 위험할 때 잡아줍니다. 신나는 여행에 든든함을 더하는 조합입니다.' }
-};
 
 // ── 상태 ──
 let curQ = 0, scores = {}, answers = [], myType = null, fromType = null;
-const EMOJIS = ['🌊','🚢','🐚','📡','🌙','🛢','🚨','🧭'];
+const EMOJIS = ['🏖','🌊','👫','🏝','😊','🌅','🎵','🌙','🐬','🗺','🚪','⚓','📸','🏖','🛟','😤','🚤','🎨','🌟','✈️'];
 
 // ── 화면 전환 ──
 function show(id) {
@@ -586,7 +615,7 @@ function show(id) {
 // ── 시작 ──
 function startTest() {
   curQ = 0;
-  scores = { night:0,wave:0,sunset:0,pollution:0,radar:0,rescue:0,compass:0,food:0 };
+  scores = { E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0 };
   answers = [];
   myType = null;
   loadQ();
@@ -631,16 +660,12 @@ function startLoading() {
   setTimeout(() => showResult(calcResult()), 1500);
 }
 
-// ── 결과 계산 + 동점 처리 ──
+// ── 결과 계산 ──
 function calcResult() {
-  const max = Math.max(...Object.values(scores));
-  const tied = Object.keys(scores).filter(k => scores[k] === max);
-  if (tied.length === 1) return tied[0];
-  for (const idx of [7, 6, 3]) {
-    if (answers[idx] && tied.includes(answers[idx])) return answers[idx];
-  }
-  for (const a of answers) { if (tied.includes(a)) return a; }
-  return tied[0];
+  return (scores.E >= scores.I ? 'E' : 'I') +
+         (scores.S >= scores.N ? 'S' : 'N') +
+         (scores.T >= scores.F ? 'T' : 'F') +
+         (scores.J >= scores.P ? 'J' : 'P');
 }
 
 // ── 결과 표시 ──
@@ -787,9 +812,17 @@ function checkCompat() {
 }
 
 function getCompat(a, b) {
-  if (a === b) return { pct:89, desc:'같은 바다를 바라보는 두 사람. 취향은 잘 맞지만, 함께 갈 때는 서로가 놓치는 부분도 한 번 더 챙겨보세요.' };
-  const key = [a,b].sort().join('+');
-  return COMPAT[key] || { pct:78, desc:'서로 다른 바다 성향이 만나 새로운 여행 분위기를 만드는 조합입니다. 함께 갈 때는 서로의 속도와 안전을 챙겨보세요.' };
+  if (!a || !b) return { pct:0, desc:'' };
+  if (a === b) return { pct:88, desc:'완전히 같은 바다 스타일! 취향이 딱 맞지만, 서로가 놓치는 부분도 있으니 조심해요.' };
+  let diff = 0;
+  for (let i = 0; i < 4; i++) if (a[i] !== b[i]) diff++;
+  const data = {
+    1: { pct:76, desc:'거의 비슷한 바다 스타일. 딱 하나 다른 그 부분이 오히려 여행의 포인트가 됩니다.' },
+    2: { pct:83, desc:'비슷한 듯 달라서 균형이 맞는 조합. 서로의 다른 면이 여행을 더 풍부하게 만들어줘요.' },
+    3: { pct:79, desc:'서로 다른 바다 스타일이지만, 그 차이가 여행의 재미가 됩니다.' },
+    4: { pct:95, desc:'정반대인데 오히려 완벽한 조합! 서로 부족한 부분을 채워주는 최강의 바다 파트너예요.' }
+  };
+  return data[diff];
 }
 
 function shareCompat() {
