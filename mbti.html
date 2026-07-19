@@ -566,7 +566,7 @@ const QUESTIONS = [
   { text:'바다 갈 때 무조건 데려가고 싶은 친구는?',
     ans:[{t:'📸 어디에서나 인생샷 찍어주는 아이폰 3개인 친구',k:'F'},{t:'🚗 길찾기와 운전 모두 다하는 베스트 드라이버 친구',k:'J'},{t:'🍜 숨겨진 맛집을 다 조사해왔다고 자기만 따라오라는 친구',k:'S'},{t:'🗣 친화력 좋아서 아무한테나 말 거는 친구',k:'T'}] },
   { text:'무료 이용권이 생겼다! 가장 끌리는 여행은?',
-    ans:[{t:'🏝 안 친한 사람과 에메랄드빛 바다',k:'N'},{t:'🏕 친한 사람과 무인도 1박',k:'F'},{t:'🌊 혼자 바다에서 하루',k:'I'},{t:'🎉 친구 여러 명과 해수욕장',k:'E'}] },
+    ans:[{t:'🏝 안 친한 친구와 1급 에메랄드 바다',k:'E',w:2},{t:'🏕 친한 사람과 무인도 1박',k:'F'},{t:'🌊 혼자만 즐길 수 있는 바다',k:'I',w:2},{t:'🎉 친구 여러 명과 해수욕장',k:'E'}] },
   { text:'바다에서 가장 설레는 순간은?',
     ans:[{t:'🌅 첫 햇살을 볼 때',k:'T'},{t:'🏄 햇빛 아래 물놀이할 때',k:'S'},{t:'🌙 조명이 하나둘 켜질 때',k:'F'},{t:'✨ 별이 보이기 시작할 때',k:'N'}] },
   { text:'바다에서 가장 듣기 좋은 소리는?',
@@ -638,16 +638,16 @@ function loadQ() {
     const btn = document.createElement('button');
     btn.className = 'ans-btn';
     btn.textContent = a.t;
-    btn.onclick = () => pick(a.k, btn);
+    btn.onclick = () => pick(a.k, btn, a.w || 1);
     list.appendChild(btn);
   });
 }
 
 // ── 답 선택 ──
-function pick(type, btn) {
+function pick(type, btn, weight) {
   document.querySelectorAll('.ans-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  scores[type]++;
+  scores[type] += (weight || 1);
   answers.push(type);
   setTimeout(() => {
     curQ++;
