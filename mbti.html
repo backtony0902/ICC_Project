@@ -91,8 +91,6 @@
     .btn-yellow:active { box-shadow:2px 2px 0 rgba(160,120,0,0.25); }
     .btn-outline { background:#fff; color:#0288d1; border:2px solid #0288d1; box-shadow:3px 3px 0 rgba(0,100,180,0.15); }
     .btn-outline:active { box-shadow:1px 1px 0 rgba(0,100,180,0.15); }
-    .btn-copy { background:rgba(255,255,255,0.15); color:#fff; border:1.5px solid rgba(255,255,255,0.5); font-size:14px; padding:10px; margin-top:8px; }
-    .btn-copy:hover { background:rgba(255,255,255,0.25); }
 
     /* ── 친구 공유 유도 ── */
     .friend-nudge {
@@ -194,39 +192,6 @@
     }
     .btn-reveal:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(25,118,210,.65); }
     .btn-reveal:active { transform: translateY(0); }
-
-    /* ── 추천 공유 문구 박스 ── */
-    .tagline-box {
-      background: rgba(0,80,160,0.35);
-      border: 1.5px solid rgba(100,180,255,0.4);
-      border-radius: 14px;
-      padding: 12px 14px 10px;
-      text-align: left;
-      backdrop-filter: blur(6px);
-      margin-top: 4px;
-    }
-    .tagline-label {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: rgba(150,210,255,0.9);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-    .tagline-text {
-      font-size: 14.5px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.4;
-      margin-bottom: 6px;
-    }
-    .tagline-cta {
-      font-size: 12px;
-      color: rgba(200,230,255,0.85);
-      line-height: 1.5;
-      border-top: 1px solid rgba(255,255,255,0.15);
-      padding-top: 8px;
-    }
 
     /* ── 시작 화면 ── */
     .bubble {
@@ -640,14 +605,6 @@
           <a class="btn-insta-link" href="https://www.instagram.com/who_guards_the_sea?igsh=MW5tNGV3NTU3NmRsaw%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener noreferrer">📸 인스타 보러가기</a>
         </div>
 
-        <!-- 추천 공유 문구 -->
-        <div class="tagline-box">
-          <div class="tagline-label">💬 추천 공유 문구</div>
-          <div class="tagline-text" id="tagline-text"></div>
-          <div class="tagline-cta">나랑 바다 가면 가장 잘 맞을 사람은 누구일까? 🌊<br>친구한테 테스트 보내고 서로의 바다 유형을 확인해보세요.</div>
-          <button class="btn btn-copy" onclick="copyTagline()">📋 문구 복사하기</button>
-        </div>
-
         <button class="btn btn-primary" onclick="openShareModal()">📤 공유하기</button>
         <div style="font-size:13px;color:rgba(255,255,255,.8);margin-top:-4px">같이 바다 가고 싶은 친구에게 공유해보세요 🌊</div>
 
@@ -844,7 +801,6 @@ function showResult(type) {
   const r = RESULTS[type];
   document.getElementById('r-title').textContent = r.title;
   document.getElementById('my-type-display').textContent = r.title;
-  document.getElementById('tagline-text').textContent = r.tagline;
   history.replaceState(null, '', '?type=' + type);
 
   // 친구 공유 링크로 들어온 경우 궁합 버튼 표시
@@ -1095,7 +1051,7 @@ function shareCompat() {
 function shareFriend() {
   const r = RESULTS[myType];
   const url = getShareUrl();
-  const text = `${r.title}\n\n너도 해봐! 바다 MBTI 👉 ${url}`;
+  const text = `${r.tagline}\n\n너도 해봐! 바다 MBTI 👉 ${url}`;
   if (navigator.share) {
     navigator.share({ title:'나의 바다 MBTI 심리테스트', text, url }).catch(()=>{});
   } else {
@@ -1105,14 +1061,6 @@ function shareFriend() {
 }
 
 // ── 추천 문구 복사 ──
-function copyTagline() {
-  const r = RESULTS[myType];
-  const url = getShareUrl();
-  const full = `${r.tagline}\n\n나랑 바다 가면 가장 잘 맞을 사람은 누구일까? 🌊\n친구한테 테스트 보내고 서로의 바다 유형을 확인해보세요.\n👉 ${url}`;
-  copyText(full);
-  toast('문구가 복사됐어요! 친구에게 바로 보내보세요 🌊');
-}
-
 // ── 반짝이 파티클 ──
 function addSparkles(wrapEl) {
   const rect = wrapEl.getBoundingClientRect();
@@ -1142,12 +1090,12 @@ function closeShareModal() { document.getElementById('share-modal').style.displa
 function shareKakao() {
   const r = RESULTS[myType];
   const url = getShareUrl();
-  const text = `${r.shareText}\n👉 ${url}`;
+  const text = `${r.tagline}\n👉 ${url}`;
   if (navigator.share) {
     navigator.share({ title:'나의 바다 MBTI 심리테스트', text, url }).catch(()=>{});
   } else {
-    copyText(url);
-    toast('링크가 복사됐어요! 카카오톡에 붙여넣기 해보세요. 💬');
+    copyText(text);
+    toast('문구랑 링크가 복사됐어요! 카카오톡에 붙여넣기 해보세요. 💬');
   }
 }
 
