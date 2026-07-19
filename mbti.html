@@ -747,6 +747,15 @@
   </div>
 </div>
 
+<!-- 링크 복사 안내 모달 -->
+<div class="modal-overlay" id="link-copied-modal">
+  <div class="modal-box">
+    <h3>🔗 링크가 복사됐어요!</h3>
+    <p>인스타그램 스토리에 사진을 올린 다음<br>"링크" 스티커를 추가하고<br>붙여넣기(paste) 하면 링크가 연결돼요. 🌊</p>
+    <button class="modal-close" onclick="confirmLinkCopiedModal()">확인, 공유하러 가기</button>
+  </div>
+</div>
+
 <script>
 // ── 결과 데이터 ──
 const RESULTS = {
@@ -999,20 +1008,21 @@ async function shareInstagram() {
   const r = RESULTS[myType];
   const url = getShareUrl();
   copyText(url);
-  if (img && img.complete && img.naturalWidth > 0) {
-    try {
-      const resp = await fetch(img.src);
-      const blob = await resp.blob();
-      const file = new File([blob], `나의바다MBTI_${r.name}.png`, { type: blob.type });
-      if (navigator.canShare && navigator.canShare({ files:[file] })) {
-        await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + url, url });
-        toast('링크도 복사해뒀어요! 스토리에서 "링크" 스티커에 붙여넣기 하면 완성 🌊');
-        return;
-      }
-    } catch(e) {}
-  }
-  saveImage();
-  showInstaModal();
+  showLinkCopiedModal(async () => {
+    if (img && img.complete && img.naturalWidth > 0) {
+      try {
+        const resp = await fetch(img.src);
+        const blob = await resp.blob();
+        const file = new File([blob], `나의바다MBTI_${r.name}.png`, { type: blob.type });
+        if (navigator.canShare && navigator.canShare({ files:[file] })) {
+          await navigator.share({ files:[file], title:'나의 바다 MBTI 결과', text: r.shareMsg + '\n👉 ' + url, url });
+          return;
+        }
+      } catch(e) {}
+    }
+    saveImage();
+    showInstaModal();
+  });
 }
 
 // ── 시작 썸네일로 테스트 초대 스토리 공유 ──
@@ -1021,21 +1031,22 @@ async function shareStoryThumb() {
   const inviteUrl = location.origin + location.pathname;
   const text = '나의 바다 MBTI 심리테스트! 너도 해봐 🌊\n👉 ' + inviteUrl;
   copyText(inviteUrl);
-  try {
-    const resp = await fetch('thumbnail2.png');
-    const blob = await resp.blob();
-    const file = new File([blob], '바다MBTI_테스트.png', { type: blob.type });
-    if (navigator.canShare && navigator.canShare({ files:[file] })) {
-      await navigator.share({ files:[file], title:'나의 바다 MBTI 심리테스트', text, url: inviteUrl });
-      toast('링크도 복사해뒀어요! 스토리에서 "링크" 스티커에 붙여넣기 하면 완성 🌊');
-      return;
-    }
-  } catch(e) {}
-  const a = document.createElement('a');
-  a.href = 'thumbnail2.png';
-  a.download = '바다MBTI_테스트.png';
-  a.click();
-  toast('썸네일이 저장되고 링크가 복사됐어요! 스토리에서 "링크" 스티커에 붙여넣기 하세요 🌊');
+  showLinkCopiedModal(async () => {
+    try {
+      const resp = await fetch('thumbnail2.png');
+      const blob = await resp.blob();
+      const file = new File([blob], '바다MBTI_테스트.png', { type: blob.type });
+      if (navigator.canShare && navigator.canShare({ files:[file] })) {
+        await navigator.share({ files:[file], title:'나의 바다 MBTI 심리테스트', text, url: inviteUrl });
+        return;
+      }
+    } catch(e) {}
+    const a = document.createElement('a');
+    a.href = 'thumbnail2.png';
+    a.download = '바다MBTI_테스트.png';
+    a.click();
+    toast('썸네일이 저장됐어요! 갤러리에서 스토리에 올려보세요 🌊');
+  });
 }
 
 // ── 궁합 ──
@@ -1448,6 +1459,19 @@ function addSparkles(wrapEl) {
 // ── 인스타 모달 ──
 function showInstaModal() { document.getElementById('insta-modal').style.display='flex'; }
 function closeModal()     { document.getElementById('insta-modal').style.display='none'; }
+
+// ── 링크 복사 안내 모달 ──
+let pendingShareAction = null;
+function showLinkCopiedModal(proceedFn) {
+  pendingShareAction = proceedFn;
+  document.getElementById('link-copied-modal').style.display = 'flex';
+}
+function confirmLinkCopiedModal() {
+  document.getElementById('link-copied-modal').style.display = 'none';
+  const fn = pendingShareAction;
+  pendingShareAction = null;
+  if (fn) fn();
+}
 
 // ── 공유하기 시트 ──
 function openShareModal()  {
