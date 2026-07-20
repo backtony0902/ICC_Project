@@ -1000,7 +1000,13 @@ function saveImage() {
   const r = RESULTS[myType];
   if (img && img.complete && img.naturalWidth > 0) {
     const a = document.createElement('a');
-    a.href = img.src; a.download = `나의바다MBTI_${r.name}.png`; a.click();
+    a.href = img.src;
+    a.download = `나의바다MBTI_${r.name}.png`;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast('이미지 저장 중이에요! 안 되면 이미지를 길게 눌러 저장해보세요 📸');
   } else {
     toast('결과카드를 길게 눌러 저장하거나 스크린샷으로 공유해보세요!');
   }
