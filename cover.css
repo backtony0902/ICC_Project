@@ -12,6 +12,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px 0;
 }
 
 .container {
@@ -20,31 +21,47 @@ body {
     background: #1c2541;
     border: 1px solid #3a506b;
     border-radius: 16px;
-    padding: 40px 30px;
+    padding: 28px 24px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.thumbnail-wrapper {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 1px solid #3a506b;
+}
+
+.cover-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .badge {
     display: inline-block;
     color: #ffc300;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     letter-spacing: 1px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .title {
-    font-size: 2.2rem;
+    font-size: 2rem;
     color: #48cae4;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .description {
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.6;
     color: #c0c0c0;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .mission-preview {
@@ -52,16 +69,16 @@ body {
     flex-wrap: wrap;
     gap: 8px;
     justify-content: center;
-    margin-bottom: 36px;
+    margin-bottom: 28px;
 }
 
 .preview-item {
     background: rgba(72, 202, 228, 0.1);
     border: 1px solid #48cae4;
     color: #48cae4;
-    padding: 8px 14px;
+    padding: 8px 12px;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
 }
 
 .start-btn {

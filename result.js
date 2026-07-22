@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const rawData = localStorage.getItem("mission01_result");
-    const resultData = rawData ? JSON.parse(rawData) : { totalScore: 0, restoredFeatures: [] };
+    const resultData = rawData ? JSON.parse(rawData) : { totalScore: 0, restoredFeatures: [], userLogs: [] };
 
     const allCategories = [
         { name: "실종자 수색", icon: "🔭" },
@@ -10,10 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
         { name: "해상교통 안전관리", icon: "⚓" }
     ];
 
-    // 점수 출력
     document.getElementById("final-score").textContent = `${resultData.totalScore}%`;
 
-    // 등급 계산
     const gradeBadge = document.getElementById("grade-badge");
     if (resultData.totalScore >= 90) {
         gradeBadge.textContent = "S등급: 완벽한 해상 지휘관";
@@ -29,13 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
         gradeBadge.className = "grade-badge c";
     }
 
-    // 5대 기능 복원 현황 리스트 생성
     const statusList = document.getElementById("status-list");
     statusList.innerHTML = "";
-
     allCategories.forEach(cat => {
         const isRestored = resultData.restoredFeatures.includes(cat.name);
-        
         const li = document.createElement("li");
         li.className = "status-item";
         li.innerHTML = `
@@ -45,7 +40,24 @@ document.addEventListener("DOMContentLoaded", () => {
         statusList.appendChild(li);
     });
 
-    // 재시도 버튼
+    const reviewList = document.getElementById("review-list");
+    reviewList.innerHTML = "";
+    
+    if (resultData.userLogs) {
+        resultData.userLogs.forEach(log => {
+            const div = document.createElement("div");
+            div.className = `review-item ${log.type}`;
+            div.innerHTML = `
+                <div class="review-header">
+                    <span>${log.icon} ${log.category}</span>
+                    <span>획득 점수: ${log.score}점</span>
+                </div>
+                <p class="review-reason">${log.reason}</p>
+            `;
+            reviewList.appendChild(div);
+        });
+    }
+
     document.getElementById("retry-btn").addEventListener("click", () => {
         window.location.href = "cover.html";
     });

@@ -28,9 +28,19 @@
             <p id="situation-text" class="situation-text">상황 설명을 불러오는 중입니다...</p>
 
             <div id="options-container" class="options-container">
-                <!-- 선택지 버튼들이 JS로 생성됩니다 -->
+                <!-- 선택지 버튼이 JS로 로드됩니다 -->
             </div>
         </main>
+    </div>
+
+    <!-- 이유 안내 피드백 팝업 모달 -->
+    <div id="feedback-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div id="feedback-badge" class="feedback-badge">판정 결과</div>
+            <h3 id="feedback-title" class="feedback-title">시스템 복원 결과</h3>
+            <p id="feedback-reason" class="feedback-reason">판정 이유가 여기에 표시됩니다.</p>
+            <button id="next-btn" class="next-btn">다음 미션으로</button>
+        </div>
     </div>
 
     <script src="questions.js"></script>
