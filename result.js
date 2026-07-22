@@ -1,64 +1,62 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const rawData = localStorage.getItem("mission01_result");
-    const resultData = rawData ? JSON.parse(rawData) : { totalScore: 0, restoredFeatures: [], userLogs: [] };
-
-    const allCategories = [
-        { name: "실종자 수색", icon: "🔭" },
-        { name: "해양 구조", icon: "🛟" },
-        { name: "불법조업 단속", icon: "🚢" },
-        { name: "해양오염 대응", icon: "🛢" },
-        { name: "해상교통 안전관리", icon: "⚓" }
-    ];
-
-    document.getElementById("final-score").textContent = `${resultData.totalScore}%`;
-
-    const gradeBadge = document.getElementById("grade-badge");
-    if (resultData.totalScore >= 90) {
-        gradeBadge.textContent = "S등급: 완벽한 해상 지휘관";
-        gradeBadge.className = "grade-badge s";
-    } else if (resultData.totalScore >= 70) {
-        gradeBadge.textContent = "A등급: 우수한 구조대원";
-        gradeBadge.className = "grade-badge a";
-    } else if (resultData.totalScore >= 50) {
-        gradeBadge.textContent = "B등급: 보통의 현장 대응";
-        gradeBadge.className = "grade-badge b";
-    } else {
-        gradeBadge.textContent = "C등급: 대응 체계 재점검 필요";
-        gradeBadge.className = "grade-badge c";
+    const rawData = sessionStorage.getItem("icc_answers");
+    if (!rawData) {
+        alert("테스트 기록이 없습니다. 메인으로 이동합니다.");
+        location.href = "index.html";
+        return;
     }
 
-    const statusList = document.getElementById("status-list");
-    statusList.innerHTML = "";
-    allCategories.forEach(cat => {
-        const isRestored = resultData.restoredFeatures.includes(cat.name);
-        const li = document.createElement("li");
-        li.className = "status-item";
-        li.innerHTML = `
-            <span>${cat.icon} ${cat.name}</span>
-            <span class="status-tag ${isRestored ? 'on' : 'off'}">${isRestored ? 'ON (복구됨)' : 'OFF (마비)'}</span>
-        `;
-        statusList.appendChild(li);
-    });
+    const answers = JSON.parse(rawData);
+    
+    // 점수 및 복원율 계산 (총 100점 만점)
+    const totalScore = answers.reduce((sum, item) => sum + item.score, 0);
+    document.getElementById("final-score").textContent = `${totalScore}%`;
 
+    // 등급 판정
+    const gradeBadge = document.getElementById("grade-badge");
+    if (totalScore === 100) {
+        gradeBadge.textContent = "GRADE: 최고 지휘관 (Perfect)";
+        gradeBadge.style.color = "#00ff88";
+    } else if (totalScore >= 60) {
+        gradeBadge.textContent = "GRADE: 현장 대응 요원 (Pass)";
+        gradeBadge.style.color = "#4dd9ff";
+    } else {
+        gradeBadge.textContent = "GRADE: 재교육 필요 (Warning)";
+        gradeBadge.style.color = "#ff3333";
+    }
+
+    // 오답 및 대응 분석 리포트 생성
     const reviewList = document.getElementById("review-list");
     reviewList.innerHTML = "";
-    
-    if (resultData.userLogs) {
-        resultData.userLogs.forEach(log => {
-            const div = document.createElement("div");
-            div.className = `review-item ${log.type}`;
-            div.innerHTML = `
-                <div class="review-header">
-                    <span>${log.icon} ${log.category}</span>
-                    <span>획득 점수: ${log.score}점</span>
+
+    answers.forEach((ans, idx) => {
+        const card = document.createElement("div");
+        const isCorrect = ans.score > 0;
+        
+        card.className = `review-card ${isCorrect ? 'correct' : 'wrong'}`;
+        card.innerHTML = `
+            <div class="review-header">
+                <span class="review-num">${ans.icon} [0${idx + 1}] ${ans.category}</span>
+                <span class="review-status ${isCorrect ? 'pass' : 'fail'}">
+                    ${isCorrect ? '✔ 복원 성공 (+20%)' : '✖ 판단 실패 (0%)'}
+                </span>
+            </div>
+            <div class="review-body">
+                <p class="user-choice"><strong>내가 내린 판단:</strong> ${ans.selectedText}</p>
+                <div class="feedback-box ${isCorrect ? 'bg-pass' : 'bg-fail'}">
+                    <strong>분석 리포트:</strong> ${ans.feedback}
                 </div>
-                <p class="review-reason">${log.reason}</p>
-            `;
-            reviewList.appendChild(div);
+            </div>
+        `;
+        reviewList.appendChild(card);
+    });
+
+    // 다시 하기 버튼
+    const retryBtn = document.getElementById("retry-btn");
+    if (retryBtn) {
+        retryBtn.addEventListener("click", () => {
+            sessionStorage.removeItem("icc_answers");
+            location.href = "cover.html";
         });
     }
-
-    document.getElementById("retry-btn").addEventListener("click", () => {
-        window.location.href = "cover.html";
-    });
 });

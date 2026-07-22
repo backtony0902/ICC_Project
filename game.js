@@ -1,92 +1,77 @@
-let currentQuestionIndex = 0;
-let totalScore = 0;
-let restoredFeatures = [];
-let userLogs = [];
+let currentIdx = 0;
+let userAnswers = []; // 선택 기록 저장용
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadQuestion();
-    document.getElementById("next-btn").addEventListener("click", handleNextQuestion);
-});
+function renderQuestion() {
+    const q = questions[currentIdx];
+    
+    // 진행도 및 텍스트 업데이트
+    document.getElementById("question-count").textContent = `MISSION 0${currentIdx + 1} / 05`;
+    document.getElementById("category-icon").textContent = q.icon;
+    document.getElementById("category-name").textContent = q.category;
+    document.getElementById("situation-text").textContent = q.situation;
 
-function loadQuestion() {
-    const currentQ = questionsData[currentQuestionIndex];
+    const fillPct = (currentIdx / questions.length) * 100;
+    document.getElementById("progress-bar-fill").style.width = `${fillPct}%`;
 
-    document.getElementById("question-count").textContent = `MISSION 0${currentQuestionIndex + 1} / 0${questionsData.length}`;
-    document.getElementById("category-icon").textContent = currentQ.icon;
-    document.getElementById("category-name").textContent = currentQ.category;
-    document.getElementById("situation-text").textContent = currentQ.situation;
+    // 선택지 리스트 생성
+    const container = document.getElementById("options-container");
+    container.innerHTML = "";
 
-    const optionsContainer = document.getElementById("options-container");
-    optionsContainer.innerHTML = "";
-
-    currentQ.options.forEach((option) => {
+    q.options.forEach((opt, idx) => {
         const btn = document.createElement("button");
         btn.className = "option-btn";
-        btn.textContent = option.text;
-        btn.addEventListener("click", () => handleSelectOption(option, currentQ));
-        optionsContainer.appendChild(btn);
+        btn.textContent = `${idx + 1}. ${opt.text}`;
+        btn.addEventListener("click", () => handleSelectOption(opt, q));
+        container.appendChild(btn);
     });
 }
 
-function handleSelectOption(selectedOption, currentQ) {
-    totalScore += selectedOption.score;
-
-    if (selectedOption.restored) {
-        restoredFeatures.push(currentQ.category);
-    }
-
-    userLogs.push({
-        category: currentQ.category,
-        icon: currentQ.icon,
+// 선택지 클릭 처리
+function handleSelectOption(selectedOption, question) {
+    // 기록 저장
+    userAnswers.push({
+        category: question.category,
+        icon: question.icon,
+        situation: question.situation,
         selectedText: selectedOption.text,
         score: selectedOption.score,
-        reason: selectedOption.reason,
-        type: selectedOption.type
+        feedback: selectedOption.feedback
     });
 
-    const progressPercent = ((currentQuestionIndex + 1) / questionsData.length) * 100;
-    document.getElementById("progress-bar-fill").style.width = `${progressPercent}%`;
-    document.getElementById("restore-rate-text").textContent = `현재 복원율: ${totalScore}%`;
-
-    showFeedbackModal(selectedOption, currentQ.category);
-}
-
-function showFeedbackModal(option, categoryName) {
+    // 팝업 모달 채우기
     const modal = document.getElementById("feedback-modal");
     const badge = document.getElementById("feedback-badge");
     const title = document.getElementById("feedback-title");
     const reason = document.getElementById("feedback-reason");
 
-    badge.className = `feedback-badge ${option.type}`;
-    
-    if (option.type === "best") {
-        badge.textContent = "최선의 판단 (+20%)";
-        title.textContent = `🎉 [${categoryName}] 기능이 복원되었습니다!`;
-    } else if (option.type === "warn") {
-        badge.textContent = "부분적 판단 (+10%)";
-        title.textContent = `⚠️ [${categoryName}] 복원이 미흡합니다.`;
+    if (selectedOption.score > 0) {
+        badge.textContent = "SUCCESS";
+        badge.style.color = "#00ff88";
+        title.textContent = "시스템 복원 성공!";
     } else {
-        badge.textContent = "위험한 판단 (+0%)";
-        title.textContent = `❌ [${categoryName}] 복원에 실패했습니다.`;
+        badge.textContent = "WARNING";
+        badge.style.color = "#ff3333";
+        title.textContent = "판단 오류 발생";
     }
 
-    reason.textContent = option.reason;
+    reason.textContent = selectedOption.feedback;
     modal.classList.remove("hidden");
 }
 
-function handleNextQuestion() {
+// 팝업 내 [다음 미션으로] 버튼
+document.getElementById("next-btn").addEventListener("click", () => {
     document.getElementById("feedback-modal").classList.add("hidden");
-    currentQuestionIndex++;
-
-    if (currentQuestionIndex < questionsData.length) {
-        loadQuestion();
+    
+    currentIdx++;
+    if (currentIdx < questions.length) {
+        renderQuestion();
     } else {
-        const resultData = {
-            totalScore: totalScore,
-            restoredFeatures: restoredFeatures,
-            userLogs: userLogs
-        };
-        localStorage.setItem("mission01_result", JSON.stringify(resultData));
-        window.location.href = "result.html";
+        // 모든 문제 종료 시 결과 저장 및 이동
+        sessionStorage.setItem("icc_answers", JSON.stringify(userAnswers));
+        localStorage.setItem("icc_game_done", "true"); // index.html 연동용
+        location.href = "result.html";
     }
-}
+});
+
+// 초기화 시작
+renderQuestion();
