@@ -1,0 +1,83 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0b132b;
+    color: #ffffff;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    background: #1c2541;
+    border: 1px solid #3a506b;
+    border-radius: 16px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.badge {
+    display: inline-block;
+    color: #ffc300;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-size: 2.2rem;
+    color: #48cae4;
+    margin-bottom: 16px;
+}
+
+.description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #c0c0c0;
+    margin-bottom: 30px;
+}
+
+.mission-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 36px;
+}
+
+.preview-item {
+    background: rgba(72, 202, 228, 0.1);
+    border: 1px solid #48cae4;
+    color: #48cae4;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.start-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0b132b;
+    background-color: #00f5d4;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.start-btn:hover {
+    background-color: #52b788;
+    transform: translateY(-2px);
+}

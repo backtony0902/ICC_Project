@@ -1,59 +1,36 @@
 <!DOCTYPE html>
-
 <html lang="ko">
-
 <head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DR5E2L2XRV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-DR5E2L2XRV');
-</script>
-
-<meta charset="UTF-8">
-
-<title>결과</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTORE MISSION 01 - 미션 결과</title>
+    <link rel="stylesheet" href="result.css">
 </head>
-
 <body>
-  <audio autoplay loop><source src="bgm.mp3" type="audio/mpeg"></audio>
+    <div class="result-container">
+        <div class="result-header">
+            <span class="badge">MISSION COMPLETE</span>
+            <h1 class="title">시스템 복원 결과</h1>
+            <div class="score-display">
+                <span class="score-label">최종 복원율</span>
+                <span id="final-score" class="score-value">0%</span>
+            </div>
+            <div id="grade-badge" class="grade-badge">판정 중...</div>
+        </div>
 
-<div class="overlay">
+        <div class="restore-status">
+            <h3>해양경찰 5대 핵심 기능 복원 현황</h3>
+            <ul id="status-list" class="status-list">
+                <!-- JS에서 동적 생성 -->
+            </ul>
+        </div>
 
-<h1>결과</h1>
+        <div class="btn-group">
+            <button id="retry-btn" class="btn secondary">다시 도전하기</button>
+            <a href="index.html" class="btn primary">메인 화면으로</a>
+        </div>
+    </div>
 
-<p id="score"></p>
-
-<button onclick="location.href='intro.html'">
-
-🔄 다시하기
-
-</button>
-
-<button onclick="location.href='index.html'">
-
-🏠 다른 테스트 보러 가기
-
-</button>
-
-</div>
-
-<script>
-
-const params=new URLSearchParams(location.search);
-const score=params.get("score");
-document.getElementById("score").innerHTML=
-"당신은 "+score+"점을 획득했습니다.<br><br>실제 해양경찰은 매일 이런 판단을 하고 있습니다.";
-localStorage.setItem('icc_game_done', 'true');
-
-</script>
-
+    <script src="result.js"></script>
 </body>
-
 </html>

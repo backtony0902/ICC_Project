@@ -1,52 +1,31 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DR5E2L2XRV"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-DR5E2L2XRV');
-  </script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>해양경찰 상황판단 테스트</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      width: 100vw;
-      height: 100vh;
-      background: url('thumbnail.png') center center / cover no-repeat;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 60px;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    .btn-start {
-      padding: 18px 72px;
-      font-size: 22px;
-      font-weight: 900;
-      border: none;
-      border-radius: 50px;
-      background: white;
-      color: #005BAC;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 30px rgba(0,0,0,0.4);
-    }
-
-    .btn-start:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 50px rgba(255,255,255,0.6);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTORE MISSION 01 - 구조 대응 시스템 복구</title>
+    <link rel="stylesheet" href="cover.css">
 </head>
 <body>
-  <audio autoplay loop><source src="bgm.mp3" type="audio/mpeg"></audio>
-  <button class="btn-start" onclick="location.href='intro.html'">테스트 시작</button>
+    <div class="container">
+        <div class="badge">⚠ RESTORE MISSION 01</div>
+        <h1 class="title">구조 대응 시스템 복구</h1>
+        <p class="description">
+            해양경찰의 5가지 핵심 대응 시스템이 마비되었습니다.<br>
+            현장 위기 상황에서 올바른 상황판단을 통해 사라진 기능을 복원하세요.
+        </p>
+
+        <div class="mission-preview">
+            <div class="preview-item">🔭 실종자 수색</div>
+            <div class="preview-item">🛟 해양 구조</div>
+            <div class="preview-item">🚢 불법조업 단속</div>
+            <div class="preview-item">🛢 해양오염 대응</div>
+            <div class="preview-item">⚓ 해상교통 안전관리</div>
+        </div>
+
+        <button id="start-btn" class="start-btn">테스트 시작하기</button>
+    </div>
+
+    <script src="cover.js"></script>
 </body>
 </html>

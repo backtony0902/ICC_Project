@@ -1,0 +1,103 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0b132b;
+    color: #ffffff;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    width: 90%;
+    max-width: 650px;
+    background: #1c2541;
+    border: 1px solid #3a506b;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.game-header {
+    margin-bottom: 24px;
+}
+
+.header-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #48cae4;
+    margin-bottom: 8px;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background-color: #0b132b;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #48cae4, #00f5d4);
+    transition: width 0.4s ease;
+}
+
+.quiz-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.category-badge {
+    align-self: flex-start;
+    background: rgba(255, 195, 0, 0.15);
+    border: 1px solid #ffc300;
+    color: #ffc300;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.situation-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+    min-height: 90px;
+    margin-bottom: 24px;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-btn {
+    background: #0b132b;
+    border: 1px solid #3a506b;
+    color: #ffffff;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: all 0.2s ease;
+}
+
+.option-btn:hover {
+    border-color: #00f5d4;
+    background: #152238;
+    transform: translateX(4px);
+}
