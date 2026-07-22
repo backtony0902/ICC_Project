@@ -10,7 +10,7 @@
         
         :root {
             --bg: #060b18;
-            --border: rgba(70, 130, 220, 0.28);
+            --border: rgba(70, 130, 220, 0.35);
             --cyan: #4dd9ff;
             --yellow: #f0a500;
             --muted: rgba(160, 196, 255, 0.65);
@@ -22,6 +22,7 @@
             color: white;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -29,7 +30,7 @@
             overflow-x: hidden;
         }
 
-        /* 메인 허브와 동일한 사이버 그리드 배경 */
+        /* 메인 허브와 통일된 배경 그리드 */
         body::before {
             content: ''; position: fixed; inset: 0;
             background:
@@ -39,94 +40,78 @@
             pointer-events: none; z-index: 1;
         }
 
-        /* 커버 카드 메인 컨테이너 */
-        .cover-card {
+        /* 메인 포스터 레이아웃 컨테이너 */
+        .cover-container {
             position: relative;
             z-index: 10;
-            max-width: 520px;
+            max-width: 640px;
             width: 100%;
-            background: rgba(4, 10, 30, 0.9);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(77, 217, 255, 0.15);
-            text-align: center;
-        }
-
-        /* 🖼 진입 시 보이는 메인 thumbnail.png 포스터 영역 */
-        .thumbnail-box {
-            width: 100%;
-            max-height: 280px;
-            overflow: hidden;
-            position: relative;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .thumbnail-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-body {
-            padding: 32px 24px;
-        }
-
-        .mission-badge {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: var(--cyan);
-            margin-bottom: 12px;
-            letter-spacing: 1.5px;
-        }
-
-        .mission-title {
-            font-size: 26px;
-            font-weight: 900;
-            margin-bottom: 14px;
-            text-shadow: 0 2px 10px rgba(77, 217, 255, 0.2);
-        }
-
-        .mission-desc {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.8;
-            margin-bottom: 28px;
-        }
-
-        .btn-group {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 🖼 thumbnail.png 포스터 프레임 */
+        .poster-wrapper {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(77, 217, 255, 0.2);
+            background: rgba(4, 10, 30, 0.8);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .poster-wrapper:hover {
+            transform: translateY(-4px);
+            border-color: rgba(77, 217, 255, 0.7);
+        }
+
+        /* 이미지 원본 비율 유지 표출 */
+        .poster-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* 하단 버튼 영역 */
+        .btn-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             gap: 12px;
         }
 
-        /* 실제 문항 풀이(game.html)로 이동하는 버튼 */
         .start-btn {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background: var(--yellow);
             color: #1a0800;
             border: none;
-            border-radius: 8px;
-            font-size: 17px;
+            border-radius: 10px;
+            font-size: 18px;
             font-weight: 900;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 20px rgba(240, 165, 0, 0.35);
+            box-shadow: 0 4px 20px rgba(240, 165, 0, 0.4);
+            letter-spacing: 1px;
         }
 
         .start-btn:hover {
             background: #ffb800;
             transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(240, 165, 0, 0.6);
         }
 
         .back-btn {
-            display: inline-block;
-            padding: 8px;
             color: var(--muted);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
+            padding: 8px 16px;
             transition: color 0.2s;
         }
 
@@ -137,24 +122,15 @@
 </head>
 <body>
 
-    <div class="cover-card">
-        <!-- 🖼 thumbnail.png 적용 위치 -->
-        <div class="thumbnail-box">
-            <img src="thumbnail.png" alt="RESTORE MISSION 01" class="thumbnail-img">
+    <div class="cover-container">
+        <!-- 이미지 클릭 시에도 게임으로 바로 이동 -->
+        <div class="poster-wrapper" onclick="location.href='game.html'">
+            <img src="thumbnail.png" alt="RESTORE MISSION 01 썸네일" class="poster-img">
         </div>
 
-        <div class="card-body">
-            <div class="mission-badge">[ RESTORE MISSION 01 ]</div>
-            <h1 class="mission-title">구조 대응 시스템 복구</h1>
-            <p class="mission-desc">
-                해양경찰의 5가지 핵심 대응 시스템이 마비되었습니다.<br>
-                현장 위기 상황에서 올바른 판단을 내려 시스템을 복원하세요.
-            </p>
-
-            <div class="btn-group">
-                <button class="start-btn" onclick="location.href='game.html'">미션 시작하기 →</button>
-                <a href="index.html" class="back-btn">← 메인 화면으로 돌아가기</a>
-            </div>
+        <div class="btn-group">
+            <button class="start-btn" onclick="location.href='game.html'">테스트 시작하기 →</button>
+            <a href="index.html" class="back-btn">← 메인 화면으로 돌아가기</a>
         </div>
     </div>
 
