@@ -100,36 +100,6 @@
     .btn-outline { background:#fff; color:#0288d1; border:2px solid #0288d1; box-shadow:3px 3px 0 rgba(0,100,180,0.15); }
     .btn-outline:active { box-shadow:1px 1px 0 rgba(0,100,180,0.15); }
 
-    /* ── 친구 공유 유도 ── */
-    .friend-nudge {
-      width: 100%;
-      max-width: 440px;
-      margin-top: 16px;
-      padding: 0 8px;
-      text-align: center;
-    }
-    .friend-nudge::before {
-      content: '';
-      display: block;
-      width: 36px;
-      height: 1px;
-      background: rgba(255,255,255,0.2);
-      margin: 0 auto 12px;
-    }
-    .friend-nudge-main {
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
-      margin-bottom: 6px;
-    }
-    .friend-nudge-sub {
-      font-size: 13px;
-      color: rgba(190,225,255,0.75);
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
     .btn-nudge {
       background: none;
       border: none;
@@ -739,13 +709,6 @@
           <button class="btn btn-outline" onclick="restartTest()" style="flex:1">🔄 다시하기</button>
           <button class="btn btn-outline" onclick="location.href='index.html'" style="flex:1;border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 목록으로</button>
         </div>
-      </div>
-
-      <!-- 친구 공유 유도 -->
-      <div class="friend-nudge">
-        <div class="friend-nudge-main">너랑 나, 같이 바다 가도 되는 조합일까?</div>
-        <div class="friend-nudge-sub">친구 유형까지 알아야 바다 궁합 완성 🌊<br>같이 바다 갈 친구한테 보내보세요.</div>
-        <button class="btn-nudge" onclick="openShareModal()">친구한테 보내기 →</button>
       </div>
     </div>
   </div>
