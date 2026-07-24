@@ -303,6 +303,23 @@
       display:block; font-size:10.5px; font-weight:400; font-style:italic;
       color:rgba(255,255,255,.65); margin-top:2px;
     }
+    .insta-tag-copy {
+      background: rgba(0,0,0,.18);
+      border: 1.5px dashed rgba(255,255,255,.4);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .insta-tag-copy-text {
+      font-size: 12px; font-weight:700; color:#fff; line-height:1.6; margin-bottom:8px;
+    }
+    .btn-copy-tag {
+      background:rgba(255,255,255,.18); color:#fff; border:1.5px solid rgba(255,255,255,.5);
+      border-radius:50px; font-family:inherit; font-size:12px; font-weight:700;
+      padding:7px 16px; cursor:pointer;
+    }
+    .btn-copy-tag:active { background:rgba(255,255,255,.3); }
     .btn-insta-link {
       display:flex; align-items:center; justify-content:center;
       padding:11px 20px; border-radius:50px; text-decoration:none;
@@ -699,10 +716,14 @@
           <div class="insta-cta-handle">@who_guards_the_sea</div>
           <ul class="insta-cta-list">
             <li>✔ 나와 다른 15가지 유형 보기 + 심리테스트 원인분석지 보러가기<br><span class="insta-cta-ex">Ex) 바다의 색깔은 검정이다 → INTP성향!</span></li>
-            <li>✔ 해양경찰 이벤트 진행 중 (설빙 1만원 쿠폰!)</li>
+            <li>✔ 스토리 공유하면 베라 쿠폰(싱글레귤러) 선착순 20명 무조건 증정! (마감 여부는 스토리 공지)</li>
             <li>✔ 바다 심리테스트후 후기를 들려주세요! 추천코스도 실행해보세요!</li>
             <li>✔ 귀여운 아치와 요즘 유행하는 바다 밈 보러 가기</li>
           </ul>
+          <div class="insta-tag-copy">
+            <div class="insta-tag-copy-text">@who_guards_the_sea<br>📸 스토리 공유하면 베라 싱글레귤러 쿠폰 100% 증정! 선착순 20명 한정</div>
+            <button class="btn-copy-tag" onclick="copyInstaTag()">📋 태그 문구 복사하기</button>
+          </div>
           <a class="btn-insta-link" href="https://www.instagram.com/who_guards_the_sea?igsh=MW5tNGV3NTU3NmRsaw%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener noreferrer">📸 인스타 보러가기</a>
         </div>
 
@@ -1619,6 +1640,13 @@ function restartTest() {
   document.getElementById('compat-result').classList.remove('show');
   document.getElementById('friend-sel').value = '';
   show('s-start');
+}
+
+// ── 인스타 태그 문구 복사 ──
+function copyInstaTag() {
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'insta_tag_copy', mbti_type: myType });
+  copyText('@who_guards_the_sea\n📸 스토리 공유하면 베라 싱글레귤러 쿠폰 100% 증정! 선착순 20명 한정');
+  toast('태그 문구가 복사됐어요! 스토리에 붙여넣기 해보세요 🌊');
 }
 
 // ── 클립보드 ──
