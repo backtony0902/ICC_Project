@@ -1,207 +1,77 @@
-const questions = [
+let currentIdx = 0;
+let userAnswers = []; // 선택 기록 저장용
 
-{
+function renderQuestion() {
+    const q = questions[currentIdx];
+    
+    // 진행도 및 텍스트 업데이트
+    document.getElementById("question-count").textContent = `MISSION 0${currentIdx + 1} / 05`;
+    document.getElementById("category-icon").textContent = q.icon;
+    document.getElementById("category-name").textContent = q.category;
+    document.getElementById("situation-text").textContent = q.situation;
 
-title:"🚨 상황 1",
+    const fillPct = (currentIdx / questions.length) * 100;
+    document.getElementById("progress-bar-fill").style.width = `${fillPct}%`;
 
-question:"낚시배가 전복되었습니다.\n승객 8명이 바다에 빠졌습니다.",
+    // 선택지 리스트 생성
+    const container = document.getElementById("options-container");
+    container.innerHTML = "";
 
-answers:[
-
-"경비정 즉시 출동",
-
-"헬기 요청",
-
-"상황 확인"
-
-],
-
-correct:0,
-
-success:"✔ 전원 구조 성공!",
-
-fail:"❌ 골든타임을 놓쳤습니다."
-
-},
-
-{
-
-title:"🌊 상황 2",
-
-question:"기름이 유출되고 있습니다.",
-
-answers:[
-
-"오일펜스 설치",
-
-"대기",
-
-"사진 촬영"
-
-],
-
-correct:0,
-
-success:"환경오염을 최소화했습니다.",
-
-fail:"오염이 확산되었습니다."
-
-},
-
-{
-
-title:"🚢 상황 3",
-
-question:"외국어선이 불법조업 중입니다.",
-
-answers:[
-
-"즉시 단속",
-
-"무시",
-
-"돌아간다"
-
-],
-
-correct:0,
-
-success:"불법조업을 막았습니다.",
-
-fail:"불법조업이 계속되었습니다."
-
-},
-
-{
-
-title:"🔍 상황 4",
-
-question:"실종 신고가 접수되었습니다.",
-
-answers:[
-
-"드론 수색",
-
-"내일 수색",
-
-"기다린다"
-
-],
-
-correct:0,
-
-success:"실종자를 발견했습니다.",
-
-fail:"수색이 늦어졌습니다."
-
-},
-
-{
-
-title:"🌪 상황 5",
-
-question:"태풍이 접근하고 있습니다.",
-
-answers:[
-
-"선박 대피",
-
-"그대로 둔다",
-
-"기상청만 기다린다"
-
-],
-
-correct:0,
-
-success:"인명 피해를 막았습니다.",
-
-fail:"피해가 발생했습니다."
-
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = `${idx + 1}. ${opt.text}`;
+        btn.addEventListener("click", () => handleSelectOption(opt, q));
+        container.appendChild(btn);
+    });
 }
 
-];
+// 선택지 클릭 처리
+function handleSelectOption(selectedOption, question) {
+    // 기록 저장
+    userAnswers.push({
+        category: question.category,
+        icon: question.icon,
+        situation: question.situation,
+        selectedText: selectedOption.text,
+        score: selectedOption.score,
+        feedback: selectedOption.feedback
+    });
 
-let current=0;
+    // 팝업 모달 채우기
+    const modal = document.getElementById("feedback-modal");
+    const badge = document.getElementById("feedback-badge");
+    const title = document.getElementById("feedback-title");
+    const reason = document.getElementById("feedback-reason");
 
-let score=0;
+    if (selectedOption.score > 0) {
+        badge.textContent = "SUCCESS";
+        badge.style.color = "#00ff88";
+        title.textContent = "시스템 복원 성공!";
+    } else {
+        badge.textContent = "WARNING";
+        badge.style.color = "#ff3333";
+        title.textContent = "판단 오류 발생";
+    }
 
-const title=document.getElementById("title");
+    reason.textContent = selectedOption.feedback;
+    modal.classList.remove("hidden");
+}
 
-const question=document.getElementById("question");
-
-const buttons=document.getElementById("buttons");
-
-const result=document.getElementById("result");
-
-function loadQuestion(){
-
-result.innerHTML="";
-
-title.innerHTML=questions[current].title;
-
-question.innerHTML=
-
-questions[current].question.replace(/\n/g,"<br>");
-
-buttons.innerHTML="";
-
-questions[current].answers.forEach((answer,index)=>{
-
-buttons.innerHTML+=`
-
-<button onclick="checkAnswer(${index})">
-
-${answer}
-
-</button>
-
-`;
-
+// 팝업 내 [다음 미션으로] 버튼
+document.getElementById("next-btn").addEventListener("click", () => {
+    document.getElementById("feedback-modal").classList.add("hidden");
+    
+    currentIdx++;
+    if (currentIdx < questions.length) {
+        renderQuestion();
+    } else {
+        // 모든 문제 종료 시 결과 저장 및 이동
+        sessionStorage.setItem("icc_answers", JSON.stringify(userAnswers));
+        localStorage.setItem("icc_game_done", "true"); // index.html 연동용
+        location.href = "result.html";
+    }
 });
 
-}
-
-function checkAnswer(index){
-
-buttons.innerHTML="";
-
-if(index===questions[current].correct){
-
-result.innerHTML=
-
-questions[current].success;
-
-score+=10;
-
-}
-
-else{
-
-result.innerHTML=
-
-questions[current].fail;
-
-}
-
-setTimeout(()=>{
-
-current++;
-
-if(current<questions.length){
-
-loadQuestion();
-
-}
-
-else{
-
-location.href="result.html?score="+score;
-
-}
-
-},2000);
-
-}
-
-loadQuestion();
+// 초기화 시작
+renderQuestion();

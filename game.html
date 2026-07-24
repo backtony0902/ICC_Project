@@ -1,51 +1,65 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DR5E2L2XRV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-DR5E2L2XRV');
-</script>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>상황 판단</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DR5E2L2XRV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-DR5E2L2XRV');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTORE MISSION 01 - 미션 진행</title>
+    <link rel="stylesheet" href="game.css">
 </head>
-
 <body>
-  <audio autoplay loop id="bgm"><source src="bgm.mp3" type="audio/mpeg"></audio>
+    <audio autoplay loop id="bgm"><source src="bgm.mp3" type="audio/mpeg"></audio>
+    <button class="bgm-hint" id="bgm-hint" onclick="document.getElementById('bgm').play().catch(()=>{});this.remove()">🔊 BGM이 있어요, 소리를 켜보세요</button>
+    <script>setTimeout(() => {
+      const b = document.getElementById('bgm-hint');
+      const audio = document.getElementById('bgm');
+      if (b && audio && !audio.paused) b.remove();
+    }, 5000);</script>
 
-<button class="bgm-hint" id="bgm-hint" onclick="document.getElementById('bgm').play().catch(()=>{});this.remove()">🔊 BGM이 있어요, 소리를 켜보세요</button>
-<script>setTimeout(() => {
-  const b = document.getElementById('bgm-hint');
-  const audio = document.getElementById('bgm');
-  if (b && audio && !audio.paused) b.remove();
-}, 5000);</script>
+    <div class="game-container">
+        <!-- 상단 진행률 프로그레스 바 -->
+        <header class="game-header">
+            <div class="header-info">
+                <span id="question-count">MISSION 01 / 05</span>
+                <span id="restore-rate-text">현재 복원율: 0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+            </div>
+        </header>
 
-<div class="overlay">
+        <!-- 문항 카드 -->
+        <main class="quiz-card">
+            <div class="category-badge">
+                <span id="category-icon">🔭</span>
+                <span id="category-name">실종자 수색</span>
+            </div>
+            <p id="situation-text" class="situation-text">상황 설명을 불러오는 중입니다...</p>
 
-<h1 id="title"></h1>
+            <div id="options-container" class="options-container">
+                <!-- 선택지 버튼이 JS로 로드됩니다 -->
+            </div>
+        </main>
+    </div>
 
-<p id="question"></p>
+    <!-- 이유 안내 피드백 팝업 모달 -->
+    <div id="feedback-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div id="feedback-badge" class="feedback-badge">판정 결과</div>
+            <h3 id="feedback-title" class="feedback-title">시스템 복원 결과</h3>
+            <p id="feedback-reason" class="feedback-reason">판정 이유가 여기에 표시됩니다.</p>
+            <button id="next-btn" class="next-btn">다음 미션으로</button>
+        </div>
+    </div>
 
-<div id="buttons"></div>
-
-<p id="result"></p>
-
-</div>
-
-<script src="game.js"></script>
-
+    <script src="questions.js"></script>
+    <script src="game.js"></script>
 </body>
-
 </html>

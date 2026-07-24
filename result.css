@@ -1,0 +1,202 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0b132b;
+    color: #ffffff;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+.bgm-hint {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    margin: 0;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50px;
+    background: rgba(255,255,255,.95);
+    color: #0b132b;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,.18);
+    animation: bgmPulse 1.8s ease-in-out infinite;
+}
+.bgm-hint:active {
+    transform: translateX(-50%) scale(0.97);
+}
+@keyframes bgmPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .7; }
+}
+
+.result-container {
+    width: 90%;
+    max-width: 650px;
+    background: #1c2541;
+    border: 1px solid #3a506b;
+    border-radius: 16px;
+    padding: 36px 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.badge {
+    color: #48cae4;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 8px 0 20px;
+}
+
+.score-display {
+    background: #0b132b;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.score-label {
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    margin-bottom: 6px;
+}
+
+.score-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #00f5d4;
+}
+
+.grade-badge {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 28px;
+}
+
+.grade-badge.s { background: #00f5d4; color: #0b132b; }
+.grade-badge.a { background: #48cae4; color: #0b132b; }
+.grade-badge.b { background: #ffc300; color: #0b132b; }
+.grade-badge.c { background: #ff4d6d; color: #ffffff; }
+
+.restore-status, .review-section {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.restore-status h3, .review-section h3 {
+    font-size: 1rem;
+    color: #c0c0c0;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #3a506b;
+    padding-bottom: 8px;
+}
+
+.status-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0b132b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.status-tag {
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.status-tag.on {
+    background: rgba(0, 245, 212, 0.2);
+    color: #00f5d4;
+    border: 1px solid #00f5d4;
+}
+
+.status-tag.off {
+    background: rgba(255, 77, 109, 0.2);
+    color: #ff4d6d;
+    border: 1px solid #ff4d6d;
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.review-item {
+    background: #0b132b;
+    padding: 14px;
+    border-radius: 8px;
+    border-left: 4px solid #3a506b;
+}
+
+.review-item.best { border-left-color: #00f5d4; }
+.review-item.warn { border-left-color: #ffc300; }
+.review-item.danger { border-left-color: #ff4d6d; }
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #48cae4;
+}
+
+.review-reason {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #d0d0d0;
+}
+
+.btn-group {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+}
+
+.btn.primary { background-color: #00f5d4; color: #0b132b; }
+.btn.secondary { background-color: #3a506b; color: #ffffff; }
