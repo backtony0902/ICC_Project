@@ -161,6 +161,13 @@ body {
     text-align: left;
 }
 
+.result-line {
+    font-weight: 700;
+}
+.result-line + .result-line {
+    margin-top: 6px;
+}
+
 .next-btn {
     width: 100%;
     padding: 14px;

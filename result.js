@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="review-body">
                 <p class="user-choice"><strong>내가 내린 판단:</strong> ${ans.selectedText}</p>
                 <div class="feedback-box ${isCorrect ? 'bg-pass' : 'bg-fail'}">
-                    <strong>분석 리포트:</strong> ${ans.feedback}
+                    <strong>결과:</strong>
+                    ${(ans.result || []).map(line => `<div class="result-line">${line}</div>`).join('')}
                 </div>
             </div>
         `;

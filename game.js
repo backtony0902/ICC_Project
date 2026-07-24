@@ -35,7 +35,7 @@ function handleSelectOption(selectedOption, question) {
         situation: question.situation,
         selectedText: selectedOption.text,
         score: selectedOption.score,
-        feedback: selectedOption.feedback
+        result: selectedOption.result
     });
 
     // 팝업 모달 채우기
@@ -54,7 +54,9 @@ function handleSelectOption(selectedOption, question) {
         title.textContent = "판단 오류 발생";
     }
 
-    reason.textContent = selectedOption.feedback;
+    reason.innerHTML = (selectedOption.result || [])
+        .map(line => `<div class="result-line">${line}</div>`)
+        .join("");
     modal.classList.remove("hidden");
 }
 
