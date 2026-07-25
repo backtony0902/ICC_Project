@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="feedback-box ${isCorrect ? 'bg-pass' : 'bg-fail'}">
                     <strong>결과:</strong>
                     ${(ans.result || []).map(line => `<div class="result-line">${line}</div>`).join('')}
+                    ${ans.feedback ? `<div class="feedback-explain">${ans.feedback}</div>` : ''}
                 </div>
             </div>
         `;

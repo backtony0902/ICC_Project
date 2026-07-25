@@ -167,6 +167,13 @@ body {
 .result-line + .result-line {
     margin-top: 6px;
 }
+.feedback-explain {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #3a506b;
+    font-weight: 400;
+    color: #b8c2d6;
+}
 
 .next-btn {
     width: 100%;
