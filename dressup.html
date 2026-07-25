@@ -26,7 +26,6 @@
       color: white; min-height: 100vh;
       display: flex; flex-direction: column; overflow-x: hidden;
     }
-    /* 사이버 사이버 그리드 배경 */
     body::before {
       content: ''; position: fixed; inset: 0;
       background:
@@ -55,11 +54,11 @@
       main { grid-template-columns: 1fr; }
     }
 
-    /* 왼쪽: 캐릭터 미리보기 홀로그램 프레임 */
+    /* 홀로그램 캐릭터 프레임 */
     .preview-card {
       background: rgba(6,14,36,0.85); border: 1px solid var(--border); border-radius: 12px;
       padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative; min-height: 520px; backdrop-filter: blur(8px);
+      position: relative; min-height: 540px; backdrop-filter: blur(8px);
       box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(77,217,255,0.05);
     }
     .card-badge {
@@ -67,7 +66,7 @@
       font-size: 8px; color: var(--cyan); border: 1px solid var(--cyan); padding: 4px 8px; border-radius: 4px;
     }
     .char-container {
-      width: 100%; max-width: 340px; height: 440px; display: flex; align-items: center; justify-content: center;
+      width: 100%; max-width: 340px; height: 460px; display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
     }
     .char-img {
@@ -77,35 +76,27 @@
     }
     .char-img.changing { opacity: 0; transform: scale(0.95); }
 
-    /* 이미지 로드 실패 시 대체 카드 */
-    .img-fallback {
-      display: none; flex-direction: column; align-items: center; justify-content: center;
-      width: 100%; height: 100%; border: 2px dashed var(--border); border-radius: 8px;
-      padding: 20px; text-align: center; color: var(--muted);
-    }
-    .img-fallback icon { font-size: 40px; margin-bottom: 10px; }
-
-    /* 오른쪽: 제복 선택 컨트롤 패널 */
-    .control-panel { display: flex; flex-direction: column; gap: 20px; }
+    /* 컨트롤 패널 */
+    .control-panel { display: flex; flex-direction: column; gap: 16px; }
 
     .panel-box {
-      background: rgba(6,14,36,0.85); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+      background: rgba(6,14,36,0.85); border: 1px solid var(--border); border-radius: 12px; padding: 16px;
     }
-    .panel-title { font-size: 14px; font-weight: 700; color: var(--cyan); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .panel-title { font-size: 14px; font-weight: 700; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 
-    /* 대원 선택 스위치 */
+    /* 대원 선택 */
     .gender-select { display: flex; gap: 10px; }
     .gender-btn {
-      flex: 1; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      flex: 1; padding: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
       border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .gender-btn.active { background: rgba(77,217,255,0.15); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 12px rgba(77,217,255,0.2); }
 
-    /* 제복 목록 버튼 Grid */
-    .uniform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    /* 제복 선택 버튼 Grid (6개) */
+    .uniform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .uniform-btn {
-      padding: 14px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      padding: 10px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: 8px; color: white; text-align: left; cursor: pointer; transition: 0.2s;
     }
     .uniform-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(77,217,255,0.5); }
@@ -113,37 +104,47 @@
       background: rgba(0,255,136,0.12); border-color: var(--green); color: var(--green);
       box-shadow: 0 0 10px rgba(0,255,136,0.2);
     }
-    .u-name { font-size: 13px; font-weight: 700; display: block; margin-bottom: 4px; }
-    .u-desc { font-size: 10.5px; color: var(--muted); }
+    .u-name { font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 2px; }
+    .u-desc { font-size: 10px; color: var(--muted); }
 
-    /* 제복 정보 요약 */
-    .info-box { font-size: 12px; color: rgba(200,220,255,0.85); line-height: 1.6; }
-    .info-tag { display: inline-block; background: rgba(240,165,0,0.2); color: var(--yellow); border: 1px solid var(--yellow); padding: 2px 6px; border-radius: 3px; font-size: 10px; margin-bottom: 6px; }
+    /* 실시간 가이드 */
+    .info-box { font-size: 12px; color: rgba(200,220,255,0.85); line-height: 1.5; }
+    .info-tag { display: inline-block; background: rgba(240,165,0,0.2); color: var(--yellow); border: 1px solid var(--yellow); padding: 2px 6px; border-radius: 3px; font-size: 10px; margin-bottom: 4px; }
 
     /* 제출 버튼 */
     .submit-btn {
-      width: 100%; padding: 16px; background: var(--yellow); color: #1a0800; border: none;
-      border-radius: 8px; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s;
+      width: 100%; padding: 15px; background: var(--yellow); color: #1a0800; border: none;
+      border-radius: 8px; font-size: 15px; font-weight: 900; cursor: pointer; transition: 0.2s;
       box-shadow: 0 4px 20px rgba(240,165,0,0.3); margin-top: auto;
     }
     .submit-btn:hover { background: #ffb800; transform: translateY(-2px); }
 
     /* 모달 팝업 */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(2,6,18,0.85); backdrop-filter: blur(6px);
+      position: fixed; inset: 0; background: rgba(2,6,18,0.88); backdrop-filter: blur(8px);
       display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;
     }
     .modal-box {
-      background: #081228; border: 2px solid var(--green); border-radius: 12px;
-      padding: 30px; max-width: 420px; width: 100%; text-align: center;
-      box-shadow: 0 0 40px rgba(0,255,136,0.3);
+      background: #081228; border: 2px solid var(--green); border-radius: 14px;
+      padding: 28px; max-width: 460px; width: 100%; text-align: center;
+      box-shadow: 0 0 40px rgba(0,255,136,0.25);
     }
-    .modal-title { font-size: 20px; font-weight: 900; color: var(--green); margin-bottom: 10px; }
-    .modal-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .modal-badge { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--green); margin-bottom: 8px; display: block; }
+    .modal-title { font-size: 22px; font-weight: 900; color: white; margin-bottom: 16px; }
+    
+    .modal-card {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px; margin-bottom: 20px; text-align: left;
+    }
+    .modal-u-name { font-size: 16px; font-weight: 700; color: var(--cyan); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-u-tag { font-size: 10px; padding: 2px 8px; background: rgba(77,217,255,0.15); border: 1px solid var(--cyan); border-radius: 4px; color: var(--cyan); }
+    .modal-u-desc { font-size: 13px; color: rgba(220,235,255,0.9); line-height: 1.65; }
+
     .modal-btn {
-      width: 100%; padding: 12px; background: var(--green); color: #021a0e; font-weight: 900;
-      border: none; border-radius: 6px; cursor: pointer; font-size: 14px;
+      width: 100%; padding: 14px; background: var(--green); color: #021a0e; font-weight: 900;
+      border: none; border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.2s;
     }
+    .modal-btn:hover { background: #33ff99; }
   </style>
 </head>
 <body>
@@ -154,145 +155,156 @@
 </nav>
 
 <main>
-  <!-- 왼쪽: 홀로그램 캐비닛 (미리보기) -->
+  <!-- 미리보기 카드 -->
   <div class="preview-card">
     <div class="card-badge">LIVE PREVIEW</div>
     <div class="char-container">
-      <img id="char-img" class="char-img" src="images/char_female_duty.png" alt="해경 캐릭터" onerror="handleImgError()">
-      <div id="img-fallback" class="img-fallback">
-        <span style="font-size:36px; margin-bottom:8px;">👮</span>
-        <div id="fb-title" style="font-weight:700; color:white; font-size:14px; margin-bottom:4px;">이미지 로딩 중...</div>
-        <div id="fb-path" style="font-size:11px; color:var(--cyan); word-break:break-all;"></div>
-      </div>
+      <img id="char-img" class="char-img" src="images/char_female_basic.png" alt="대원 캐릭터" onerror="handleImgError()">
     </div>
   </div>
 
-  <!-- 오른쪽: 착용 및 세팅 컨트롤러 -->
+  <!-- 컨트롤 패널 -->
   <div class="control-panel">
     <!-- 대원 선택 -->
     <div class="panel-box">
-      <div class="panel-title">👤 대원 선택 (CHARACTER)</div>
+      <div class="panel-title">👤 대원 선택</div>
       <div class="gender-select">
         <button class="gender-btn active" id="g-female" onclick="selectGender('female')">
-          <span>👩</span> 여성 대원 (핑크)
+          <span>👩</span> 해누리 대원 (여)
         </button>
         <button class="gender-btn" id="g-male" onclick="selectGender('male')">
-          <span>👨</span> 남성 대원 (보라)
+          <span>👨</span> 해우리 대원 (남)
         </button>
       </div>
     </div>
 
-    <!-- 제복 선택 -->
+    <!-- 제복 선택 (6가지 복장) -->
     <div class="panel-box">
-      <div class="panel-title">🥋 제복 및 특수복 선택 (UNIFORM)</div>
+      <div class="panel-title">🥋 제복 선택 (UNIFORM)</div>
       <div class="uniform-grid">
-        <button class="uniform-btn active" id="u-duty" onclick="selectUniform('duty')">
-          <span class="u-name">근무복</span>
-          <span class="u-desc">일상 해상순찰 및 치안 업무</span>
+        <button class="uniform-btn active" id="u-basic" onclick="selectUniform('basic')">
+          <span class="u-name">기본 상태</span>
+          <span class="u-desc">제복 미착용 (대기 상태)</span>
         </button>
-        <button class="uniform-btn" id="u-rescue" onclick="selectUniform('rescue')">
-          <span class="u-name">해양구조대복</span>
-          <span class="u-desc">인명 구조 및 수색 특수 임무</span>
+        <button class="uniform-btn" id="u-duty" onclick="selectUniform('duty')">
+          <span class="u-name">근무복</span>
+          <span class="u-desc">연안 순찰 및 일반 치안</span>
         </button>
         <button class="uniform-btn" id="u-formal" onclick="selectUniform('formal')">
           <span class="u-name">정복 (Formal)</span>
-          <span class="u-desc">의전 및 행사 공식 제복</span>
+          <span class="u-desc">의전 및 공식 행사</span>
         </button>
-        <button class="uniform-btn" id="u-clean" onclick="selectUniform('clean')">
-          <span class="u-name">오염방제복</span>
-          <span class="u-desc">해양 기름유출 및 화학 대응</span>
+        <button class="uniform-btn" id="u-rescue" onclick="selectUniform('rescue')">
+          <span class="u-name">해양구조대복</span>
+          <span class="u-desc">인명 구조 및 특수 수색</span>
+        </button>
+        <button class="uniform-btn" id="u-ssat" onclick="selectUniform('ssat')">
+          <span class="u-name">특공대복 (SSAT)</span>
+          <span class="u-desc">대테러 및 특수 작전</span>
+        </button>
+        <button class="uniform-btn" id="u-flight" onclick="selectUniform('flight')">
+          <span class="u-name">항공대 조종복</span>
+          <span class="u-desc">항공 수색 및 긴급 이송</span>
         </button>
       </div>
     </div>
 
-    <!-- 제복 정보 -->
+    <!-- 제복 설명 정보 -->
     <div class="panel-box">
-      <div class="panel-title">📋 장비 및 임무 가이드</div>
+      <div class="panel-title">📋 현재 복장 임무 가이드</div>
       <div class="info-box">
-        <span class="info-tag" id="info-tag">임무 범위</span>
-        <div id="info-text">해양경찰의 가장 기본적인 제복으로, 연안 순찰 및 해상 치안 유지 임무 수행 시 착용합니다.</div>
+        <span class="info-tag" id="info-tag">대기 상태</span>
+        <div id="info-text">현재 제복을 착용하지 않은 상태입니다. 상황에 알맞은 제복을 선택해 주세요.</div>
       </div>
     </div>
 
-    <!-- 완료 버튼 -->
+    <!-- 제출 버튼 -->
     <button class="submit-btn" onclick="completeMission()">✔ 제복 착용 완료 & 복원 제출</button>
   </div>
 </main>
 
-<!-- 성공 모달 -->
+<!-- 성공 및 제복 설명 모달 -->
 <div class="modal-overlay" id="success-modal">
   <div class="modal-box">
-    <div class="modal-title">MISSION COMPLETE!</div>
-    <div class="modal-desc">
-      해양경찰 제복 착용 시스템이 정상적으로 복원되었습니다.<br>
-      해양경찰청 복원율이 상승했습니다!
+    <span class="modal-badge">MISSION COMPLETE</span>
+    <div class="modal-title" id="modal-title">준비 완료!</div>
+    
+    <div class="modal-card">
+      <div class="modal-u-name">
+        <span id="modal-u-title">근무복</span>
+        <span class="modal-u-tag" id="modal-u-tag">임무 완료</span>
+      </div>
+      <div class="modal-u-desc" id="modal-u-desc">
+        제복 설명이 들어가는 공간입니다.
+      </div>
     </div>
+
     <button class="modal-btn" onclick="location.href='index.html'">메인 화면으로 돌아가기</button>
   </div>
 </div>
 
 <script>
   let currentGender = 'female';
-  let currentUniform = 'duty';
+  let currentUniform = 'basic'; // 기본 상태 (제복 안 입은 상태)
 
   const uniformData = {
-    duty: {
-      name: '근무복',
-      tag: '해상 순찰 및 치안',
-      desc: '해양경찰의 대표적인 일상 제복입니다. 통기성과 활동성이 뛰어나 연안 경비 및 치안 활동에 적합합니다.'
+    basic: {
+      name: '기본 상태 (제복 미착용)',
+      tag: '대기 상태',
+      desc: '대원이 제복을 입지 않은 기본 복장 상태입니다. 출동 및 임무에 알맞은 제복을 선택해 착용시켜 주세요.'
     },
-    rescue: {
-      name: '해양구조대복',
-      tag: '인명 구조 및 특수 수색',
-      desc: '시인성이 뛰어난 주황색 컬러와 구명 장비가 조합되어 있어 파도가 센 위험 해역에서도 즉각적인 구조 활동이 가능합니다.'
+    duty: {
+      name: '해양경찰 근무복',
+      tag: '해상 순찰 및 치안',
+      desc: '해양경찰의 가장 기본적인 제복으로, 연안 순찰, 해상 치안 유지, 선박 안전 점검 등 일상적인 해양 경비 임무 수행 시 착용합니다.'
     },
     formal: {
-      name: '정복 (Formal)',
+      name: '해양경찰 정복',
       tag: '공식 행사 및 의전',
-      desc: '해양경찰로서의 위엄과 신뢰를 상징하는 단정한 정복입니다. 주요 행사 및 공식 접견 시 착용합니다.'
+      desc: '해양경찰로서의 위엄과 신뢰를 상징하는 단정한 정복입니다. 국가 주요 행사, 명예로운 서훈식 및 공식 접견 시 착용합니다.'
     },
-    clean: {
-      name: '오염방제복',
-      tag: '해양 환경 방제 작업',
-      desc: '해양 기름 유출이나 유해 물질 사고 발생 시 대원의 안전을 보호하고 해양 오염 확산을 막는 방제용 특수 복장입니다.'
+    rescue: {
+      name: '해양구조대 특수복',
+      tag: '인명 구조 및 특수 수색',
+      desc: '전문 잠수 장비와 특수 구조복으로 구성되어 있어, 거친 파도와 위험 해역에서도 신속하게 바다에 투입되어 인명을 구조할 수 있습니다.'
+    },
+    ssat: {
+      name: '해양경찰 특공대복 (SSAT)',
+      tag: '대테러 및 특수 작전',
+      desc: '해양 대테러, 선박 강제 진입 및 강력 범죄 단속 등 고도의 위험 작전 수행 시 대원의 신체를 보호하고 작전 수행력을 극대화하는 특수 전투복입니다.'
+    },
+    flight: {
+      name: '항공대 조종복',
+      tag: '항공 수색 및 긴급 이송',
+      desc: '해양경찰 항공대(헬기 및 고정경비기) 대원이 해상 광역 수색, 신속 응급 환자 이송 및 입체적 해상 감시 임무 수행 시 착용하는 전용 항공복입니다.'
     }
   };
 
   function updatePreview() {
     const imgEl = document.getElementById('char-img');
-    const fallbackEl = document.getElementById('img-fallback');
     
-    // 전환 애니메이션
     imgEl.classList.add('changing');
     
     setTimeout(() => {
-      imgEl.style.display = 'block';
-      fallbackEl.style.display = 'none';
-      
       const imgPath = `images/char_${currentGender}_${currentUniform}.png`;
       imgEl.src = imgPath;
-      
       imgEl.classList.remove('changing');
-    }, 150);
+    }, 120);
 
-    // 정보 텍스트 업데이트
+    // 가이드 정보 업데이트
     const info = uniformData[currentUniform];
     document.getElementById('info-tag').textContent = info.tag;
     document.getElementById('info-text').textContent = info.desc;
   }
 
+  // 이미지 예외 처리 (Fallback)
   function handleImgError() {
     const imgEl = document.getElementById('char-img');
-    const fallbackEl = document.getElementById('img-fallback');
-    
-    imgEl.style.display = 'none';
-    fallbackEl.style.display = 'flex';
-    
-    const genderText = currentGender === 'female' ? '여성 대원' : '남성 대원';
-    const uniformName = uniformData[currentUniform].name;
-    
-    document.getElementById('fb-title').textContent = `${genderText} [${uniformName}]`;
-    document.getElementById('fb-path').textContent = `images/char_${currentGender}_${currentUniform}.png (파일 필요)`;
+    if (currentGender === 'female') {
+      imgEl.src = 'char_female_basic.png';
+    } else {
+      imgEl.src = 'char_male_basic.png';
+    }
   }
 
   function selectGender(gender) {
@@ -304,19 +316,31 @@
 
   function selectUniform(uniform) {
     currentUniform = uniform;
-    ['duty', 'rescue', 'formal', 'clean'].forEach(u => {
-      document.getElementById(`u-${u}`).classList.toggle('active', u === uniform);
+    ['basic', 'duty', 'formal', 'rescue', 'ssat', 'flight'].forEach(u => {
+      const btn = document.getElementById(`u-${u}`);
+      if (btn) btn.classList.toggle('active', u === uniform);
     });
     updatePreview();
   }
 
   function completeMission() {
-    // 3번 미션 완료 상태 저장 (index.html에서 실시간 감지)
+    // 미션 완료 상태 저장
     localStorage.setItem('icc_dressup_done', 'true');
+    
+    const info = uniformData[currentUniform];
+    const genderName = currentGender === 'female' ? '해누리 대원' : '해우리 대원';
+    
+    // 모달 데이터 채우기
+    document.getElementById('modal-title').textContent = `${genderName} 준비 완료!`;
+    document.getElementById('modal-u-title').textContent = info.name;
+    document.getElementById('modal-u-tag').textContent = info.tag;
+    document.getElementById('modal-u-desc').textContent = info.desc;
+    
+    // 모달 띄우기
     document.getElementById('success-modal').style.display = 'flex';
   }
 
-  // 초기화 실행
+  // 초기 실행
   updatePreview();
 </script>
 </body>
