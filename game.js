@@ -35,6 +35,7 @@ function handleSelectOption(selectedOption, question) {
         situation: question.situation,
         selectedText: selectedOption.text,
         score: selectedOption.score,
+        result: selectedOption.result,
         feedback: selectedOption.feedback
     });
 
@@ -54,7 +55,13 @@ function handleSelectOption(selectedOption, question) {
         title.textContent = "판단 오류 발생";
     }
 
-    reason.textContent = selectedOption.feedback;
+    const resultLines = (selectedOption.result || [])
+        .map(line => `<div class="result-line">${line}</div>`)
+        .join("");
+    const feedbackText = selectedOption.feedback
+        ? `<div class="feedback-explain">${selectedOption.feedback}</div>`
+        : "";
+    reason.innerHTML = resultLines + feedbackText;
     modal.classList.remove("hidden");
 }
 

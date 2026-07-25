@@ -100,36 +100,6 @@
     .btn-outline { background:#fff; color:#0288d1; border:2px solid #0288d1; box-shadow:3px 3px 0 rgba(0,100,180,0.15); }
     .btn-outline:active { box-shadow:1px 1px 0 rgba(0,100,180,0.15); }
 
-    /* ── 친구 공유 유도 ── */
-    .friend-nudge {
-      width: 100%;
-      max-width: 440px;
-      margin-top: 16px;
-      padding: 0 8px;
-      text-align: center;
-    }
-    .friend-nudge::before {
-      content: '';
-      display: block;
-      width: 36px;
-      height: 1px;
-      background: rgba(255,255,255,0.2);
-      margin: 0 auto 12px;
-    }
-    .friend-nudge-main {
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
-      margin-bottom: 6px;
-    }
-    .friend-nudge-sub {
-      font-size: 13px;
-      color: rgba(190,225,255,0.75);
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
     .btn-nudge {
       background: none;
       border: none;
@@ -303,6 +273,23 @@
       display:block; font-size:10.5px; font-weight:400; font-style:italic;
       color:rgba(255,255,255,.65); margin-top:2px;
     }
+    .insta-tag-copy {
+      background: rgba(0,0,0,.18);
+      border: 1.5px dashed rgba(255,255,255,.4);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .insta-tag-copy-text {
+      font-size: 12px; font-weight:700; color:#fff; line-height:1.6; margin-bottom:8px;
+    }
+    .btn-copy-tag {
+      background:rgba(255,255,255,.18); color:#fff; border:1.5px solid rgba(255,255,255,.5);
+      border-radius:50px; font-family:inherit; font-size:12px; font-weight:700;
+      padding:7px 16px; cursor:pointer;
+    }
+    .btn-copy-tag:active { background:rgba(255,255,255,.3); }
     .btn-insta-link {
       display:flex; align-items:center; justify-content:center;
       padding:11px 20px; border-radius:50px; text-decoration:none;
@@ -477,7 +464,6 @@
     .card-frame img {
       display:block; width:100%; height:auto;
       border-radius: 10px;
-      filter: brightness(1.18);
     }
     .card-reveal {
       animation: cardReveal 1.4s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
@@ -519,7 +505,11 @@
 <body>
 <audio autoplay loop id="bgm"><source src="ocean.mp3" type="audio/mpeg"></audio>
 <button class="bgm-hint" id="bgm-hint" onclick="document.getElementById('bgm').play().catch(()=>{});this.remove()">🔊 BGM이 있어요, 소리를 켜보세요</button>
-<script>setTimeout(() => { const b = document.getElementById('bgm-hint'); if (b) b.remove(); }, 5000);</script>
+<script>setTimeout(() => {
+  const b = document.getElementById('bgm-hint');
+  const audio = document.getElementById('bgm');
+  if (b && audio && !audio.paused) b.remove();
+}, 5000);</script>
 
 <div class="container">
 
@@ -614,7 +604,7 @@
           <div class="skel skel-block" id="r-skel"></div>
           <img id="r-img" src="" alt="결과카드" style="display:none">
         </div>
-        <button class="btn-save-small" onclick="saveImage()">💾 길게 눌러 저장하기</button>
+        <button class="btn-save-small" onclick="saveImage()">💾 사진 꾹 눌러저장</button>
         <div class="disclaimer-text">이 테스트는 해양경찰청 홍보를 위해 단순 오락 목적으로 제작된 콘텐츠입니다.</div>
 
         <!-- 궁합 (핵심 기능 강조) -->
@@ -695,10 +685,14 @@
           <div class="insta-cta-handle">@who_guards_the_sea</div>
           <ul class="insta-cta-list">
             <li>✔ 나와 다른 15가지 유형 보기 + 심리테스트 원인분석지 보러가기<br><span class="insta-cta-ex">Ex) 바다의 색깔은 검정이다 → INTP성향!</span></li>
-            <li>✔ 해양경찰 이벤트 진행 중 (설빙 1만원 쿠폰!)</li>
+            <li>✔ 스토리 공유하면 베라 쿠폰(싱글레귤러) 선착순 20명 무조건 증정! (마감 여부는 스토리 공지)</li>
             <li>✔ 바다 심리테스트후 후기를 들려주세요! 추천코스도 실행해보세요!</li>
             <li>✔ 귀여운 아치와 요즘 유행하는 바다 밈 보러 가기</li>
           </ul>
+          <div class="insta-tag-copy">
+            <div class="insta-tag-copy-text">@who_guards_the_sea<br>📸 스토리 공유하면 베라 싱글레귤러 쿠폰 100% 증정! 선착순 20명 한정</div>
+            <button class="btn-copy-tag" onclick="copyInstaTag()">📋 태그 문구 복사하기</button>
+          </div>
           <a class="btn-insta-link" href="https://www.instagram.com/who_guards_the_sea?igsh=MW5tNGV3NTU3NmRsaw%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener noreferrer">📸 인스타 보러가기</a>
         </div>
 
@@ -715,13 +709,6 @@
           <button class="btn btn-outline" onclick="location.href='index.html'" style="flex:1;border-color:rgba(255,255,255,0.4);color:white;background:rgba(255,255,255,0.15)">🏠 목록으로</button>
         </div>
       </div>
-
-      <!-- 친구 공유 유도 -->
-      <div class="friend-nudge">
-        <div class="friend-nudge-main">너랑 나, 같이 바다 가도 되는 조합일까?</div>
-        <div class="friend-nudge-sub">친구 유형까지 알아야 바다 궁합 완성 🌊<br>같이 바다 갈 친구한테 보내보세요.</div>
-        <button class="btn-nudge" onclick="openShareModal()">친구한테 보내기 →</button>
-      </div>
     </div>
   </div>
 
@@ -735,7 +722,7 @@
     <div class="share-grid">
       <button class="share-opt" onclick="shareKakao(); closeShareModal()"><span class="share-opt-icon">💬</span>카카오톡</button>
       <button class="share-opt" onclick="shareInstagram(); closeShareModal()"><span class="share-opt-icon">📸</span>인스타그램</button>
-      <button class="share-opt" onclick="saveImage(); closeShareModal()"><span class="share-opt-icon">💾</span>길게 눌러 저장</button>
+      <button class="share-opt" onclick="saveImage(); closeShareModal()"><span class="share-opt-icon">💾</span>사진 꾹 눌러저장</button>
       <button class="share-opt" onclick="shareFriend(); closeShareModal()"><span class="share-opt-icon">🔗</span>링크 복사</button>
       <button class="share-opt share-opt-wide" onclick="shareStoryThumb(); closeShareModal()"><span class="share-opt-icon">🖼️</span>테스트 공유</button>
     </div>
@@ -987,9 +974,19 @@ function checkCompatWithFriend() {
 // ── 이미지 저장 ──
 function saveImage() {
   if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'save_image', mbti_type: myType });
+  const img = document.getElementById('r-img');
   const wrap = document.getElementById('r-wrap');
+  const r = RESULTS[myType];
   if (wrap) wrap.scrollIntoView({ behavior:'smooth', block:'center' });
-  toast('위 카드 이미지를 길게 눌러서 저장해보세요 📸');
+  if (img && img.complete && img.naturalWidth > 0) {
+    const a = document.createElement('a');
+    a.href = img.src;
+    a.download = `나의바다MBTI_${r.name}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+  toast('이미지 저장을 시도했어요! 안 되면 위 카드를 꾹 눌러서 저장해보세요 📸');
 }
 
 // ── 인스타그램 공유 ──
@@ -1615,6 +1612,13 @@ function restartTest() {
   document.getElementById('compat-result').classList.remove('show');
   document.getElementById('friend-sel').value = '';
   show('s-start');
+}
+
+// ── 인스타 태그 문구 복사 ──
+function copyInstaTag() {
+  if (typeof gtag === 'function') gtag('event', 'share_click', { method: 'insta_tag_copy', mbti_type: myType });
+  copyText('@who_guards_the_sea\n📸 스토리 공유하면 베라 싱글레귤러 쿠폰 100% 증정! 선착순 20명 한정');
+  toast('태그 문구가 복사됐어요! 스토리에 붙여넣기 해보세요 🌊');
 }
 
 // ── 클립보드 ──

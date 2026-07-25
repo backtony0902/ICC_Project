@@ -161,6 +161,20 @@ body {
     text-align: left;
 }
 
+.result-line {
+    font-weight: 700;
+}
+.result-line + .result-line {
+    margin-top: 6px;
+}
+.feedback-explain {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #3a506b;
+    font-weight: 400;
+    color: #b8c2d6;
+}
+
 .next-btn {
     width: 100%;
     padding: 14px;
@@ -171,4 +185,30 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+}
+
+.bgm-hint {
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    margin: 0;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 50px;
+    background: rgba(255,255,255,.95);
+    color: #0b132b;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,.18);
+    animation: bgmPulse 1.8s ease-in-out infinite;
+}
+.bgm-hint:active {
+    transform: translateX(-50%) scale(0.97);
+}
+@keyframes bgmPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .7; }
 }
