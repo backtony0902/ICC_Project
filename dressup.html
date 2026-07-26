@@ -85,13 +85,25 @@
     .panel-title { font-size: 14px; font-weight: 700; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 
     /* 대원 선택 */
-    .gender-select { display: flex; gap: 10px; }
+    .gender-select { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .gender-btn {
-      flex: 1; padding: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      padding: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
       border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .gender-btn.active { background: rgba(77,217,255,0.15); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 12px rgba(77,217,255,0.2); }
+
+    /* 내 얼굴 사진 업로드 */
+    .photo-upload-btn {
+      width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1.5px dashed var(--border);
+      border-radius: 8px; color: white; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .photo-upload-btn:hover { border-color: var(--cyan); background: rgba(77,217,255,0.08); }
+    .photo-thumb-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .photo-thumb { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--cyan); }
+    .photo-hint { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin-top: 8px; }
+    .photo-hint.warn { color: var(--yellow); }
 
     /* 제복 선택 버튼 Grid (6개) */
     .uniform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -160,6 +172,7 @@
     <div class="card-badge">LIVE PREVIEW</div>
     <div class="char-container">
       <img id="char-img" class="char-img" src="images/char_female_basic.png" alt="대원 캐릭터" onerror="handleImgError()">
+      <canvas id="char-canvas" class="char-img" style="display:none"></canvas>
     </div>
   </div>
 
@@ -175,7 +188,27 @@
         <button class="gender-btn" id="g-male" onclick="selectGender('male')">
           <span>👨</span> 해우리 대원 (남)
         </button>
+        <button class="gender-btn" id="g-my_female" onclick="selectGender('my_female')">
+          <span>🙋‍♀️</span> 나 (여)
+        </button>
+        <button class="gender-btn" id="g-my_male" onclick="selectGender('my_male')">
+          <span>🙋</span> 나 (남)
+        </button>
       </div>
+    </div>
+
+    <!-- 내 얼굴 사진 등록 (나 남/여 선택 시에만 표시) -->
+    <div class="panel-box" id="photo-panel" style="display:none">
+      <div class="panel-title">📸 내 얼굴 사진</div>
+      <input type="file" accept="image/*" capture="user" id="face-photo-input" onchange="handlePhotoUpload(event)" style="display:none">
+      <button class="photo-upload-btn" onclick="document.getElementById('face-photo-input').click()">
+        📷 사진 선택 / 촬영하기
+      </button>
+      <div class="photo-thumb-row" id="photo-thumb-row" style="display:none">
+        <img id="photo-thumb" class="photo-thumb" alt="내 얼굴 사진">
+        <span style="font-size:12px;color:var(--green)">✔ 등록 완료 — 제복에 합성됩니다</span>
+      </div>
+      <div class="photo-hint" id="photo-hint">정면 얼굴이 잘 보이는 사진을 올리면 제복 캐릭터 얼굴 자리에 합성돼요. (간단한 오버레이 방식이라 자연스러운 합성은 아니에요)</div>
     </div>
 
     <!-- 제복 선택 (6가지 복장) -->
@@ -280,16 +313,50 @@
     }
   };
 
+  // '나(남)'/'나(여)' 모드에서 쓸 얼굴 합성용 데이터
+  let userPhotoImg = null; // 업로드된 얼굴 사진 (Image 객체)
+
+  // 캐릭터별 얼굴 위치 (원본 이미지 기준 %) — 심플 오버레이용 대략치, 필요하면 조정 가능
+  const FACE_BOX = {
+    female: {
+      basic:  { cx:.47, cy:.26, w:.25, h:.13 },
+      duty:   { cx:.47, cy:.26, w:.25, h:.13 },
+      formal: { cx:.47, cy:.27, w:.24, h:.13 },
+      rescue: { cx:.47, cy:.27, w:.25, h:.13 },
+      flight: { cx:.47, cy:.26, w:.25, h:.13 },
+      ssat:   { cx:.50, cy:.30, w:.24, h:.15 }
+    },
+    male: {
+      basic:  { cx:.48, cy:.24, w:.24, h:.13 },
+      duty:   { cx:.48, cy:.24, w:.24, h:.13 },
+      formal: { cx:.48, cy:.25, w:.23, h:.13 },
+      rescue: { cx:.48, cy:.25, w:.24, h:.13 },
+      flight: { cx:.48, cy:.24, w:.24, h:.13 },
+      ssat:   { cx:.50, cy:.27, w:.26, h:.16 }
+    }
+  };
+
+  function isMyMode(gender) { return gender === 'my_male' || gender === 'my_female'; }
+  function baseGenderOf(gender) { return gender === 'my_male' ? 'male' : gender === 'my_female' ? 'female' : gender; }
+
   function updatePreview() {
     const imgEl = document.getElementById('char-img');
-    
-    imgEl.classList.add('changing');
-    
-    setTimeout(() => {
-      const imgPath = `images/char_${currentGender}_${currentUniform}.png`;
-      imgEl.src = imgPath;
-      imgEl.classList.remove('changing');
-    }, 120);
+    const canvasEl = document.getElementById('char-canvas');
+    const base = baseGenderOf(currentGender);
+
+    if (isMyMode(currentGender)) {
+      imgEl.style.display = 'none';
+      canvasEl.style.display = 'block';
+      renderMyComposite(base, currentUniform);
+    } else {
+      canvasEl.style.display = 'none';
+      imgEl.style.display = 'block';
+      imgEl.classList.add('changing');
+      setTimeout(() => {
+        imgEl.src = `images/char_${base}_${currentUniform}.png`;
+        imgEl.classList.remove('changing');
+      }, 120);
+    }
 
     // 가이드 정보 업데이트
     const info = uniformData[currentUniform];
@@ -297,20 +364,80 @@
     document.getElementById('info-text').textContent = info.desc;
   }
 
+  function renderMyComposite(base, uniform) {
+    const canvas = document.getElementById('char-canvas');
+    const ctx = canvas.getContext('2d');
+    const charImg = new Image();
+    charImg.onload = () => {
+      canvas.width = charImg.naturalWidth;
+      canvas.height = charImg.naturalHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(charImg, 0, 0);
+
+      if (userPhotoImg) {
+        const box = FACE_BOX[base][uniform];
+        const cx = box.cx * canvas.width, cy = box.cy * canvas.height;
+        const rw = (box.w * canvas.width) / 2, rh = (box.h * canvas.height) / 2;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
+        ctx.clip();
+        const bw = rw * 2, bh = rh * 2;
+        const scale = Math.max(bw / userPhotoImg.naturalWidth, bh / userPhotoImg.naturalHeight);
+        const dw = userPhotoImg.naturalWidth * scale, dh = userPhotoImg.naturalHeight * scale;
+        ctx.drawImage(userPhotoImg, cx - dw / 2, cy - dh / 2, dw, dh);
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
+        ctx.lineWidth = Math.max(2, canvas.width * 0.006);
+        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.stroke();
+      }
+    };
+    charImg.onerror = () => { charImg.src = `images/char_${base}_basic.png`; };
+    charImg.src = `images/char_${base}_${uniform}.png`;
+  }
+
+  function handlePhotoUpload(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        userPhotoImg = img;
+        const thumb = document.getElementById('photo-thumb');
+        thumb.src = e.target.result;
+        document.getElementById('photo-thumb-row').style.display = 'flex';
+        document.getElementById('photo-hint').classList.remove('warn');
+        document.getElementById('photo-hint').textContent = '사진이 등록됐어요! 제복을 바꿔가며 확인해보세요.';
+        if (typeof gtag === 'function') gtag('event', 'dressup_photo_upload', { gender: currentGender });
+        updatePreview();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   // 이미지 예외 처리 (Fallback)
   function handleImgError() {
     const imgEl = document.getElementById('char-img');
-    if (currentGender === 'female') {
-      imgEl.src = 'char_female_basic.png';
-    } else {
-      imgEl.src = 'char_male_basic.png';
-    }
+    const base = baseGenderOf(currentGender);
+    imgEl.src = `images/char_${base}_basic.png`;
   }
 
   function selectGender(gender) {
     currentGender = gender;
     document.getElementById('g-female').classList.toggle('active', gender === 'female');
     document.getElementById('g-male').classList.toggle('active', gender === 'male');
+    document.getElementById('g-my_female').classList.toggle('active', gender === 'my_female');
+    document.getElementById('g-my_male').classList.toggle('active', gender === 'my_male');
+
+    const photoPanel = document.getElementById('photo-panel');
+    photoPanel.style.display = isMyMode(gender) ? 'block' : 'none';
+
     updatePreview();
   }
 
@@ -324,18 +451,32 @@
   }
 
   function completeMission() {
+    if (isMyMode(currentGender) && !userPhotoImg) {
+      const hint = document.getElementById('photo-hint');
+      hint.textContent = '⚠️ 먼저 얼굴 사진을 등록해주세요!';
+      hint.classList.add('warn');
+      document.getElementById('photo-panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     // 미션 완료 상태 저장
     localStorage.setItem('icc_dressup_done', 'true');
-    
+
     const info = uniformData[currentUniform];
-    const genderName = currentGender === 'female' ? '해누리 대원' : '해우리 대원';
-    
+    const genderNameMap = {
+      female: '해누리 대원',
+      male: '해우리 대원',
+      my_female: '나 (여)',
+      my_male: '나 (남)'
+    };
+    const genderName = genderNameMap[currentGender];
+
     // 모달 데이터 채우기
     document.getElementById('modal-title').textContent = `${genderName} 준비 완료!`;
     document.getElementById('modal-u-title').textContent = info.name;
     document.getElementById('modal-u-tag').textContent = info.tag;
     document.getElementById('modal-u-desc').textContent = info.desc;
-    
+
     // 모달 띄우기
     document.getElementById('success-modal').style.display = 'flex';
   }
