@@ -105,6 +105,18 @@
     .photo-hint { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin-top: 8px; }
     .photo-hint.warn { color: var(--yellow); }
 
+    .adjust-row { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .adjust-slider-line { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+    .adjust-slider-line input[type="range"] { flex: 1; accent-color: var(--cyan); }
+    .adjust-reset-btn {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white;
+      padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer;
+    }
+    .adjust-reset-btn:hover { border-color: var(--cyan); }
+    .drag-hint { font-size: 11px; color: var(--yellow); text-align: center; margin-top: 4px; }
+    .char-canvas-wrap { touch-action: none; cursor: grab; }
+    .char-canvas-wrap:active { cursor: grabbing; }
+
     /* 제복 선택 버튼 Grid (6개) */
     .uniform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .uniform-btn {
@@ -172,7 +184,7 @@
     <div class="card-badge">LIVE PREVIEW</div>
     <div class="char-container">
       <img id="char-img" class="char-img" src="images/char_female_basic.png" alt="대원 캐릭터" onerror="handleImgError()">
-      <canvas id="char-canvas" class="char-img" style="display:none"></canvas>
+      <canvas id="char-canvas" class="char-img char-canvas-wrap" style="display:none"></canvas>
     </div>
   </div>
 
@@ -209,6 +221,15 @@
         <span style="font-size:12px;color:var(--green)">✔ 등록 완료 — 제복에 합성됩니다</span>
       </div>
       <div class="photo-hint" id="photo-hint">정면 얼굴이 잘 보이는 사진을 올리면 제복 캐릭터 얼굴 자리에 합성돼요. (간단한 오버레이 방식이라 자연스러운 합성은 아니에요)</div>
+
+      <div class="adjust-row" id="adjust-row" style="display:none">
+        <div class="drag-hint">👆 미리보기의 사진을 드래그하면 위치를 옮길 수 있어요</div>
+        <div class="adjust-slider-line">
+          <span>🔍 크기</span>
+          <input type="range" id="size-slider" min="40" max="220" value="100" oninput="onSizeSliderChange(this.value)">
+        </div>
+        <button class="adjust-reset-btn" onclick="resetAdjust()">↺ 이 제복 위치/크기 초기화</button>
+      </div>
     </div>
 
     <!-- 제복 선택 (6가지 복장) -->
@@ -339,18 +360,54 @@
   function isMyMode(gender) { return gender === 'my_male' || gender === 'my_female'; }
   function baseGenderOf(gender) { return gender === 'my_male' ? 'male' : gender === 'my_female' ? 'female' : gender; }
 
+  // 사용자가 드래그/슬라이더로 조정한 위치·크기 (제복별로 따로 기억)
+  const userAdjust = {};
+  function adjustKey(base, uniform) { return base + '_' + uniform; }
+  function getCurrentBox(base, uniform) {
+    const key = adjustKey(base, uniform);
+    if (!userAdjust[key]) userAdjust[key] = Object.assign({}, FACE_BOX[base][uniform]);
+    return userAdjust[key];
+  }
+  function resetAdjust() {
+    const base = baseGenderOf(currentGender);
+    userAdjust[adjustKey(base, currentUniform)] = Object.assign({}, FACE_BOX[base][currentUniform]);
+    document.getElementById('size-slider').value = 100;
+    renderMyComposite(base, currentUniform);
+  }
+  function onSizeSliderChange(val) {
+    const base = baseGenderOf(currentGender);
+    const box = getCurrentBox(base, currentUniform);
+    const def = FACE_BOX[base][currentUniform];
+    const factor = val / 100;
+    box.w = def.w * factor;
+    box.h = def.h * factor;
+    renderMyComposite(base, currentUniform);
+  }
+
   function updatePreview() {
     const imgEl = document.getElementById('char-img');
     const canvasEl = document.getElementById('char-canvas');
     const base = baseGenderOf(currentGender);
 
+    const adjustRow = document.getElementById('adjust-row');
+
     if (isMyMode(currentGender)) {
       imgEl.style.display = 'none';
       canvasEl.style.display = 'block';
       renderMyComposite(base, currentUniform);
+
+      if (userPhotoImg) {
+        adjustRow.style.display = 'flex';
+        const box = getCurrentBox(base, currentUniform);
+        const def = FACE_BOX[base][currentUniform];
+        document.getElementById('size-slider').value = Math.round((box.w / def.w) * 100);
+      } else {
+        adjustRow.style.display = 'none';
+      }
     } else {
       canvasEl.style.display = 'none';
       imgEl.style.display = 'block';
+      adjustRow.style.display = 'none';
       imgEl.classList.add('changing');
       setTimeout(() => {
         imgEl.src = `images/char_${base}_${currentUniform}.png`;
@@ -375,30 +432,62 @@
       ctx.drawImage(charImg, 0, 0);
 
       if (userPhotoImg) {
-        const box = FACE_BOX[base][uniform];
+        const box = getCurrentBox(base, uniform);
         const cx = box.cx * canvas.width, cy = box.cy * canvas.height;
         const rw = (box.w * canvas.width) / 2, rh = (box.h * canvas.height) / 2;
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
-        ctx.clip();
+        // 사진을 별도 캔버스에 그린 뒤, 방사형 그라데이션으로 가장자리를 부드럽게 페이드아웃
+        const off = document.createElement('canvas');
+        off.width = canvas.width; off.height = canvas.height;
+        const octx = off.getContext('2d');
         const bw = rw * 2, bh = rh * 2;
         const scale = Math.max(bw / userPhotoImg.naturalWidth, bh / userPhotoImg.naturalHeight);
         const dw = userPhotoImg.naturalWidth * scale, dh = userPhotoImg.naturalHeight * scale;
-        ctx.drawImage(userPhotoImg, cx - dw / 2, cy - dh / 2, dw, dh);
-        ctx.restore();
+        octx.drawImage(userPhotoImg, cx - dw / 2, cy - dh / 2, dw, dh);
 
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
-        ctx.lineWidth = Math.max(2, canvas.width * 0.006);
-        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-        ctx.stroke();
+        octx.globalCompositeOperation = 'destination-in';
+        const grad = octx.createRadialGradient(cx, cy, Math.min(rw, rh) * 0.6, cx, cy, Math.max(rw, rh) * 1.05);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        octx.fillStyle = grad;
+        octx.beginPath();
+        octx.ellipse(cx, cy, rw * 1.1, rh * 1.1, 0, 0, Math.PI * 2);
+        octx.fill();
+
+        ctx.drawImage(off, 0, 0);
       }
     };
     charImg.onerror = () => { charImg.src = `images/char_${base}_basic.png`; };
     charImg.src = `images/char_${base}_${uniform}.png`;
   }
+
+  // ── 드래그로 위치 옮기기 ──
+  let dragState = null;
+  function canvasPointFromEvent(e) {
+    const canvas = document.getElementById('char-canvas');
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (e.clientX - rect.left) * (canvas.width / rect.width),
+      y: (e.clientY - rect.top) * (canvas.height / rect.height)
+    };
+  }
+  function onCanvasPointerDown(e) {
+    if (!isMyMode(currentGender) || !userPhotoImg) return;
+    dragState = canvasPointFromEvent(e);
+    e.target.setPointerCapture(e.pointerId);
+  }
+  function onCanvasPointerMove(e) {
+    if (!dragState) return;
+    const canvas = document.getElementById('char-canvas');
+    const base = baseGenderOf(currentGender);
+    const p = canvasPointFromEvent(e);
+    const box = getCurrentBox(base, currentUniform);
+    box.cx = Math.min(1, Math.max(0, box.cx + (p.x - dragState.x) / canvas.width));
+    box.cy = Math.min(1, Math.max(0, box.cy + (p.y - dragState.y) / canvas.height));
+    dragState = p;
+    renderMyComposite(base, currentUniform);
+  }
+  function onCanvasPointerUp() { dragState = null; }
 
   function handlePhotoUpload(event) {
     const file = event.target.files && event.target.files[0];
@@ -480,6 +569,13 @@
     // 모달 띄우기
     document.getElementById('success-modal').style.display = 'flex';
   }
+
+  // 캔버스 드래그 리스너 등록
+  const charCanvasEl = document.getElementById('char-canvas');
+  charCanvasEl.addEventListener('pointerdown', onCanvasPointerDown);
+  charCanvasEl.addEventListener('pointermove', onCanvasPointerMove);
+  charCanvasEl.addEventListener('pointerup', onCanvasPointerUp);
+  charCanvasEl.addEventListener('pointercancel', onCanvasPointerUp);
 
   // 초기 실행
   updatePreview();
