@@ -84,7 +84,7 @@
     }
     .panel-title { font-size: 14px; font-weight: 700; color: var(--cyan); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 
-    /* 대원 선택 */
+    /* 캐릭터 선택 */
     .gender-select { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .gender-btn {
       padding: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
@@ -130,10 +130,6 @@
     }
     .u-name { font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 2px; }
     .u-desc { font-size: 10px; color: var(--muted); }
-
-    /* 실시간 가이드 */
-    .info-box { font-size: 12px; color: rgba(200,220,255,0.85); line-height: 1.5; }
-    .info-tag { display: inline-block; background: rgba(240,165,0,0.2); color: var(--yellow); border: 1px solid var(--yellow); padding: 2px 6px; border-radius: 3px; font-size: 10px; margin-bottom: 4px; }
 
     /* 제출 버튼 */
     .submit-btn {
@@ -183,22 +179,22 @@
   <div class="preview-card">
     <div class="card-badge">LIVE PREVIEW</div>
     <div class="char-container">
-      <img id="char-img" class="char-img" src="images/char_female_basic.png" alt="대원 캐릭터" onerror="handleImgError()">
+      <img id="char-img" class="char-img" src="images/char_female_basic.png" alt="캐릭터" onerror="handleImgError()">
       <canvas id="char-canvas" class="char-img char-canvas-wrap" style="display:none"></canvas>
     </div>
   </div>
 
   <!-- 컨트롤 패널 -->
   <div class="control-panel">
-    <!-- 대원 선택 -->
+    <!-- 캐릭터 선택 -->
     <div class="panel-box">
-      <div class="panel-title">👤 대원 선택</div>
+      <div class="panel-title">👤 캐릭터 선택</div>
       <div class="gender-select">
         <button class="gender-btn active" id="g-female" onclick="selectGender('female')">
-          <span>👩</span> 해누리 대원 (여)
+          <span>👩</span> 해누리
         </button>
         <button class="gender-btn" id="g-male" onclick="selectGender('male')">
-          <span>👨</span> 해우리 대원 (남)
+          <span>👨</span> 해우리
         </button>
         <button class="gender-btn" id="g-my_female" onclick="selectGender('my_female')">
           <span>🙋‍♀️</span> 나 (여)
@@ -260,15 +256,6 @@
           <span class="u-name">항공대 조종복</span>
           <span class="u-desc">항공 수색 및 긴급 이송</span>
         </button>
-      </div>
-    </div>
-
-    <!-- 제복 설명 정보 -->
-    <div class="panel-box">
-      <div class="panel-title">📋 현재 복장 임무 가이드</div>
-      <div class="info-box">
-        <span class="info-tag" id="info-tag">대기 상태</span>
-        <div id="info-text">현재 제복을 착용하지 않은 상태입니다. 상황에 알맞은 제복을 선택해 주세요.</div>
       </div>
     </div>
 
@@ -337,7 +324,7 @@
   // '나(남)'/'나(여)' 모드에서 쓸 얼굴 합성용 데이터
   let userPhotoImg = null; // 업로드된 얼굴 사진 (Image 객체)
 
-  // 캐릭터별 얼굴 위치 (원본 이미지 기준 %) — 심플 오버레이용 대략치, 필요하면 조정 가능
+  // 캐릭터별 얼굴 위치 (원본 이미지 기준 %)
   const FACE_BOX = {
     female: {
       basic:  { cx:.56, cy:.28, w:.25, h:.13 },
@@ -414,11 +401,6 @@
         imgEl.classList.remove('changing');
       }, 120);
     }
-
-    // 가이드 정보 업데이트
-    const info = uniformData[currentUniform];
-    document.getElementById('info-tag').textContent = info.tag;
-    document.getElementById('info-text').textContent = info.desc;
   }
 
   function renderMyComposite(base, uniform) {
@@ -436,7 +418,6 @@
         const cx = box.cx * canvas.width, cy = box.cy * canvas.height;
         const rw = (box.w * canvas.width) / 2, rh = (box.h * canvas.height) / 2;
 
-        // 사진을 별도 캔버스에 그린 뒤, 방사형 그라데이션으로 가장자리를 부드럽게 페이드아웃
         const off = document.createElement('canvas');
         off.width = canvas.width; off.height = canvas.height;
         const octx = off.getContext('2d');
@@ -553,8 +534,8 @@
 
     const info = uniformData[currentUniform];
     const genderNameMap = {
-      female: '해누리 대원',
-      male: '해우리 대원',
+      female: '해누리',
+      male: '해우리',
       my_female: '나 (여)',
       my_male: '나 (남)'
     };
