@@ -119,7 +119,7 @@
     .mission-card.done .mission-num { color: #00ff88; }
     .mission-title { font-size: 20px; font-weight: 900; color: white; line-height: 1.3; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
     .mission-desc { font-size: 12.5px; color: rgba(200,220,255,0.8); line-height: 1.7; margin-bottom: 16px; }
-    .mission-btn { width: 100%; padding: 13px; background: var(--yellow); color: #1a0800; border: none; border-radius: 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 900; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 20px rgba(240,165,0,0.3); }
+    .mission-btn { display: block; width: 100%; padding: 13px; background: var(--yellow); color: #1a0800; border: none; border-radius: 6px; font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 900; text-align: center; text-decoration: none; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 20px rgba(240,165,0,0.3); box-sizing: border-box; }
     .mission-btn:hover { background: #ffb800; }
     .mission-btn.done { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid rgba(0,255,136,0.35); font-size: 13px; box-shadow: none; }
     .mission-btn.done:hover { background: rgba(0,255,136,0.15); }
@@ -237,7 +237,7 @@
         <div class="mission-num">[ RESTORE MISSION 01 ]</div>
         <div class="mission-title">구조 대응 시스템 복구</div>
         <div class="mission-desc">위기 상황에서 당신의 판단을 통해 사라진 구조 기능을 복원합니다.</div>
-        <button class="mission-btn" id="btn-game" onclick="location.href='cover.html'">테스트 시작 →</button>
+        <a class="mission-btn" id="btn-game" href="cover.html">테스트 시작 →</a>
       </div>
     </div>
 
@@ -249,7 +249,7 @@
         <div class="mission-num">[ RESTORE MISSION 02 ]</div>
         <div class="mission-title">바다 심리테스트</div>
         <div class="mission-desc">당신의 바다 성향을 분석하여 당신만의 바다 유형을 확인합니다.</div>
-        <button class="mission-btn" id="btn-mbti" onclick="location.href='mbti.html'">테스트 시작 →</button>
+        <a class="mission-btn" id="btn-mbti" href="mbti.html">테스트 시작 →</a>
       </div>
     </div>
 
@@ -261,7 +261,7 @@
         <div class="mission-num">[ RESTORE MISSION 03 ]</div>
         <div class="mission-title">해경 제복 착용 시스템</div>
         <div class="mission-desc">상황에 알맞은 제복과 장비를 갖춰 해양경찰 대응 준비를 마칩니다.</div>
-        <button class="mission-btn" id="btn-dressup" onclick="location.href='dressup.html'">착용 시작 →</button>
+        <a class="mission-btn" id="btn-dressup" href="dressup.html">착용 시작 →</a>
       </div>
     </div>
   </div>
