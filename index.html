@@ -124,6 +124,18 @@
     .mission-btn.done { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid rgba(0,255,136,0.35); font-size: 13px; box-shadow: none; }
     .mission-btn.done:hover { background: rgba(0,255,136,0.15); }
 
+    /* ── 세계관(ABOUT) ── */
+    #view-mission { display: flex; flex-direction: column; align-items: center; width: 100%; }
+    #view-about { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 720px; margin: 0 auto; }
+    .about-credit { font-family: 'Press Start 2P', monospace; font-size: 9px; color: rgba(160,196,255,0.5); text-align: center; margin-bottom: 28px; letter-spacing: 1.5px; }
+    .about-box { width: 100%; background: rgba(4,10,30,0.85); border: 1px solid var(--border); border-radius: 8px; padding: 34px 26px; backdrop-filter: blur(4px); }
+    .about-box p { font-size: 14px; color: rgba(220,235,255,0.85); line-height: 2; text-align: center; margin-bottom: 22px; }
+    .about-quote { font-size: 16px; font-weight: 700; color: white; }
+    .about-quote-big { font-size: clamp(18px,3.4vw,24px); font-weight: 900; color: var(--cyan); text-shadow: 0 0 20px rgba(77,217,255,0.4); margin-bottom: 14px; }
+    .about-dots { letter-spacing: 10px; color: var(--muted); margin-bottom: 14px; }
+    .about-highlight { font-size: 16px; font-weight: 700; color: var(--yellow); }
+    .about-rate { font-family: 'Press Start 2P', monospace; font-size: 13px; color: var(--cyan); letter-spacing: 1px; }
+
     /* ── STATUS BAR ── */
     .status-bar { width: 100%; background: rgba(3,7,18,0.97); border-top: 1px solid var(--border); padding: 12px 28px; display: flex; align-items: center; gap: 20px; position: relative; z-index: 10; flex-wrap: wrap; }
     .status-current { display: flex; flex-direction: column; gap: 5px; min-width: 140px; }
@@ -163,8 +175,8 @@
     <div class="nav-logo-text">KOREA COAST GUARD<br>RESTORE PROJECT</div>
   </div>
   <div class="nav-links">
-    <div class="nav-link"><span class="nl-en">.ABOUT</span><span class="nl-ko">세계관</span></div>
-    <div class="nav-link active"><span class="nl-en">.MISSION</span><span class="nl-ko">테스트</span></div>
+    <div class="nav-link" id="nav-about" onclick="showView('about')"><span class="nl-en">.ABOUT</span><span class="nl-ko">세계관</span></div>
+    <div class="nav-link active" id="nav-mission" onclick="showView('mission')"><span class="nl-en">.MISSION</span><span class="nl-ko">테스트</span></div>
     <div class="nav-link"><span class="nl-en">.RESTORE</span><span class="nl-ko">복원 현황</span></div>
     <div class="nav-link"><span class="nl-en">.ARCHIVE</span><span class="nl-ko">기록 보관소</span></div>
   </div>
@@ -177,6 +189,7 @@
 
 <!-- MAIN -->
 <main>
+<div id="view-mission">
   <div class="error-label">⚠ SYSTEM ERROR ⚠</div>
   <div class="error-title">해양경찰청을 찾을 수 없습니다.</div>
   <div class="error-sub">바다의 일부 기능이 비활성화되었습니다.<br>당신의 선택으로 복원을 시작하세요.</div>
@@ -231,6 +244,24 @@
       </div>
     </div>
   </div>
+</div>
+
+<div id="view-about">
+  <div class="about-credit">ICC 프로젝트 · 팀 오션와이드</div>
+  <div class="about-box">
+    <p>당신은 평소처럼 검색창에 <strong>'해양경찰청'</strong>을 입력했다.</p>
+    <p class="about-quote">"해양경찰청을 찾을 수 없습니다."</p>
+    <p>새로고침을 눌러봐도, 다시 검색해봐도 결과는 같다.<br>정말 이 기관이... 존재했던 게 맞나?<br>그 순간, 화면 속에서 낡은 팝업 하나가 깜빡인다.</p>
+    <p class="about-quote about-quote-big">"해양경찰청을 복원시키겠습니까?"</p>
+    <p class="about-dots">· · ·</p>
+    <p><strong>[YES]</strong>를 누르는 순간, 당신의 여정은 시작된다.</p>
+    <p>바다 어딘가에 흩어진<br>해양경찰청의 기록들을 되찾기 위한 여정.</p>
+    <p class="about-highlight">지금부터 우리가 함께 이 바다를 복원합니다.</p>
+    <p class="about-rate">오늘의 복원률 : <span id="about-rate-num">0%</span></p>
+    <p>당신도 이 미션에 참여할 준비 됐나요?</p>
+    <button class="mission-btn" onclick="showView('mission')" style="max-width:280px;margin:8px auto 0">[YES] 미션 시작하기 →</button>
+  </div>
+</div>
 </main>
 
 <!-- STATUS BAR -->
@@ -274,6 +305,7 @@
   const rate = Math.round((count / 3) * 100);
 
   document.getElementById('restore-pct').textContent = rate + '%';
+  document.getElementById('about-rate-num').textContent = rate + '%';
   setTimeout(() => { document.getElementById('progress-fill').style.width = rate + '%'; }, 300);
 
   // 미션 1 완료 처리
@@ -335,6 +367,16 @@
   document.addEventListener('click',()=>{ if(!bgmOn) bgm.play().then(()=>{bgmOn=true;bgmBtn.textContent='🔊';}).catch(()=>{}); },{once:true});
 
   function sharePage(){ if(navigator.share) navigator.share({title:'KOREA COAST GUARD RESTORE PROJECT',url:location.href}).catch(()=>{}); else if(navigator.clipboard) navigator.clipboard.writeText(location.href); }
+
+  // 세계관(ABOUT) / 미션 탭 전환
+  function showView(name){
+    document.getElementById('view-mission').style.display = name === 'mission' ? 'flex' : 'none';
+    document.getElementById('view-about').style.display = name === 'about' ? 'flex' : 'none';
+    document.getElementById('nav-mission').classList.toggle('active', name === 'mission');
+    document.getElementById('nav-about').classList.toggle('active', name === 'about');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof gtag === 'function') gtag('event', 'nav_view_switch', { view: name });
+  }
 </script>
 </body>
 </html>
