@@ -136,6 +136,28 @@
     .about-highlight { font-size: 16px; font-weight: 700; color: var(--yellow); }
     .about-rate { font-family: 'Press Start 2P', monospace; font-size: 13px; color: var(--cyan); letter-spacing: 1px; }
 
+    /* ── 복원 현황(RESTORE) ── */
+    #view-restore { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 720px; margin: 0 auto; }
+    .restore-title { font-size: clamp(20px,3.6vw,28px); font-weight: 900; color: white; margin-bottom: 8px; text-align: center; }
+    .restore-sub { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 24px; }
+    .restore-list { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+    .restore-item {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(4,10,30,0.85); border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px 18px; backdrop-filter: blur(4px); transition: border-color 0.3s;
+    }
+    .restore-item.done { border-color: rgba(0,255,136,0.4); }
+    .restore-icon { font-size: 26px; flex-shrink: 0; }
+    .restore-info { flex: 1; min-width: 0; }
+    .restore-name { font-size: 14px; font-weight: 700; color: white; margin-bottom: 3px; }
+    .restore-desc { font-size: 11.5px; color: var(--muted); }
+    .restore-badge {
+      flex-shrink: 0; font-family: 'Press Start 2P', monospace; font-size: 8px;
+      padding: 6px 10px; border-radius: 4px; white-space: nowrap;
+      background: rgba(255,51,51,0.12); color: var(--red); border: 1px solid rgba(255,51,51,0.4);
+    }
+    .restore-badge.done { background: rgba(0,255,136,0.12); color: #00ff88; border-color: rgba(0,255,136,0.4); }
+
     /* ── STATUS BAR ── */
     .status-bar { width: 100%; background: rgba(3,7,18,0.97); border-top: 1px solid var(--border); padding: 12px 28px; display: flex; align-items: center; gap: 20px; position: relative; z-index: 10; flex-wrap: wrap; }
     .status-current { display: flex; flex-direction: column; gap: 5px; min-width: 140px; }
@@ -177,7 +199,7 @@
   <div class="nav-links">
     <div class="nav-link" id="nav-about" onclick="showView('about')"><span class="nl-en">.ABOUT</span><span class="nl-ko">세계관</span></div>
     <div class="nav-link active" id="nav-mission" onclick="showView('mission')"><span class="nl-en">.MISSION</span><span class="nl-ko">테스트</span></div>
-    <div class="nav-link"><span class="nl-en">.RESTORE</span><span class="nl-ko">복원 현황</span></div>
+    <div class="nav-link" id="nav-restore" onclick="showView('restore')"><span class="nl-en">.RESTORE</span><span class="nl-ko">복원 현황</span></div>
     <div class="nav-link"><span class="nl-en">.ARCHIVE</span><span class="nl-ko">기록 보관소</span></div>
   </div>
   <div class="nav-actions">
@@ -261,6 +283,38 @@
     <p>당신도 이 미션에 참여할 준비 됐나요?</p>
     <button class="mission-btn" onclick="showView('mission')" style="max-width:280px;margin:8px auto 0">[YES] 미션 시작하기 →</button>
   </div>
+</div>
+
+<div id="view-restore">
+  <div class="restore-title">🛰 미션 복원 현황</div>
+  <div class="restore-sub" id="restore-sub-text">아직 복원이 시작되지 않았습니다.</div>
+  <div class="restore-list">
+    <div class="restore-item" id="restore-item-game">
+      <span class="restore-icon">🔭</span>
+      <div class="restore-info">
+        <div class="restore-name">MISSION 01 — 구조 대응 시스템 복구</div>
+        <div class="restore-desc">위기 상황판단 테스트</div>
+      </div>
+      <span class="restore-badge" id="restore-badge-game">미완료</span>
+    </div>
+    <div class="restore-item" id="restore-item-mbti">
+      <span class="restore-icon">🌊</span>
+      <div class="restore-info">
+        <div class="restore-name">MISSION 02 — 바다 심리테스트</div>
+        <div class="restore-desc">나의 바다 유형 분석</div>
+      </div>
+      <span class="restore-badge" id="restore-badge-mbti">미완료</span>
+    </div>
+    <div class="restore-item" id="restore-item-dressup">
+      <span class="restore-icon">🥋</span>
+      <div class="restore-info">
+        <div class="restore-name">MISSION 03 — 해경 제복 착용 시스템</div>
+        <div class="restore-desc">상황별 제복·장비 착용</div>
+      </div>
+      <span class="restore-badge" id="restore-badge-dressup">미완료</span>
+    </div>
+  </div>
+  <button class="mission-btn" onclick="showView('mission')" style="max-width:280px;margin:24px auto 0">미션 화면으로 →</button>
 </div>
 </main>
 
@@ -368,15 +422,39 @@
 
   function sharePage(){ if(navigator.share) navigator.share({title:'KOREA COAST GUARD RESTORE PROJECT',url:location.href}).catch(()=>{}); else if(navigator.clipboard) navigator.clipboard.writeText(location.href); }
 
-  // 세계관(ABOUT) / 미션 탭 전환
+  // 세계관(ABOUT) / 미션 / 복원 현황(RESTORE) 탭 전환
   function showView(name){
     document.getElementById('view-mission').style.display = name === 'mission' ? 'flex' : 'none';
     document.getElementById('view-about').style.display = name === 'about' ? 'flex' : 'none';
+    document.getElementById('view-restore').style.display = name === 'restore' ? 'flex' : 'none';
     document.getElementById('nav-mission').classList.toggle('active', name === 'mission');
     document.getElementById('nav-about').classList.toggle('active', name === 'about');
+    document.getElementById('nav-restore').classList.toggle('active', name === 'restore');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (typeof gtag === 'function') gtag('event', 'nav_view_switch', { view: name });
   }
+
+  // 복원 현황 탭 완료/미완료 배지 반영
+  function setRestoreBadge(key, isDone){
+    const item = document.getElementById(`restore-item-${key}`);
+    const badge = document.getElementById(`restore-badge-${key}`);
+    if (isDone) {
+      item.classList.add('done');
+      badge.classList.add('done');
+      badge.textContent = '완료';
+    }
+  }
+  setRestoreBadge('game', done.game);
+  setRestoreBadge('mbti', done.mbti);
+  setRestoreBadge('dressup', done.dressup);
+
+  const restoreSubMsg = [
+    '아직 복원이 시작되지 않았습니다.',
+    '첫 번째 복원이 완료됐습니다. 계속 진행하세요.',
+    '두 개의 시스템이 복원됐습니다. 마지막 미션이 남았습니다.',
+    '모든 미션이 복원 완료됐습니다. 수고하셨습니다!'
+  ];
+  document.getElementById('restore-sub-text').textContent = restoreSubMsg[count];
 </script>
 </body>
 </html>
