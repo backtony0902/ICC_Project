@@ -336,6 +336,7 @@
 </div>
 <footer>© 2026 KOREA COAST GUARD RESTORE PROJECT</footer>
 
+<script src="bgm-continuity.js"></script>
 <script>
   // 비
   const rainWrap = document.getElementById('rain');
@@ -415,6 +416,7 @@
 
   // BGM
   const bgm = new Audio('bgm.mp3'); bgm.loop = true;
+  wireBGMContinuity(bgm, 'icc_bgm_time');
   const bgmBtn = document.getElementById('bgm-btn'); let bgmOn = false;
   function toggleBGM(){ if(bgmOn){bgm.pause();bgmOn=false;bgmBtn.textContent='🔇';}else{bgm.play();bgmOn=true;bgmBtn.textContent='🔊';} }
   document.addEventListener('click',()=>{ if(!bgmOn) bgm.play().then(()=>{bgmOn=true;bgmBtn.textContent='🔊';}).catch(()=>{}); },{once:true});
